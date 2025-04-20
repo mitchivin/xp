@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <title>Windows XP Simulation</title>
+
+    <!-- Preload Critical Assets -->
+    <link rel="preload" href="./assets/gui/desktop/bliss.jpg" as="image">
+    <link rel="prefetch" href="./assets/gui/desktop/bliss-ultrawide.jpg" as="image">
+    <link rel="preload" href="./assets/gui/desktop/about-me.webp" as="image">
+    <link rel="preload" href="./assets/gui/desktop/my-projects.webp" as="image">
+    <link rel="preload" href="./assets/gui/desktop/email.webp" as="image">
+    <link rel="preload" href="./assets/gui/desktop/resume.webp" as="image">
+    <link rel="preload" href="./assets/gui/taskbar/start-button.webp" as="image">
+    <link rel="preload" href="./assets/gui/taskbar/system-tray.webp" as="image">
+    <!-- Prefetch likely-to-be-used app icons for faster menu opening -->
+    <link rel="prefetch" href="./assets/gui/start-menu/vanity-apps/photoshop.webp" as="image">
+    <link rel="prefetch" href="./assets/gui/start-menu/vanity-apps/illustrator.webp" as="image">
+    <link rel="prefetch" href="./assets/gui/start-menu/vanity-apps/after-effects.webp" as="image">
+    <link rel="prefetch" href="./assets/gui/start-menu/vanity-apps/vscode.webp" as="image">
+    <link rel="prefetch" href="./assets/gui/start-menu/vanity-apps/figma.webp" as="image">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://unpkg.com/xp.css@0.2.3/dist/XP.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="./src/styles/main.css">
+    <link rel="stylesheet" href="./src/styles/utils/boot.css">
+</head>
+<body>
+    <!-- Boot Screen -->
+    <div id="boot-screen">
+        <div class="loading-container">
+            <img id="boot-logo" src="/assets/gui/boot/loading.webp" alt="Windows XP Loading">
+            <div class="container">
+                <div class="box"></div>
+                <div class="box"></div>
+                <div class="box"></div>
+            </div>
+        </div>
+
+        <!-- Bottom Left Text -->
+        <div class="boot-bottom-left">
+            <span>Portfolio &copy; 2025</span>
+            <span>Mitchell Ivin Design</span>
+        </div>
+
+        <!-- Bottom Right Image -->
+        <div class="boot-bottom-right">
+            <img src="./assets/gui/boot/boot-wordmark.webp" alt="Boot Wordmark">
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="login-screen" style="display:block;">
+            <div class="login-screen-inner">
+                <div class="login-screen-center">
+                    <div class="left">
+                        <img
+                            class="xp-logo-image"
+                            src="/assets/gui/boot/loading.webp"
+                            alt="Windows XP Loading"
+                        />
+                        <div class="left-text">To begin, click your next designer's name</div>
+                    </div>
+                    <div class="right">
+                        <div class="back-gradient">
+                            <div class="user">
+                                <img
+                                    src="/assets/gui/boot/userlogin.webp"
+                                    alt="User Profile"
+                                />
+                            </div>
+                            <div class="text-wrap">
+                                <div class="name">Mitchell Ivin</div>
+                                <div class="user-title">Graphic Designer</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="turn-off">
+                <img id="shutdown-icon" src="/assets/gui/boot/shutdown.webp" alt="Shutdown" />
+                <div class="shutdown-text">Turn off computer</div>
+            </div>
+            <div class="right-bottom">
+                <span>After you log on, the system's yours to explore.</span>
+                <span>Just launch My Projects to check out my work.</span>
+            </div>
+        </div>
+        <link rel="stylesheet" href="./src/styles/utils/login.css" />
+        <script src="./src/scripts/utils/login.js"></script>
+    </div>
+
+    <div class="desktop">
+        <div class="desktop-icons">
+            <div class="desktop-icon" data-program-name="about-me">
+                <img src="./assets/gui/desktop/about-me.webp" alt="About Me" loading="eager">
+                <span>About Me</span>
+            </div>
+            <div class="desktop-icon" data-program-name="my-projects">
+                <img src="./assets/gui/desktop/my-projects.webp" alt="My Projects" loading="eager">
+                <span>My Projects</span>
+            </div>
+            <div class="desktop-icon" data-program-name="contact-me">
+                <img src="./assets/gui/desktop/email.webp" alt="Contact Me" loading="eager">
+                <span>Contact Me</span>
+            </div>
+            <div class="desktop-icon" data-program-name="resume-pdf">
+                <img src="./assets/gui/desktop/resume.webp" alt="Resume.pdf" loading="eager">
+                <span>Resume.pdf</span>
+            </div>
+        </div>
+
+        <div id="windows-container"></div>
+        
+        <div class="taskbar">
+            <button class="start-button" id="start-button">
+                <img src="./assets/gui/taskbar/start-button.webp" alt="Start">
+            </button>
+            <div class="quick-launch"></div>
+            <div class="taskbar-programs"></div>
+            <div class="system-tray">
+                <img src="./assets/gui/taskbar/system-tray.webp" alt="System Tray" class="system-tray-bg">
+                <div class="tray-content">
+                    <div class="tray-icons">
+                        
+                        <img src="./assets/gui/taskbar/network.webp" alt="Network Icon" class="tray-network-icon" data-tooltip="Connection Successful">
+                        <img src="./assets/gui/taskbar/volume.webp" alt="Volume Icon" class="tray-volume-icon" data-tooltip="Volume: 100%">
+                    </div>
+                    <div class="time">12:00 PM</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./src/scripts/main.js"></script>
+    
+    <!-- CRT Effect Overlay -->
+    <div class="crt-effect"></div>
+    <!-- CRT Additional Effects -->
+    <div class="crt-scanline"></div>
+    <div class="crt-glow"></div>
+    <div class="crt-vignette"></div>
+    <div class="crt-noise"></div>
+    <div class="crt-flicker"></div>
+    <div class="crt-aberration"></div>
+    <div class="crt-persistence"></div>
+    <div class="flicker"></div>
+    
+    <!-- Boot sequence script (now a module) -->
+    <script type="module" src="./src/scripts/utils/boot.js"></script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+/* Windows XP Notepad Exact Replica */
+
+/* Only font and reset rules are scoped to children, not layout! */
+body * { /* Changed selector from .notepad-container * */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Tahoma, 'Segoe UI', sans-serif;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    background: #fff; /* Added background here */
+}
+
+/* Notepad content area */
+.content-area {
+    flex: 1; /* Added flex: 1 to make it expand */
+    width: 100%;
+    overflow: hidden;
+    background-color: #fff;
+    padding: 0;
+    margin: 0;
+    min-height: 0; /* Added to prevent potential overflow issues in flex */
+}
+
+/* Textarea editor styling */
+#notepad-editor {
+    width: 100%;
+    height: 100%;
+    padding: 8px; /* Uniform 8px padding on all sides as specified */
+    font-family: 'Lucida Console', monospace; /* Changed to authentic Windows XP Notepad font */
+    font-size: 14px;
+    font-weight: normal; /* Changed to normal weight as specified */
+    line-height: 1.3; /* Keeping the specified line height */
+    color: #000; /* Exact black color as specified */
+    resize: none;
+    border: none;
+    outline: none;
+    background-color: #fff; /* Exact white background as specified */
+    overflow: hidden auto; /* Vertical scrollbar only when needed */ /* Hide horizontal scrollbar for word wrap */
+    white-space: pre-wrap; /* Enable word wrap */
+    word-wrap: break-word; /* Ensure words break properly */
+    cursor: text; /* Default text I-beam cursor */
+}
+
+/* Status Bar */
+.status-bar {
+    display: flex;
+    background-color: #f0f0f0;
+    border-top: 1px solid #d7d7d7;
+    padding: 2px 0;
+    font-size: 11px;
+    justify-content: flex-end;
+    user-select: none;
+    height: 22px;
+}
+
+.status-item {
+    padding: 0 8px;
+    border-right: 1px solid #d7d7d7;
+    display: flex;
+    align-items: center;
+}
+
+.status-item:last-child {
+    border-right: none;
+}
+
+/* === MenuBar Styles (Copied from reusable/MenuBar.css) === */
+/* Menu bar styles for Windows XP-like UI
+   .menu-bar: Menu bar container
+   .menu-item: Top-level menu items
+   .dropdown-menu: Dropdown menu container
+   .menu-option: Individual menu options
+   .menu-separator: Divider line
+*/
+
+.menu-bar-container { /* Added container rule */
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.menu-bar {
+  display: flex;
+  align-items: center;
+  background: #ece9d8;
+  height: 22px;
+  min-height: 22px;
+  max-height: 22px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  flex-grow: 0;
+  overflow: hidden;
+  padding: 0 8px 0 0;
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 11px;
+  user-select: none;
+  position: relative;
+  z-index: 30;
+  border-bottom: 2px solid #d7d4ca;
+  cursor: default;
+}
+.menu-item {
+  position: relative;
+  padding: 0 10px;
+  font-size: inherit;
+  color: #222;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  line-height: 22px; /* Added to explicitly match menu bar height */
+  cursor: default;
+  border: none;
+  background: none;
+  outline: none;
+  transition: background 0.15s;
+}
+.menu-item:not(.disabled):hover, .menu-item.active {
+  background: #0a6fc2;
+  color: #fff;
+}
+.menu-item.disabled {
+  color: #bcbcbc;
+  cursor: default;
+}
+.dropdown-menu {
+  display: none;
+  position: absolute; /* Changed to absolute for positioning within body */
+  left: 0;
+  top: 100%; /* Position below the menu item */
+  width: 130px;
+  background: #ece9d8;
+  border: 1px solid #b5b2a3;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  font-size: 11px;
+  font-family: Tahoma, Arial, sans-serif;
+  z-index: 1000;
+  margin-top: 1px;
+  border-radius: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.dropdown-menu.show {
+  display: block;
+}
+.menu-option {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 3px 10px 3px 24px;
+  cursor: default;
+  white-space: nowrap;
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  background: none;
+  text-align: left;
+  transition: background 0.13s;
+}
+.menu-option:hover:not(.disabled) {
+  background: #0a6fc2;
+  color: #fff;
+}
+.menu-option.disabled {
+  color: #bcbcbc;
+  cursor: default;
+}
+.menu-separator {
+  border-top: 1px solid #d7d4ca;
+  margin: 2px 0;
+  height: 0;
+}
+/* === End MenuBar Styles === */

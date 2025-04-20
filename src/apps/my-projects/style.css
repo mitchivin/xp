@@ -1,0 +1,414 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Tahoma, sans-serif;
+    background-color: #fff;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Menu bar styles for Windows XP-like UI */
+/* Copied from reusable/MenuBar.css */
+/* Removed empty ruleset for .menu-bar-container */
+.menu-bar {
+  display: flex;
+  align-items: center;
+  background: #ece9d8;
+  height: 22px;
+  min-height: 22px;
+  max-height: 22px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  flex-grow: 0;
+  overflow: hidden;
+  padding: 0 8px 0 0;
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 11px;
+  user-select: none;
+  position: relative;
+  z-index: 30;
+  border-bottom: 2px solid #d7d4ca;
+  cursor: default;
+}
+.menu-item {
+  position: relative;
+  padding: 0 10px;
+  font-size: inherit;
+  color: #222;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  line-height: 22px; /* Added to explicitly match menu bar height */
+  cursor: default;
+  border: none;
+  background: none;
+  outline: none;
+  transition: background 0.15s;
+}
+.menu-item:not(.disabled):hover, .menu-item.active {
+  background: #0a6fc2;
+  color: #fff;
+}
+.menu-item.disabled {
+  color: #bcbcbc;
+  cursor: default;
+}
+.dropdown-menu {
+  display: none;
+  position: absolute; /* Changed to absolute for positioning relative to menu-bar */
+  left: 0;
+  top: 100%; /* Position below the menu item */
+  width: 130px;
+  background: #ece9d8;
+  border: 1px solid #b5b2a3;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  font-size: 11px;
+  font-family: Tahoma, Arial, sans-serif;
+  z-index: 1000;
+  margin-top: 1px;
+  border-radius: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.dropdown-menu.show {
+  display: block;
+}
+.menu-option {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 3px 10px 3px 24px;
+  cursor: default;
+  white-space: nowrap;
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  background: none;
+  text-align: left;
+  transition: background 0.13s;
+}
+.menu-option:hover:not(.disabled) {
+  background: #0a6fc2;
+  color: #fff;
+}
+.menu-option.disabled {
+  color: #bcbcbc;
+  cursor: default;
+}
+.menu-separator {
+  border-top: 1px solid #d7d4ca;
+  margin: 2px 0;
+  height: 0;
+}
+/* End Menu bar styles */
+
+/* Content Area - Holds the iframe */
+.content-area {
+    flex-grow: 1;
+    overflow: hidden; /* Hide overflow, iframe handles scroll */
+    background-color: #fff; /* White background behind iframe */
+    padding: 0; /* No padding around iframe */
+    position: relative;
+    z-index: 1;
+    border: none; /* Remove border */
+    margin: 0; /* Remove margin */
+    box-shadow: none; /* Remove shadow */
+}
+
+#project-frame {
+    width: 100%;
+    height: 100%;
+    border: none; /* Remove iframe default border */
+    display: block;
+}
+
+/* .project-content a { ... } */
+
+/* Toolbar styles for Windows XP-like UI - Copied from reusable/Toolbar.css */
+/*
+   .toolbar-container: Toolbar outer container
+   .toolbar-row: Toolbar container
+   .back_enabled, .forward, .search, .favourites, .folder, .thumbnail: Toolbar buttons
+   .vertical_line: Divider between button groups
+*/
+
+.toolbar-container {
+  all: initial;
+  box-sizing: border-box;
+  width: 100vw;
+  min-width: 100vw;
+  max-width: 100vw;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  position: static;
+  z-index: auto;
+}
+
+.toolbar-row {
+  all: unset;
+  display: flex;
+  flex-direction: row;
+  background: #ece9d8;
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  flex-grow: 0;
+  overflow: hidden;
+  padding: 0 8px 0 4px;
+  align-items: center;
+  border-bottom: 2px solid #d7d4ca;
+  z-index: 20;
+  position: static; /* Now static, not fixed */
+  width: 100vw;
+  user-select: none;
+}
+
+/* Body style adjustment from Toolbar.css - ensure no extra margin */
+/* Note: This duplicates the body rule at the top, but following README instructions to copy FULL CSS */
+body {
+  /* Remove default browser/XP.css margin for flush positioning */
+  margin: 0;
+  padding: 0;
+  /* No margin-top needed for static toolbar */
+}
+
+.vertical_line {
+  width: 1px;
+  height: 26px;
+  background: #d7d4ca;
+  margin: 0 4px;
+}
+
+.back, .forward, .search, .favourites, .home, .print {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-family: Tahoma, Arial, sans-serif;
+  color: #222;
+  padding: 6px 8px;
+  border-radius: 5px;
+  transition: box-shadow 0.13s, border 0.13s, background 0.13s;
+  border: 1.5px solid transparent;
+  box-shadow: none;
+  margin: 0;
+  user-select: none;
+}
+
+.toolbar-row img, .toolbar-row span {
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+.toolbar-row > * {
+  margin: 0;
+}
+
+.back > img + span,
+.forward > img + span,
+.search > img + span,
+.favourites > img + span,
+.print > img + span {
+  margin-left: 5px;
+}
+
+.home > img {
+  margin-right: 0;
+}
+
+.back:hover, .forward:hover, .search:hover, .favourites:hover, .home:hover, .print:hover {
+  background: #ecebe2;
+  border: 1.5px solid #b9b6aa;
+  box-shadow: none;
+}
+
+.back:active, .forward:active, .search:active, .favourites:active, .home:active, .print:active {
+  border: 1.5px solid #888;
+  box-shadow: inset 2px 2px 5px #b9b6aa, inset -1.5px -1.5px 3px #fff;
+  background: #e4e3dc;
+}
+
+.search.disabled,
+.favourites.disabled,
+.print.disabled {
+  filter: grayscale(100%) opacity(0.6);
+  cursor: not-allowed !important;
+  pointer-events: none;
+  border: 1.5px solid transparent !important;
+  background: none !important;
+}
+
+.search.disabled:hover,
+.favourites.disabled:hover,
+.print.disabled:hover,
+.search.disabled:active,
+.favourites.disabled:active,
+.print.disabled:active {
+  filter: grayscale(100%) opacity(0.6);
+  cursor: not-allowed !important;
+  pointer-events: none;
+  border: 1.5px solid transparent !important;
+  background: none !important;
+}
+
+.forward.disabled {
+  filter: grayscale(100%) opacity(0.6);
+  cursor: not-allowed !important;
+  pointer-events: none;
+  border: 1.5px solid transparent !important;
+  background: none !important;
+}
+
+.forward.disabled:hover,
+.forward.disabled:active {
+  filter: grayscale(100%) opacity(0.6);
+  cursor: not-allowed !important;
+  pointer-events: none;
+  border: 1.5px solid transparent !important;
+  background: none !important;
+}
+/* End Toolbar styles */
+
+/* Address bar styles for Windows XP-like UI - Copied FULLY from reusable/AddressBar.css */
+/*
+   .addressbar-row: Address bar row
+   .addressbar: Main address input area
+   .addressbar-title: Label/title inside the address bar
+   .goIcon, .dropdownIcon: Icon styles
+*/
+
+/* Address Bar Container (Added wrapper for consistency, not in original reusable CSS but helps structure) */
+.addressbar-container {
+  all: initial;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  position: static;
+  z-index: auto;
+}
+
+/* Address Bar CSS (pixel-perfect from reusable/AddressBar.css) */
+.addressbar {
+  display: flex;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  width: 100%;
+  align-items: center;
+  margin: 0;
+  justify-content: space-between;
+  flex: 1 1 auto;
+  min-width: 150px;
+  max-width: 100%;
+  padding-left: 5px;
+  padding-right: 0;
+  height: 22px;
+  box-sizing: border-box;
+}
+.addressbar-title {
+  font-family: Tahoma, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #222;
+  margin-left: 2px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.addressbar-row {
+  padding: 0 0px 0 0;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  box-sizing: border-box;
+  background: #ece9d8;
+  border-bottom: 2px solid #d7d4ca;
+  height: 34px;
+  height: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+  overflow: hidden !important;
+}
+.addressbar-row, .addressbar-row * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
+.address-label-container {
+  width: 60px;
+  min-width: 60px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Tahoma, Arial, sans-serif;
+  color: #7f7c73;
+  font-size: 11px;
+}
+
+.go-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-shrink: 0;
+  width: 56px;
+  min-width: 56px;
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 11px;
+  color: #a0a0a0;
+  white-space: nowrap;
+}
+
+.goIcon {
+  flex-shrink: 0;
+}
+
+.goIcon:hover {
+  filter: brightness(1.1);
+}
+.goIcon[style*="not-allowed"],
+.addressbar .dropdownIcon[style*="not-allowed"],
+.addressbar-row > span[style*="not-allowed"] {
+  cursor: not-allowed !important;
+}
+.dropdownIcon {
+    flex-shrink: 0;
+}
+.dropdownIcon:hover {
+  filter: brightness(1.1);
+}
+.dropdownIcon[style*="not-allowed"] {
+  pointer-events: none;
+}
+.addressbar .dropdownIcon {
+  filter: grayscale(100%) opacity(0.6) !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+.addressbar .dropdownIcon:hover {
+  filter: grayscale(100%) opacity(0.6) !important;
+  cursor: not-allowed !important;
+}
+/* End Address bar styles */
+
+#ps1 {
+    font-weight: var(--cmd-font-weight);
+}

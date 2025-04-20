@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Contact Me</title>
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/xp.css@0.2.3/dist/XP.css"
+            crossorigin="anonymous"
+        />
+        <!-- Added XP.css link -->
+        <link rel="stylesheet" href="style.css" /> <!-- Link to external CSS -->
+    </head>
+    <body>
+        <div class="email-window">
+            <!-- Menu bar markup for Windows XP-style UI -->
+            <div class="menu-bar-container">
+                <div class="menu-bar">
+                    <div class="menu-item" data-menu="file">File</div>
+                    <div class="menu-item disabled" data-menu="edit">Edit</div>
+                    <div class="menu-item disabled" data-menu="view">View</div>
+                    <div class="menu-item disabled" data-menu="tools">Tools</div>
+                    <div class="menu-item disabled" data-menu="message">Message</div>
+                    <div class="menu-item disabled" data-menu="help">Help</div>
+
+                    <!-- File Menu -->
+                    <div id="file-menu" class="dropdown-menu">
+                        <div class="menu-option" data-action="new">New</div>
+                        <div class="menu-option disabled">Open...</div>
+                        <div class="menu-option disabled">Save</div>
+                        <div class="menu-option disabled">Print...</div>
+                        <div class="menu-separator"></div>
+                        <div class="menu-option" data-action="exit">Exit</div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Menu Bar -->
+
+            <!-- Toolbar markup for Windows XP-style UI -->
+            <!-- Copied from reusable/Toolbar.html -->
+            <div class="toolbar-container">
+              <div class="toolbar-row">
+                <div class="send">
+                  <img alt="send" width="25" height="25" src="/assets/gui/components/send.webp" />
+                  <span>Send</span>
+                </div>
+                <div class="vertical_line"></div>
+                <div class="cut disabled">
+                  <img alt="cut" width="25" height="25" src="/assets/gui/components/cut.webp" />
+                </div>
+                <div class="copy disabled">
+                  <img alt="copy" width="25" height="25" src="/assets/gui/components/copy.webp" />
+                </div>
+                <div class="paste disabled">
+                  <img alt="paste" width="25" height="25" src="/assets/gui/components/paste.webp" />
+                </div>
+                <div class="vertical_line"></div>
+                <div class="new" data-tooltip="Open Photo Viewer">
+                  <img alt="new" width="25" height="25" src="/assets/gui/components/newmsg.webp" />
+                  <span>New</span>
+                </div>
+                <div class="attach disabled" data-tooltip="Open Media Player">
+                  <img alt="attach" width="25" height="25" src="/assets/gui/components/attach.webp" />
+                </div>
+                <div class="vertical_line"></div>
+                <div class="sign disabled">
+                  <img alt="sign" width="25" height="25" src="/assets/gui/components/sign.webp" />
+                </div>
+              </div>
+            </div>
+            <!-- End Toolbar -->
+
+            <div class="main-content">
+                <div class="email-fields">
+                    <div class="field-row">
+                        <div class="field-label">
+                            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='14.5' fill='none' stroke='black' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'><rect x='2.5' y='1.75' width='11' height='11' rx='2' fill='none'/><circle cx='8' cy='6.75' r='2'/><path d='M5.5 11.25c0-1.5 5-1.5 5 0'/></svg>" alt="Address Book">To:
+                        </div>
+                        <input
+                            type="text"
+                            class="field-input readonly"
+                            value="mitchqqis@gmail.com"
+                            readonly
+                            id="contact-name"
+                            name="contact-name"
+                        />
+                    </div>
+
+                    <div class="field-row">
+                        <div class="field-label">From:</div>
+                        <input
+                            type="text"
+                            class="field-input"
+                            value=""
+                            placeholder="Your email address"
+                            id="contact-email"
+                            name="contact-email"
+                        />
+                    </div>
+
+                    <div class="field-row">
+                        <div class="field-label">Subject:</div>
+                        <input
+                            type="text"
+                            class="field-input"
+                            value=""
+                            placeholder="Subject of your message"
+                            id="contact-subject"
+                            name="contact-subject"
+                        />
+                    </div>
+                </div>
+
+                <div class="email-body-container">
+                    <textarea id="contact-message" name="contact-message" class="email-body" placeholder="Write your message here"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <script type="module" src="script.js"></script> <!-- Link to external JS -->
+    </body>
+</html>

@@ -1,0 +1,109 @@
+/**
+ * Common styles for iframe-based applications
+ * Ensures consistent rendering across different application windows
+ */
+
+/* Common settings for all application containers */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Generic styling for all iframe application containers */
+.window-body .mainwindow {
+    width: 100%;
+    min-width: 420px;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(255 0 0 / 20%);
+    font-family: Tahoma, Arial, sans-serif;
+    font-size: 11px;
+    box-sizing: border-box; /* Ensure padding/border included */
+    flex: 1; /* Allow mainwindow to grow/shrink within window-body */
+}
+
+.window-body a {
+    color: #0088e4;
+}
+
+/* Ensure main container fills the window body */
+.special-iframe-container .window-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Common styles for all iframe containers */
+.special-iframe-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+    position: relative;
+    background-color: rgb(0 255 0 / 20%);
+}
+
+/* Base styles for iframe containers */
+.special-iframe-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: block;
+}
+
+/* Add a custom shadow that doesn't affect layout */
+.special-iframe-container::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    box-shadow: inset 0 1px 3px rgb(0 0 0 / 10%);
+    border-radius: 0;
+    z-index: 5;
+}
+
+/* Style for iframe overlay used during window drag operations */
+.iframe-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: transparent;
+    z-index: 100;
+    display: none;
+}
+
+/* Fix for layout shift issue */
+html,
+body {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* Prevent iframe scroll from affecting parent */
+iframe {
+    overflow: hidden;
+}
+
+/* Make sure iframe links don't cause layout shifts */
+iframe a {
+    scroll-behavior: auto;
+}
+
+/* Fixed positioning for desktop to prevent shifting */
+.desktop {
+    position: fixed !important;
+    inset: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Remove @-moz-document block and scrollbar-width property for compatibility warnings */

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Notepad</title>
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/xp.css@0.2.3/dist/XP.css"
+            crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <!-- Menu bar markup for Windows XP-style UI -->
+        <div class="menu-bar-container">
+            <div class="menu-bar">
+                <div class="menu-item" data-menu="file">File</div>
+                <div class="menu-item disabled" data-menu="edit">Edit</div>
+                <div class="menu-item disabled" data-menu="format">Format</div>
+                <div class="menu-item disabled" data-menu="view">View</div>
+                <div class="menu-item disabled" data-menu="help">Help</div>
+            </div>
+        </div>
+                <div id="file-menu" class="dropdown-menu">
+                    <div class="menu-option" data-action="new">New</div>
+                    <div class="menu-option disabled">Open...</div>
+                    <div class="menu-option disabled">Save</div>
+                    <div class="menu-option disabled">Save As...</div>
+                    <div class="menu-separator"></div>
+                    <div class="menu-option disabled">Page Setup...</div>
+                    <div class="menu-option disabled">Print...</div>
+                    <div class="menu-separator"></div>
+                    <div class="menu-option" data-action="exit">Exit</div>
+        </div>
+
+        <div class="content-area">
+            <textarea id="notepad-editor" name="notepad-editor"></textarea>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-item">Ln 1, Col 1</div>
+            <div class="status-item">100%</div>
+            <div class="status-item">Windows (CRLF)</div>
+            <div class="status-item">ANSI</div>
+        </div>
+
+        <script type="module" src="script.js"></script>
+    </body>
+</html>
