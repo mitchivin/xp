@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mainImage = document.querySelector('.main-image');
 
   function updateImage() {
-    mainImage.src = `/assets/apps/photo-viewer/image${currentIndex}.webp`;
+    mainImage.src = "../../../assets/apps/photo-viewer/image" + currentIndex + ".webp";
   }
 
   // Slideshow logic
