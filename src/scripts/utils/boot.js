@@ -27,7 +27,6 @@ export function initBootSequence(eventBus, EVENTS) {
     // CRT effect elements
     const crtScanline = document.querySelector('.crt-scanline');
     const crtVignette = document.querySelector('.crt-vignette');
-    const crtGlow = document.querySelector('.crt-glow');
     
     // Check URL parameters for boot control
     const urlParams = new URLSearchParams(window.location.search);
@@ -69,7 +68,7 @@ export function initBootSequence(eventBus, EVENTS) {
         desktop.style.pointerEvents = 'auto';
         
         // CRT effects remain visible by default CSS
-        if (crtGlow) crtGlow.style.display = 'block';
+        // if (crtGlow) crtGlow.style.display = 'block';
     }
     
     /**
@@ -96,7 +95,6 @@ export function initBootSequence(eventBus, EVENTS) {
         // Hide CRT effects during boot animation
         if (crtScanline) crtScanline.style.display = 'none';
         if (crtVignette) crtVignette.style.display = 'none';
-        if (crtGlow) crtGlow.style.display = 'none';
         
         // Activate boot screen
         if (!bootScreen) {
@@ -152,8 +150,7 @@ export function initBootSequence(eventBus, EVENTS) {
         // Restore CRT effects after login
         if (crtScanline) crtScanline.style.display = 'block'; 
         if (crtVignette) crtVignette.style.display = 'block';
-        if (crtGlow) crtGlow.style.display = 'block';
-
+        
         // Trigger a custom event to reinitialize scanline animation
         document.dispatchEvent(new CustomEvent('reinitScanline'));
 
@@ -230,7 +227,6 @@ export function initBootSequence(eventBus, EVENTS) {
                 // Hide CRT effects
                 if (crtScanline) crtScanline.style.display = 'none';
                 if (crtVignette) crtVignette.style.display = 'none';
-                if (crtGlow) crtGlow.style.display = 'none';
                 
                 // Prepare login screen (hidden but ready)
                 loginScreen.style.display = 'flex';
@@ -284,7 +280,6 @@ export function initBootSequence(eventBus, EVENTS) {
             // Hide CRT effects during login screen
             if (crtScanline) crtScanline.style.display = 'none';
             if (crtVignette) crtVignette.style.display = 'none';
-            if (crtGlow) crtGlow.style.display = 'none';
             
             // Show login screen
             loginScreen.style.display = 'flex';

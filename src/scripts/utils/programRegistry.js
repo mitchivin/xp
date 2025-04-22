@@ -79,16 +79,20 @@ const programData = {
         "Media Player",
         "start-menu/media-player.webp",
         "media-player",
-        { dimensions: { width: 750, height: 500 } }
+        { 
+            dimensions: { width: 750, height: 500 },
+            initialDynamicStatus: true,
+            initialStatusText: "Stopped"
+        }
     ),
     
     // System and Utility Programs
-    "help-support": createProgram(
-        "help-support",
-        "Help and Support",
+    "sys-info": createProgram(
+        "sys-info",
+        "System Information",
         "start-menu/help.webp",
-        "help-support", 
-        { dimensions: { width: 750, height: 550 }}
+        "sys-info", 
+        { dimensions: { width: 390, height: 475 }, canMinimize: false, canMaximize: false }
     ),
     "cmd-prompt": createProgram(
         "cmd-prompt", 
@@ -101,7 +105,8 @@ const programData = {
         "notepad", 
         "Notepad", 
         "start-menu/notepad.webp", 
-        "notepad"
+        "notepad",
+        { initialDynamicStatus: true }
     ),
     
     // Portfolio Content
@@ -110,39 +115,36 @@ const programData = {
         "About Me",
         "desktop/about-me.webp",
         "about-me",
-        { dimensions: { width: 800, height: 600 }}
+        { dimensions: { width: 800, height: 600 }, statusBarText: "Viewing information about Mitchell Ivin" }
     ),
     "contact-me": createProgram(
         "contact-me",
         "Contact Me",
         "desktop/email.webp",
         "contact-me",
-        { dimensions: { width: 600, height: 450 }}
+        { dimensions: { width: 600, height: 450 }, statusBarText: "Send a message" }
     ),
     "resume-pdf": createProgram(
         "resume-pdf",
         "Resume.pdf",
         "desktop/resume.webp",
         "resume-pdf",
-        { dimensions: { width: 700, height: 800 }}
+        { dimensions: { width: 700, height: 800 }, statusBarText: "Viewing Resume.pdf" }
     ),
 
     // Media Programs
-    "music-player": createProgram(
-        "music-player",
-        "Music Player",
-        "start-menu/music-player.webp",
-        "music-player",
-        { dimensions: { width: 500, height: 350 }}
-    ),
     // --- Photo Viewer Window Size ---
     // The default window size for the Photo Viewer is set here. Adjust width/height as needed.
     "my-pictures": createProgram(
         "my-pictures", 
-        "Photo Viewer", 
+        "My Photos", 
         "start-menu/photo-viewer.webp", 
         "photo-viewer", 
-        { dimensions: { width: 440, height: 561 }}
+        { 
+            dimensions: { width: 440, height: 561 }, 
+            initialDynamicStatus: true, 
+            initialStatusText: "image1.webp (1024x1024)"
+        }
     ),
     
     // Project Showcase Programs
@@ -151,7 +153,7 @@ const programData = {
         "My Projects", 
         "desktop/my-projects.webp", 
         "my-projects", 
-        { dimensions: { width: 1150, height: 775 }}
+        { dimensions: { width: 1150, height: 775 }, statusBarText: "Browsing project portfolio" }
     ),
 
     // Special format entries with custom properties

@@ -1,0 +1,25 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# App Module Conventions
+
+Each app in the portfolio simulation is located in its own subdirectory under [src/apps/](mdc:src/apps).
+
+## Structure
+- Each app has its own folder (e.g., [about-me](mdc:src/apps/about-me), [notepad](mdc:src/apps/notepad)).
+- Typical contents:
+  - `index.html`: App entry point, loaded in an iframe by the main OS window.
+  - `style.css`: App-specific styles, following UI conventions.
+  - `script.js`: App logic, imports shared utilities from [src/scripts/utils/](mdc:src/scripts/utils).
+  - `assets/`: App-specific images or resources (optional).
+
+## Conventions
+- All app scripts use `type="module"` and import shared utilities.
+- Menu bars and toolbars in apps use the shared setup functions from [src/scripts/utils/](mdc:src/scripts/utils).
+- App CSS and structure should follow the guidelines in [docs/ISSUES.md](mdc:docs/ISSUES.md) for pixel-perfect UI and consistent menu/toolbar behavior.
+
+---
+For more details, see [ISSUES.md](mdc:docs/ISSUES.md).
+

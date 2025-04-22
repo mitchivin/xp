@@ -73,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize CRT visual effects
     initRandomScanline();
-    initGlowEffect();
 });
 
 /**
@@ -144,42 +143,5 @@ function initRandomScanline() {
         // Begin the initial animation cycle after short delay
         // This allows initial page render to complete first
         setTimeout(startAnimation, 500);
-    }
-}
-
-/**
- * Initializes and manages the glow effect
- *
- * @description Ensures the CRT glow effect is properly displayed
- * on the desktop but hidden during boot sequence
- */
-function initGlowEffect() {
-    const glowElement = document.querySelector('.crt-glow');
-    if (!glowElement) return; // Exit if element doesn't exist
-
-    let isGlowActive = false;
-
-    // Activate glow on first desktop click
-    document.querySelector('.desktop').addEventListener(
-        'click',
-        () => {
-            if (!isGlowActive) {
-                glowElement.style.display = 'block';
-                isGlowActive = true;
-            }
-        },
-        { once: true }
-    );
-
-    // Listen for login success to ensure glow is active
-    document.addEventListener('reinitScanline', () => {
-        glowElement.style.display = 'block';
-        isGlowActive = true;
-    });
-
-    // For page refreshes when already on desktop
-    if (sessionStorage.getItem('logged_in') === 'true') {
-        glowElement.style.display = 'block';
-        isGlowActive = true;
     }
 } 

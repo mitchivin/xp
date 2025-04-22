@@ -3,7 +3,6 @@ import { handleExit } from '../../../src/scripts/utils/common.js';
 
 document.addEventListener('DOMContentLoaded', function () {
     const notepadEditor = document.getElementById('notepad-editor');
-    const statusLnCol = document.querySelector('.status-item:first-child');
 
     setupMenuBar({
         menuBarSelector: '.menu-bar',
@@ -38,7 +37,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const currentLine = lines.length;
         const currentCol = lines[lines.length - 1].length + 1;
 
-        // Update status bar
-        statusLnCol.textContent = `Ln ${currentLine}, Col ${currentCol}`;
+        // Update status bar via postMessage to the parent window
+        const statusText = `Ln ${currentLine}, Col ${currentCol}`;
+        // Send message only if running inside an iframe (parent exists)
+        if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'updateStatusBar', text: statusText }, window.location.origin || '*');
+        }
     }
 });

@@ -84,13 +84,9 @@ export default class StartMenu {
                     <img src="./assets/gui/start-menu/media-player.webp" alt="Media Player">
                     Media Player
                 </li>
-                <li class="all-programs-item" data-program-name="music-player">
-                    <img src="./assets/gui/start-menu/music-player.webp" alt="Music Player">
-                    Music Player
-                </li>
                 <li class="all-programs-item" data-program-name="my-pictures">
-                    <img src="./assets/gui/start-menu/photo-viewer.webp" alt="Photo Viewer">
-                    Photo Viewer
+                    <img src="./assets/gui/start-menu/photo-viewer.webp" alt="My Photos">
+                    My Photos
                 </li>
                 <li class="all-programs-item" data-program-name="notepad">
                     <img src="./assets/gui/start-menu/notepad.webp" alt="Notepad">
@@ -302,21 +298,21 @@ export default class StartMenu {
                             </div>
                         </li>
                         <li class="menu-item" id="menu-photo-viewer" data-action="open-program" data-program-name="my-pictures">
-                            <img src="./assets/gui/start-menu/photo-viewer.webp" alt="Photo Viewer">
+                            <img src="./assets/gui/start-menu/photo-viewer.webp" alt="My Photos">
                             <div class="item-details">
-                                <span class="item-title">Photo Viewer</span>
+                                <span class="item-title">My Photos</span>
+                            </div>
+                        </li>
+                        <li class="menu-item" id="menu-cmd-prompt" data-action="open-program" data-program-name="cmd-prompt">
+                            <img src="./assets/gui/start-menu/command-prompt.webp" alt="Command Prompt">
+                            <div class="item-content">
+                                <span class="item-title" style="font-weight: normal; padding: 5px 0;">Command Prompt</span>
                             </div>
                         </li>
                         <li class="menu-item" id="menu-notepad" data-action="open-program" data-program-name="notepad">
                             <img src="./assets/gui/start-menu/notepad.webp" alt="Notepad">
                             <div class="item-content">
                                 <span class="item-title">Notepad</span>
-                            </div>
-                        </li>
-                        <li class="menu-item" id="menu-music-player" data-action="open-program" data-program-name="music-player">
-                            <img src="./assets/gui/start-menu/music-player.webp" alt="Music Player">
-                            <div class="item-content">
-                                <span class="item-title">Music Player</span>
                             </div>
                         </li>
                     </ul>
@@ -362,16 +358,10 @@ export default class StartMenu {
                             </div>
                         </li>
                         <li class="menu-divider right-section-divider"><hr class="divider"></li>
-                        <li class="menu-item" id="menu-cmd-prompt" data-action="open-program" data-program-name="cmd-prompt">
-                            <img src="./assets/gui/start-menu/command-prompt.webp" alt="Command Prompt">
-                            <div class="item-content">
-                                <span class="item-title" style="font-weight: normal; padding: 5px 0;">Command Prompt</span>
-                            </div>
-                        </li>
-                        <li class="menu-item" id="menu-help-support" data-action="open-program" data-program-name="help-support">
-                            <img src="./assets/gui/start-menu/help-and-support.webp" alt="Help and Support">
+                        <li class="menu-item" id="menu-help-support" data-action="open-program" data-program-name="sys-info">
+                            <img src="./assets/gui/start-menu/help.webp" alt="System Information">
                             <div class="item-details">
-                                <span class="item-title">Help and Support</span>
+                                <span class="item-title">System Information</span>
                             </div>
                         </li>
                     </ul>

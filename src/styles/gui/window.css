@@ -1,7 +1,7 @@
 /* --- SCOPED APP WINDOW STYLES --- */
 .app-window {
-    border: 2px solid #0055ea;
-    border-top-width: 1px;
+    border: 2px solid #275cec;
+    border-top-width: 1.5px;
     border-radius: 8px;
     box-shadow: 1px 1px 6px rgb(0 0 0 / 40%);
     display: flex;
@@ -17,13 +17,11 @@
 }
 
 .app-window.active {
-    border-color: #0055ea;
-    box-shadow: 1px 1px 8px rgb(0 0 0 / 50%);
+    box-shadow: 1px 1px 4px rgb(0 0 0 / 50%);
 }
 
 .app-window:not(.active) {
-    border-color: #7399cf;
-    box-shadow: 1px 1px 4px rgb(0 0 0 / 20%);
+    box-shadow: 1px 1px 4px rgb(0 0 0 / 50%);
 }
 
 .app-window .title-bar {
@@ -268,14 +266,17 @@
 .window-inactive-mask {
     display: none;
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 38px;
     background-color: rgb(255 255 255 / 25%);
     pointer-events: none;
     z-index: 10;
-    border-radius: 8px 8px 3px 3px;
+    border-radius: 8px 8px 0 0;
 }
 
-.window:not(.active) .window-inactive-mask {
+.app-window:not(.active) .window-inactive-mask {
     display: block;
 }
 
@@ -440,3 +441,33 @@ iframe {
     border-color: transparent !important;
     overflow: hidden !important;
 }
+
+/* --- Notepad Status Bar Specific Styles --- */
+.status-bar.notepad-statusbar {
+    justify-content: flex-end; /* Align items to the right */
+}
+
+.status-bar.notepad-statusbar > p {
+    padding: 0 8px;
+    border-left: 1px solid #d7d7d7; /* Use left border for separators */
+    margin: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 11px;
+}
+
+.status-bar.notepad-statusbar > .status-bar-item-dynamic {
+    min-width: 80px; /* Ensure space for Ln/Col */
+    justify-content: center; /* Center Ln/Col text */
+}
+
+/* Remove border from the very first item (now the dynamic Ln/Col) */
+.status-bar.notepad-statusbar > p:first-child {
+    border-left: none;
+}
+
+/* --- End Notepad Status Bar Styles --- */
+
+
+/* --- BUTTON ROW STYLES (Example for potential use) --- */

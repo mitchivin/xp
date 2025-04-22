@@ -1,50 +1,34 @@
 ---
 description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 # Project Structure Guide
 
-This project simulates a Windows XP environment as a portfolio site. The main entry point is [index.html](mdc:index.html), which loads the desktop UI, boot/login sequence, and core scripts.
+This project is a web-based simulation of the Windows XP desktop environment, used as a creative portfolio.
 
-## Key Directories and Files
+## Main Entry Point
+- [index.html](mdc:index.html): Loads the desktop simulation and all core scripts/styles.
 
-- [index.html](mdc:index.html): Main entry point, loads the desktop, boot, and login screens, and initializes the simulation.
-- [scripts/main.js](mdc:scripts/main.js): Main JavaScript entry, initializes core UI components, event bus, and CRT effects.
-- [styles/main.css](mdc:styles/main.css): Main stylesheet, imports shared and GUI-specific CSS.
-- [assets/](mdc:assets): Contains images, sounds, and GUI assets for the simulation.
-- [docs/ISSUES.md](mdc:docs/ISSUES.md): Contains implementation notes, known issues, and UI conventions for apps.
-
-## Apps
-
-- All app modules are located in [apps/](mdc:apps), each in its own subdirectory (e.g., [about-me](mdc:apps/about-me), [notepad](mdc:apps/notepad)).
-- Each app typically contains:
-  - [index.html](mdc:apps/about-me/index.html): App entry point, loaded in an iframe by the main OS window.
-  - [style.css](mdc:apps/about-me/style.css): App-specific styles, following conventions in [ISSUES.md](mdc:docs/ISSUES.md).
-  - [script.js](mdc:apps/about-me/script.js): App logic, imports shared utilities from [scripts/utils/](mdc:scripts/utils).
-  - [assets/](mdc:apps/about-me/assets): App-specific images or resources.
-
-## Shared Utilities
-
-- [scripts/utils/boot.js](mdc:scripts/utils/boot.js): Handles boot animation, login, and session state.
-- [scripts/utils/menuBar.js](mdc:scripts/utils/menuBar.js): Shared menu bar logic for all apps.
-- [scripts/utils/toolbar.js](mdc:scripts/utils/toolbar.js): Shared toolbar logic for all apps.
-- [scripts/utils/common.js](mdc:scripts/utils/common.js): Shared actions (e.g., window exit) for all apps.
+## Source Code
+- [src/scripts/](mdc:src/scripts): Core logic, utilities, and GUI managers.
+  - [main.js](mdc:src/scripts/main.js): Main script for initializing the environment.
+  - [utils/](mdc:src/scripts/utils): Utility modules (menu bar, toolbar, event bus, etc.).
+  - [gui/](mdc:src/scripts/gui): GUI managers (window, desktop, taskbar, start menu).
+- [src/apps/](mdc:src/apps): Individual app modules (About Me, Notepad, etc.), each in its own subdirectory.
 
 ## Styles
-
-- [styles/](mdc:styles): Main and utility CSS files for the OS UI.
-- [styles/gui/](mdc:styles/gui): GUI-specific styles (windows, taskbar, start menu, etc.).
-- [styles/utils/](mdc:styles/utils): Utility and effect styles (CRT, reset, boot, login, etc.).
+- [src/styles/](mdc:src/styles): Main, GUI, and utility CSS files.
+  - [gui/](mdc:src/styles/gui): Styles for desktop, windows, taskbar, start menu, etc.
+  - [utils/](mdc:src/styles/utils): Utility and reset styles.
 
 ## Assets
+- [assets/](mdc:assets): Images, icons, sounds, and GUI assets.
+  - [gui/](mdc:assets/gui): GUI-related images and icons.
 
-- [assets/gui/](mdc:assets/gui): Desktop backgrounds, icons, and GUI images.
-- [assets/sounds/](mdc:assets/sounds): System sounds (e.g., login.wav).
+## Documentation
+- [docs/README.md](mdc:docs/README.md): Project overview and documentation index.
+- [docs/ISSUES.md](mdc:docs/ISSUES.md): Implementation notes, UI conventions, and known issues.
 
-## Conventions
-
-- All app scripts use `type="module"` and import shared utilities.
-- Menu bars and toolbars in apps use the shared setup functions from [scripts/utils/](mdc:scripts/utils).
-- App CSS and structure should follow the guidelines in [docs/ISSUES.md](mdc:docs/ISSUES.md) for pixel-perfect UI and consistent menu/toolbar behavior.
-
+---
+For more details on app/module conventions, see [ISSUES.md](mdc:docs/ISSUES.md).

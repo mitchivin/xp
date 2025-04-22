@@ -210,4 +210,64 @@ To ensure the Windows XP-style menu bar works perfectly in all apps, you must:
   - The import path to `menuBar.js` is correct.
 - If you see no errors but the menu still doesn't work, clear your browser cache and refresh.
 
-**Following these steps will ensure your menu bar works identically to the working apps and avoids common pitfalls.** 
+**Following these steps will ensure your menu bar works identically to the working apps and avoids common pitfalls.**
+
+## 5. ABOUT ME BACKGROUND IMAGE NOT SHOWING
+
+**Problem:**
+The background image (`bg.webp`) for the About Me section does not display, resulting in a missing or broken background.
+
+**Root Cause:**
+The CSS background-image path was set as a relative path from the CSS file to `./assets/apps/about-me/bg.webp`. However, since the CSS file is located at `src/apps/about-me/style.css` and the assets folder is at the project root, the path was incorrect for both local and GitHub Pages deployment.
+
+**Solution:**
+Update the background-image path in `src/apps/about-me/style.css` to use the correct relative path to the root-level assets directory:
+```css
+body, .scroll-content {
+  background-image: url("../../../assets/apps/about-me/bg.webp");
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: cover;
+  background-attachment: fixed;
+}
+```
+
+**How to Fix:**
+- Always ensure that asset paths in CSS are relative to the CSS file's location, not the HTML file.
+- For apps in `src/apps/[app]/`, the correct path to the root-level `assets` directory is typically `../../../assets/...`.
+- After updating the path, the background image will display correctly both locally and on GitHub Pages.
+
+**Reference:**
+If you encounter missing backgrounds in other apps, check the relative path from the CSS file to the asset, and adjust as needed to point to the root-level `assets` directory.
+
+## 6. ASSETS SHOW LOCALLY BUT NOT ON GITHUB PAGES
+
+**Problem:**
+Images and other assets (icons, backgrounds, etc.) display correctly in local/live preview but appear broken or missing when deployed to GitHub Pages (or other static hosts).
+
+**Root Causes:**
+1. **Incorrect Asset Paths:**
+   - Local/live preview servers often serve your site from the project root, so paths like `/assets/...` or `./assets/...` may work even if they're not correct for deployment.
+   - GitHub Pages serves your site from a subdirectory (e.g., `https://username.github.io/repo-name/`), so absolute paths (`/assets/...`) look for assets at the domain root, not your project folder.
+   - **Solution:** Always use relative paths from the file referencing the asset to the asset itself. For example, from `src/apps/about-me/index.html` to `assets/gui/components/back.webp`, use `../../../assets/gui/components/back.webp`.
+
+2. **Case Sensitivity:**
+   - Windows and Mac file systems are case-insensitive, but GitHub Pages (Linux servers) are case-sensitive. `assets/Gui/Back.webp` is different from `assets/gui/back.webp`.
+   - **Solution:** Double-check that all file and folder names match exactly (including case) in your code and in the repository.
+
+3. **Directory Structure Differences:**
+   - If your build process or deployment changes the directory structure, asset paths may break.
+   - **Solution:** Ensure your deployed directory structure matches your local structure, or update asset paths accordingly.
+
+4. **Files Not Pushed to Git:**
+   - Sometimes assets are not added to git or are ignored by `.gitignore`.
+   - **Solution:** Make sure all assets are tracked and pushed to your repository.
+
+**How to Fix:**
+- Use only relative paths for all asset references in HTML, CSS, and JS, based on the location of the referencing file.
+- Avoid leading slashes (`/assets/...`) in asset paths; use `./` or `../` as needed.
+- Double-check case and spelling of all asset references and filenames.
+- After pushing, verify the deployed site and check the browser console for 404 errors to identify broken asset links.
+
+**Reference:**
+If assets work locally but not on GitHub Pages, check the path, case, and directory structure first. This is the most common cause of asset issues in static web projects. 

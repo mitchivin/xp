@@ -97,6 +97,9 @@ class WMPlaylist extends EventTarget {
       if (this.#index > 0) {
          this.index = this.#index - 1;
          return true;
+      } else if (this.#items.length > 1) {
+         this.index = this.#items.length - 1;
+         return true;
       }
       return false;
    }
@@ -1189,6 +1192,10 @@ class WMPlayerElement extends HTMLElement {
       window.setTimeout((function() {
          this.#ready_to_autoplay = false;
       }).bind(this), 500);
+      
+      // --- Initial status update ---
+      // Use setTimeout to ensure the DOM is fully ready and initialStatusText from registry is likely set
+      setTimeout(() => this.#update_parent_status(), 0); 
    }
    
    //
@@ -1304,19 +1311,18 @@ class WMPlayerElement extends HTMLElement {
    //
    
    #on_playlist_current_item_changed(e) {
-      let index = e.detail.index;
-      let item  = e.detail.item;
-      
-      this.#media.pause();
+      let item = e.detail.item;
       if (item) {
          item.populateMediaElement(this.#media);
-      }
-      this.#update_current_time_readout(0);
-      this.#update_prev_next_state(0);
-      if (index > 0) {
+         this.#current_playlist_index_started = false;
          this.#set_is_stopped(false);
+         if (this.autoplay) {
+            queueMicrotask(() => this.play());
+         }
+      } else {
+         this.stop();
       }
-      this.#update_content_type_classes();
+      this.#update_parent_status();
    }
    #on_playlist_cleared() {
       this.#media.pause();
@@ -1329,7 +1335,6 @@ class WMPlayerElement extends HTMLElement {
    
    #on_playlist_modified() {
       let no_media = this.#playlist.empty();
-      // Disable Stop if no media, or if stopped, or if at the start
       if (no_media || this.#is_stopped || this.#media.currentTime === 0) {
          this.#stop_button.disabled = true;
          this.#hide_current_time_readout();
@@ -1368,7 +1373,7 @@ class WMPlayerElement extends HTMLElement {
    #on_loaded_metadata(e) {
       this.#media.width  = this.#media.videoWidth  || 0;
       this.#media.height = this.#media.videoHeight || 0;
-      this.#update_content_type_classes(); // we rely on metadata for older browsers
+      this.#update_content_type_classes();
    }
    #on_duration_change(e) {
       let duration = this.#media.duration;
@@ -1381,7 +1386,7 @@ class WMPlayerElement extends HTMLElement {
       let time = this.#media.currentTime;
       this.#seek_slider.value = time;
       this.#update_current_time_readout(time);
-      {  // Update the state of the "Previous" button (with debouncing)
+      {
          let now = Date.now();
          if (now - this.#_last_prev_enable_state_check > 100) {
             this.#_last_prev_enable_state_check = now;
@@ -1398,9 +1403,8 @@ class WMPlayerElement extends HTMLElement {
    }
    
    #on_media_play(e) {
-      this.#playlist.markAsPlayed();
-      this.#set_is_stopped(false);
-      this.#update_play_state();
+      this.#is_stopped = false; 
+      this.#update_play_state(); 
    }
    #on_media_ended(e) {
       //
@@ -1450,15 +1454,26 @@ class WMPlayerElement extends HTMLElement {
       }
    }
    #update_play_state() {
-      if (this.#media.paused) {
-         this.#internals.states.add("paused");
-         this.#internals.states.delete("playing");
+      if (this.#is_stopped) {
+         this.#play_pause_button.textContent = "Play";
          this.#play_pause_button.title = "Play";
+         this.#internals.states.delete("playing");
+         this.#internals.states.delete("paused");
+         this.#internals.states.add("stopped");
+      } else if (this.#media.paused) {
+         this.#play_pause_button.textContent = "Play";
+         this.#play_pause_button.title = "Play";
+         this.#internals.states.delete("playing");
+         this.#internals.states.add("paused");
+         this.#internals.states.delete("stopped");
       } else {
+         this.#play_pause_button.textContent = "Pause";
+         this.#play_pause_button.title = "Pause";
          this.#internals.states.add("playing");
          this.#internals.states.delete("paused");
-         this.#play_pause_button.title = "Pause";
+         this.#internals.states.delete("stopped");
       }
+      this.#update_parent_status(); // Update status bar based on final state
    }
    
    //
@@ -1783,6 +1798,7 @@ class WMPlayerElement extends HTMLElement {
       }
    }
    #set_is_stopped(v) {
+      v = !!v;
       this.#is_stopped = v;
       if (v) {
          this.#playlist.index = 0;
@@ -1797,6 +1813,26 @@ class WMPlayerElement extends HTMLElement {
          this.#stop_button.disabled = false;
       }
    }
+   
+   // --- Add helper for status bar updates ---
+   #update_parent_status() {
+       if (window.parent && window.parent !== window) {
+           let statusText = "Stopped";
+           const currentSrc = this.#media.src || "";
+           const filename = currentSrc.substring(currentSrc.lastIndexOf('/') + 1) || "Unknown";
+
+           if (!this.#is_stopped) {
+               if (this.#media.paused) {
+                   statusText = `Paused: ${filename}`;
+               } else {
+                   statusText = `Playing: ${filename}`;
+               }
+           }
+           
+           window.parent.postMessage({ type: 'updateStatusBar', text: statusText }, window.location.origin || '*');
+       }
+   }
+   // --- End helper ---
 };
 customElements.define(
    "wm-player",

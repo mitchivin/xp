@@ -3,7 +3,7 @@
  */
 import programData from '../utils/programRegistry.js';
 import { EVENTS } from '../utils/eventBus.js';
-import { getPreloadedIframe } from '../utils/iframePreloader.js'; // Import preloader getter
+import { getPreloadedIframe, getPersistentIframe } from '../utils/iframePreloader.js'; // Import preloader and persistent preloader getters
 
 const TASKBAR_HEIGHT = 30; // Define constant taskbar height
 
@@ -21,6 +21,22 @@ class WindowTemplates {
         // Handle standard iframe apps via appPath - TRY PRELOADED FIRST
         if (templateName === 'iframe-standard' && programConfig?.appPath) {
             const programKey = programConfig.id.replace('-window', '');
+            // Special handling for persistent media-player iframe
+            if (programKey === 'media-player') {
+                const persistentIframe = getPersistentIframe(programKey);
+                if (persistentIframe) {
+                    const container = this.createEmptyContainer();
+                    container.classList.add('iframe-container');
+                    persistentIframe.style.position = '';
+                    persistentIframe.style.left = '';
+                    persistentIframe.style.top = '';
+                    persistentIframe.style.width = '100%';
+                    persistentIframe.style.height = '100%';
+                    persistentIframe.style.display = '';
+                    container.appendChild(persistentIframe);
+                    return container;
+                }
+            }
             const preloadedIframe = getPreloadedIframe(programKey);
             if (preloadedIframe) {
                 const container = this.createEmptyContainer();
@@ -98,6 +114,9 @@ export default class WindowManager {
         this.baseZIndex = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--z-window')) || 100;
         this.windowsContainer = document.getElementById('windows-container');
         this.zIndexStack = []; // Array to track window stacking order (IDs)
+        // --- Multi-column cascade state ---
+        this.cascadeColumn = 0;
+        this.cascadeRow = 0;
         
         this._setupGlobalHandlers();
         this._subscribeToEvents();
@@ -124,6 +143,11 @@ export default class WindowManager {
                 this.minimizeWindow(windowElement);
             } else if (event.data?.type === 'close-window') {
                 this.closeWindow(windowElement);
+            } else if (event.data?.type === 'updateStatusBar' && typeof event.data.text === 'string') {
+                // Handle status bar updates from specific apps (like Notepad)
+                if (windowElement.statusBarField) {
+                    windowElement.statusBarField.textContent = event.data.text;
+                }
             }
         }, true);
     }
@@ -145,6 +169,57 @@ export default class WindowManager {
             console.error(`Invalid program data for: ${programName}`);
             return;
         }
+
+        // === Standalone Overlay Support ===
+        if (program.standalone) {
+            // Prevent multiple overlays
+            if (document.getElementById('standalone-overlay')) {
+                return;
+            }
+            // Create overlay container
+            const overlay = document.createElement('div');
+            overlay.id = 'standalone-overlay';
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100vw';
+            overlay.style.height = '100vh';
+            overlay.style.display = 'flex';
+            overlay.style.zIndex = '2';
+            overlay.style.pointerEvents = 'none'; // Overlay does not block clicks
+            overlay.style.background = 'none'; // No dark background
+
+            // Create iframe for the app
+            const iframe = document.createElement('iframe');
+            iframe.src = program.appPath;
+            iframe.style.border = 'none';
+                iframe.style.width = '100vw';
+                iframe.style.height = '100vh';
+            iframe.style.borderRadius = '';
+            iframe.style.background = '';
+            iframe.setAttribute('allow', 'autoplay');
+            iframe.setAttribute('title', program.title);
+            iframe.style.pointerEvents = 'auto'; // Only the player is clickable
+
+            overlay.appendChild(iframe);
+            const desktopElement = document.querySelector('.desktop');
+            if (desktopElement) {
+                document.body.insertBefore(overlay, desktopElement);
+            } else {
+                // Fallback if .desktop isn't found (shouldn't happen)
+                document.body.appendChild(overlay);
+            }
+
+            // Listen for close event from the iframe
+            window.addEventListener('message', function handleStandaloneClose(e) {
+                if (e.source === iframe.contentWindow && e.data && (e.data.type === 'close-overlay' || e.data.action === 'closeApp')) {
+                    overlay.remove();
+                    window.removeEventListener('message', handleStandaloneClose);
+                }
+            });
+            return;
+        }
+        // === End Standalone Overlay Support ===
         
         const existingWindow = document.getElementById(program.id);
         if (existingWindow) {
@@ -200,10 +275,51 @@ export default class WindowManager {
 
         this._addStartMenuOverlay(windowElement, content);
 
+        // Create Status Bar
+        const programName = program.id.replace('-window', ''); // Get program name
         const statusBar = document.createElement('div');
         statusBar.className = 'status-bar';
-        statusBar.innerHTML = '<p class="status-bar-field">Ready</p>';
+        
+        // --- Create main text field (dynamic or static) ---
+        const statusBarField = document.createElement('p');
+        statusBarField.className = 'status-bar-field'; // Class for the main/dynamic field
+        
+        // Determine initial text based on flags and program data
+        let initialText = 'Ready'; // Default fallback
+        if (program.initialDynamicStatus) {
+            initialText = program.initialStatusText || ''; // Use specific initial text or empty
+        } else if (program.statusBarText) {
+            initialText = program.statusBarText; // Use static text from registry
+        }
+        statusBarField.textContent = initialText;
+
+        // --- Add Notepad-specific static items --- 
+        if (programName === 'notepad') {
+            statusBar.classList.add('notepad-statusbar'); // Add class for flex layout
+            
+            // Append dynamic field (Ln/Col) FIRST for Notepad
+            statusBarField.classList.add('status-bar-item-dynamic');
+            // Set Notepad's initial text here, overriding the general initialText if needed
+            statusBarField.textContent = 'Ln 1, Col 1'; 
+            statusBar.appendChild(statusBarField);
+            
+            // Then append static items
+            ['ANSI', 'Windows (CRLF)', '100%'].forEach(text => {
+                const staticItem = document.createElement('p');
+                staticItem.className = 'status-bar-item-static';
+                staticItem.textContent = text;
+                statusBar.appendChild(staticItem);
+            });
+        } else {
+            // For other apps, just append the default/custom field
+             statusBar.appendChild(statusBarField);
+        }
+        
+        // Append the status bar to the window element itself
         windowElement.appendChild(statusBar);
+        
+        // Store reference for dynamic updates (always points to the main field)
+        windowElement.statusBarField = statusBarField; 
 
         const defaultWidth = 600;
         const defaultHeight = 400;
@@ -216,6 +332,7 @@ export default class WindowManager {
     
     _getWindowBaseHTML(program) {
         return `
+            <div class="window-inactive-mask"></div>
             <div class="title-bar">
                 <div class="title-bar-left">
                     <div class="title-bar-icon">
@@ -224,12 +341,11 @@ export default class WindowManager {
                     <div class="title-bar-text">${program.title}</div>
                 </div>
                 <div class="title-bar-controls">
-                    <button aria-label="Minimize" data-action="minimize"></button>
-                    <button aria-label="Maximize" data-action="maximize"></button>
+                    ${program.canMinimize !== false ? '<button aria-label="Minimize" data-action="minimize"></button>' : ''}
+                    ${program.canMaximize !== false ? '<button aria-label="Maximize" data-action="maximize"></button>' : ''}
                     <button aria-label="Close" data-action="close"></button>
                 </div>
             </div>
-            <div class="window-inactive-mask"></div>
         `;
     }
         
@@ -471,6 +587,22 @@ export default class WindowManager {
         if (!windowElement) return;
         const windowId = windowElement.id;
         
+        // Special handling for persistent media-player iframe
+        const programName = windowElement.getAttribute('data-program');
+        if (programName === 'media-player') {
+            const persistentIframe = getPersistentIframe('media-player');
+            if (persistentIframe && persistentIframe.parentNode) {
+                // Move it offscreen and hide it, but do not remove from DOM
+                persistentIframe.style.position = 'absolute';
+                persistentIframe.style.left = '-9999px';
+                persistentIframe.style.top = '-9999px';
+                persistentIframe.style.width = '1px';
+                persistentIframe.style.height = '1px';
+                persistentIframe.style.display = 'none';
+                document.body.appendChild(persistentIframe);
+            }
+        }
+        
         // First clean up internal state and taskbar
         this._handleWindowCloseCleanup(windowId);
 
@@ -490,7 +622,6 @@ export default class WindowManager {
         }
 
         // Update program data state
-        const programName = windowElement.getAttribute('data-program');
         if (programName && this.programData[programName]) {
             this.programData[programName].isOpen = false;
         }
@@ -683,35 +814,38 @@ export default class WindowManager {
     }
     
     positionWindowCascade(windowElement) {
-        const position = this._calculateCascadePosition(this.windowCount);
-        const windowHeight = parseInt(windowElement.style.height) || 400; // Get window height
+        const windowHeight = parseInt(windowElement.style.height) || 400;
         const viewportHeight = document.documentElement.clientHeight;
-        
-        // ** Corrected Logic Start **
         const maxTop = viewportHeight - windowHeight - TASKBAR_HEIGHT;
+        // Calculate position using current column/row
+        const position = this._calculateCascadePosition(this.cascadeColumn, this.cascadeRow);
         let adjustedTop = position.y;
-
         if (adjustedTop > maxTop) {
             adjustedTop = Math.max(0, maxTop);
         }
-        adjustedTop = Math.max(0, adjustedTop); // Ensure top is not negative
-        // ** Corrected Logic End **
-
+        adjustedTop = Math.max(0, adjustedTop);
         windowElement.style.position = 'absolute';
         windowElement.style.left = position.x + 'px';
-        windowElement.style.top = adjustedTop + 'px'; // Apply the adjusted top
+        windowElement.style.top = adjustedTop + 'px';
         windowElement.style.transform = 'none';
-
-        // Existing logic for resetting cascade and constraining
-        this.windowCount++;
-        const maxOffsetX = Math.min(document.documentElement.clientWidth * 0.6, document.documentElement.clientWidth - 300);
-        const maxOffsetY = Math.min(document.documentElement.clientHeight * 0.6, document.documentElement.clientHeight - 200);
-        const initialOffsetX = 120;
-        const initialOffsetY = 100;
-        if ((initialOffsetX + (this.windowCount * this.cascadeOffset)) > maxOffsetX ||
-            (initialOffsetY + (this.windowCount * this.cascadeOffset)) > maxOffsetY) {
-            this.windowCount = 1;
+        // --- Multi-column cascade logic ---
+        // Check if next window would overflow vertically
+        const nextRowY = 100 + ((this.cascadeRow + 1) * this.cascadeOffset);
+        const wouldOverflow = (nextRowY + windowHeight > viewportHeight - TASKBAR_HEIGHT - 20);
+        if (wouldOverflow) {
+            this.cascadeColumn++;
+            this.cascadeRow = 0;
+        } else {
+            this.cascadeRow++;
         }
+        // Optionally, reset columns if we go too far right (wrap around)
+        const maxOffsetX = Math.min(document.documentElement.clientWidth * 0.8, document.documentElement.clientWidth - 200);
+        const nextColX = 120 + (this.cascadeColumn * 200); // 200px per col
+        if (nextColX > maxOffsetX) {
+            this.cascadeColumn = 0;
+            this.cascadeRow = 0;
+        }
+        this.windowCount++;
     }
     
     positionWindowCustom(windowElement, posConfig) {
@@ -730,18 +864,15 @@ export default class WindowManager {
         }
     }
     
-    _calculateCascadePosition(windowCount) {
-        const viewportWidth = document.documentElement.clientWidth;
-        const viewportHeight = document.documentElement.clientHeight;
+    _calculateCascadePosition(col, row) {
         const initialOffsetX = 120;
-        const initialOffsetY = 100;
-        const offsetX = initialOffsetX + (windowCount * this.cascadeOffset);
-        const offsetY = initialOffsetY + (windowCount * this.cascadeOffset);
-        const maxOffsetX = Math.min(viewportWidth * 0.6, viewportWidth - 300);
-        const maxOffsetY = Math.min(viewportHeight * 0.6, viewportHeight - 200);
-        const finalX = offsetX > maxOffsetX ? initialOffsetX : offsetX;
-        const finalY = offsetY > maxOffsetY ? initialOffsetY : offsetY;
-        return { x: finalX, y: finalY };
+        const initialOffsetY = 50;
+        const columnSpacing = 500; // Each new column is 200px to the right
+        const columnYOffset = 20; // Each new column starts 40px lower
+        // Diagonal offset within a column, plus extra Y offset per column
+        const offsetX = initialOffsetX + (col * columnSpacing) + (row * this.cascadeOffset);
+        const offsetY = initialOffsetY + (col * columnYOffset) + (row * this.cascadeOffset);
+        return { x: offsetX, y: offsetY };
     }
     
     _calculateCustomPosition(windowElement, posConfig, windowWidth, windowHeight) {

@@ -250,7 +250,7 @@
     left: 0;
     width: 100%;
     height: 100vh;
-    z-index: 10101;
+    z-index: 100000;
     pointer-events: none;
     border-radius: var(--crt-curvature);
     overflow: hidden;
@@ -274,7 +274,7 @@
         transparent calc(var(--crt-scanline-width) + var(--crt-scanline-gap))
     );
     pointer-events: none;
-    z-index: 10101;
+    z-index: 100000;
     mix-blend-mode: multiply;
 }
 
@@ -298,7 +298,7 @@
     );
     pointer-events: none;
     opacity: 0.7; /* Increased from 0.5 */
-    z-index: 10101;
+    z-index: 100000;
     mix-blend-mode: multiply;
 }
 
@@ -321,7 +321,7 @@
     opacity: 0.3; /* Further reduced opacity */
 
     /* Animation will be controlled by JS */
-    z-index: 10102; /* Increased from 10002 */
+    z-index: 100001; /* Increased from 10002 */
     pointer-events: none;
     mix-blend-mode: screen;
     transform: translateY(0); /* Initial position */
@@ -339,7 +339,7 @@
     background: rgb(255 255 255 / var(--crt-flicker-opacity));
     opacity: 0;
     animation: flicker 15s infinite; /* Changed from 6s to 15s */
-    z-index: 10100; /* Increased from 9999 */
+    z-index: 100002; /* Increased from 9999 */
     pointer-events: none;
 }
 
@@ -352,22 +352,9 @@
     height: 100vh;
     background-color: transparent;
     pointer-events: none;
-    z-index: 10103; /* Increased from 10001 */
+    z-index: 100003; /* Increased from 10001 */
     mix-blend-mode: overlay;
     animation: crt-flicker 10s infinite; /* Changed from 4s to 10s */
-}
-
-/* CRT glow effect */
-.crt-glow {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    box-shadow: inset 0 0 80px var(--crt-glow-color);
-    pointer-events: none;
-    z-index: 10104; /* Increased from 9998 */
-    border-radius: var(--crt-curvature);
 }
 
 /* Vignette effect for more authentic feel - adjusted to minimize color distortion */
@@ -379,7 +366,7 @@
     height: 100vh;
     background: radial-gradient(ellipse at center, transparent 70%, rgb(0 0 0 / 8%) 100%);
     pointer-events: none;
-    z-index: 10105; /* Increased from 9997 */
+    z-index: 100005; /* Increased from 9997 */
     mix-blend-mode: multiply;
 }
 
@@ -395,7 +382,7 @@
     opacity: 0.05;
     animation: noise 0.5s steps(2) infinite;
     pointer-events: none;
-    z-index: 10106; /* Increased from 9996 */
+    z-index: 100006; /* Increased from 9996 */
 }
 
 /* Enhanced RGB chromatic aberration effect */
@@ -406,7 +393,7 @@
     width: 100%;
     height: 100vh;
     pointer-events: none;
-    z-index: 10107; /* Increased from 9995 */
+    z-index: 100007; /* Increased from 9995 */
     mix-blend-mode: screen;
     opacity: var(--crt-aberration-opacity);
 }
@@ -445,7 +432,7 @@
     height: 100vh;
     background: rgb(150 255 150 / 1%);
     pointer-events: none;
-    z-index: 10108; /* Increased from 9994 */
+    z-index: 100008; /* Increased from 9994 */
     mix-blend-mode: screen;
 }
 

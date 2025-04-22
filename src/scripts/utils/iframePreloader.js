@@ -5,6 +5,7 @@
 import programData from './programRegistry.js';
 
 const preloadedIframes = {};
+const persistentIframes = {};
 
 function preloadIframes() {
     Object.keys(programData).forEach(key => {
@@ -25,6 +26,9 @@ function preloadIframes() {
             document.body.appendChild(iframe); // Add to DOM to trigger loading
 
             preloadedIframes[key] = iframe;
+            if (key === 'media-player') {
+                persistentIframes[key] = iframe;
+            }
         }
     });
 }
@@ -56,4 +60,8 @@ function getPreloadedIframe(programKey) {
     return null; // Or throw error
 }
 
-export { preloadIframes, getPreloadedIframe }; 
+function getPersistentIframe(programKey) {
+    return persistentIframes[programKey] || null;
+}
+
+export { preloadIframes, getPreloadedIframe, getPersistentIframe }; 

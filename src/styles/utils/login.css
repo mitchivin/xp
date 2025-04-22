@@ -171,7 +171,7 @@
 .login-screen .text-wrap .name {
     font-size: 22px;
     font-weight: 400;
-    margin-bottom: 2px;
+    margin-bottom: 0.5px;
     letter-spacing: 0.25px;
 }
 
@@ -182,6 +182,7 @@
     color: #000080;
     line-height: 1.2;
     transition: color 0.3s;
+    margin-top: -2px;
 }
 
 .login-screen .turn-off {

@@ -57,7 +57,8 @@ body {
     cursor: text; /* Default text I-beam cursor */
 }
 
-/* Status Bar */
+/* Status Bar styles removed - Handled by WindowManager */
+/*
 .status-bar {
     display: flex;
     background-color: #f0f0f0;
@@ -79,6 +80,7 @@ body {
 .status-item:last-child {
     border-right: none;
 }
+*/
 
 /* === MenuBar Styles (Copied from reusable/MenuBar.css) === */
 /* Menu bar styles for Windows XP-like UI

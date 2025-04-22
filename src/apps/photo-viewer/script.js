@@ -17,8 +17,31 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentIndex = 1;
   const mainImage = document.querySelector('.main-image');
 
+  // --- Event handler for status bar update ---
+  const handleImageLoad = () => {
+      if (window.parent && window.parent !== window) {
+          const imageName = `image${currentIndex}.webp`;
+          const dimensions = `(${mainImage.naturalWidth}x${mainImage.naturalHeight})`;
+          const statusText = `${imageName} ${dimensions}`;
+          window.parent.postMessage({ type: 'updateStatusBar', text: statusText }, window.location.origin || '*');
+      }
+  };
+  
+  const handleImageError = () => {
+      if (window.parent && window.parent !== window) {
+          const imageName = `image${currentIndex}.webp`;
+          window.parent.postMessage({ type: 'updateStatusBar', text: imageName + ' (Error loading)' }, window.location.origin || '*');
+      }
+  };
+
+  // Add listeners ONCE
+  mainImage.addEventListener('load', handleImageLoad);
+  mainImage.addEventListener('error', handleImageError);
+
   function updateImage() {
-    mainImage.src = "../../../assets/apps/photo-viewer/image" + currentIndex + ".webp";
+    const imageName = `image${currentIndex}.webp`;
+    // Just update the src; the load/error listeners will handle the status update
+    mainImage.src = `../../../assets/apps/photo-viewer/${imageName}`;
   }
 
   // Slideshow logic

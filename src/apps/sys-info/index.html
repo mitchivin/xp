@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Information</title>
+  <link rel="stylesheet" href="https://unpkg.com/xp.css@0.2.3/dist/XP.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    html, body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      font-family: Tahoma, Verdana, Segoe UI, Arial, sans-serif;
+      font-size: 12px;
+      color: #222;
+    }
+    .sysinfo-container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+    .tabs {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 0;
+      width: 100%;
+      max-width: 100%;
+    }
+    menu[role="tablist"] {
+      display: flex;
+      border-bottom: 0.5px solid #b5b5b5;
+      margin: 0;
+      padding: 0;
+    }
+    menu[role="tablist"] > button[role="tab"] {
+      border: 0.5px solid #b5b5b5;
+      border-bottom: none;
+      background: #e0e0e0;
+      margin: 0;
+      padding: 3px 6px 6px 6px;
+      position: relative;
+      top: 2px;
+      box-shadow: none;
+      z-index: 1;
+      transition: none;
+      border-radius: 6px 6px 0 0;
+      font-family: Tahoma, Verdana, Segoe UI, Arial, sans-serif;
+      font-size: 12px;
+      font-weight: normal;
+      color: #222;
+    }
+    menu[role="tablist"] > button[role="tab"][aria-selected="true"] {
+      background: #fff;
+      color: #222;
+      box-shadow: none;
+      z-index: 2;
+      border-bottom: 0.5px solid #fff;
+      border-top: 2px solid #ffcc6f; /* XP orange highlight, thicker */
+      font-weight: normal;
+    }
+    .tab-content {
+      flex: 1 1 0;
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 0;
+      padding: 18px 12px 0 12px;
+      background: #fff;
+      border: 0.5px solid #b5b5b5;
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+      font-size: 12px;
+      font-family: inherit;
+      color: #222;
+      margin-bottom: 0;
+    }
+    .tab-content ul {
+      margin: 0 0 0 18px;
+      padding: 0;
+    }
+    .tab-content h2 {
+      margin-top: 0;
+      font-size: 1.2em;
+    }
+    .sysinfo-flex {
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      align-items: flex-start;
+      gap: 24px;
+    }
+    .sysinfo-left {
+      flex: 0 0 80px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 8px;
+    }
+    .sysinfo-img {
+      width: 60px;
+      height: auto;
+      display: block;
+      background: #fff;
+      border: none;
+    }
+    .sysinfo-right {
+      flex: 1 1 0;
+      min-width: 0;
+      padding-top: 8px;
+    }
+    .sysinfo-section {
+      margin-bottom: 18px;
+    }
+    .sysinfo-section-title {
+      font-weight: bold;
+      margin-bottom: 4px;
+      font-size: 12px;
+      color: #222;
+    }
+    .sysinfo-label {
+      font-weight: normal;
+      color: #222;
+    }
+    .sysinfo-value {
+      font-weight: normal;
+      color: #222;
+    }
+    .sysinfo-break {
+      height: 10px;
+      display: block;
+    }
+    menu[role="tablist"] > button[role="tab"]:focus {
+      outline: none;
+      box-shadow: none;
+    }
+    .window-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 14px;
+      margin-bottom: 2px;
+    }
+    .xp-btn {
+      font-family: Tahoma, Verdana, Segoe UI, Arial, sans-serif;
+      font-size: 12px;
+      padding: 2px 18px 3px 18px;
+      border: 1.5px solid #b5b5b5;
+      border-radius: 3px;
+      background: linear-gradient(to bottom, #fff 60%, #e5e5e5 100%);
+      color: #222;
+      box-shadow: 1px 1px 0 #fff inset, 0 1px 2px #bbb;
+      outline: none;
+      cursor: default;
+      transition: background 0.1s;
+    }
+    .xp-btn:active {
+      background: linear-gradient(to bottom, #e5e5e5 60%, #fff 100%);
+      border-color: #7b7b7b;
+    }
+    .devnotes-vertical {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100%;
+      width: 100%;
+      gap: 10px;
+    }
+    .devnotes-img-top {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 4px;
+      height: 80px;
+      min-height: 80px;
+      padding-left: 6px;
+      padding-right: 6px;
+    }
+    .devnotes-content {
+      width: 100%;
+      max-width: 340px;
+      margin: 0 auto;
+      text-align: left;
+      padding-left: 6px;
+      padding-right: 16px;
+    }
+    .tab-content.devnotes-tab {
+      padding-right: 34px;
+      padding-left: 24px;
+    }
+    .devnotes-img-top .sysinfo-img {
+      width: 62px;
+    }
+  </style>
+</head>
+<body>
+  <div class="sysinfo-container">
+    <section class="tabs" style="max-width: 100%">
+      <menu role="tablist" aria-label="System Information Tabs">
+        <button role="tab" aria-selected="true" aria-controls="tab-general" id="tab-general-btn">General</button>
+        <button role="tab" aria-selected="false" aria-controls="tab-devnotes" id="tab-devnotes-btn">Developer Notes</button>
+      </menu>
+      <article role="tabpanel" id="tab-general" aria-labelledby="tab-general-btn" class="tab-content">
+        <div class="sysinfo-flex">
+          <div class="sysinfo-left">
+            <img src="/assets/gui/components/sys-info.webp" alt="System Info" class="sysinfo-img" />
+          </div>
+          <div class="sysinfo-right">
+            <div class="sysinfo-section">
+              <div class="sysinfo-section-title">System:</div>
+              OS Simulation v1.0<br>
+              Developer: Mitchell Ivin<br>
+              Build Date: April 2025<br>
+            </div>
+            <div class="sysinfo-section">
+              <div class="sysinfo-section-title">Computer:</div>
+              Platform: HTML, CSS, JavaScript<br>
+              Engine: Pure vanilla code<br>
+              Runtime Environment: Web Browser
+            </div>
+            <div class="sysinfo-section">
+              <div class="sysinfo-section-title">Key Features:</div>
+              <ul>
+                <li>Authentic boot sequence with sound</li>
+                <li>Functional Start Menu and taskbar</li>
+                <li>Launchable XP-style applications</li>
+                <li>Draggable, modular windows</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article role="tabpanel" id="tab-devnotes" aria-labelledby="tab-devnotes-btn" class="tab-content devnotes-tab" hidden>
+        <div class="devnotes-vertical">
+          <div class="devnotes-img-top">
+            <img src="/assets/gui/components/dev-notes.webp" alt="Developer Notes" class="sysinfo-img" />
+          </div>
+          <div class="devnotes-content">
+            <h2>Developer Notes</h2>
+            <p>This project recreates the Windows XP desktop using only HTML, CSS, and JavaScript. The goal was to capture the look and feel of XP, including the Start Menu, taskbar, and window behavior.</p>
+            <p>It began as an experiment to see what someone with little coding experience could build with the help of AI coding agents. All work was guided and reviewed by me, using AI as a tool for learning and creation. No external frameworks were used.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+    <div class="window-buttons" style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px;">
+      <button class="xp-btn" type="button">OK</button>
+      <button class="xp-btn" type="button">Cancel</button>
+    </div>
+  </div>
+  <script>
+    // Simple tab switching logic
+    const tabs = document.querySelectorAll('menu[role="tablist"] > button');
+    const panels = document.querySelectorAll('article[role="tabpanel"]');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.setAttribute('aria-selected', 'false'));
+        tab.setAttribute('aria-selected', 'true');
+        panels.forEach(panel => panel.hidden = true);
+        const panel = document.getElementById(tab.getAttribute('aria-controls'));
+        if (panel) panel.hidden = false;
+      });
+    });
+
+    // Close window on OK or Cancel
+    document.querySelectorAll('.window-buttons .xp-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (window.parent !== window) {
+          window.parent.postMessage({ type: 'close-window' }, '*');
+        } else {
+          window.close();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

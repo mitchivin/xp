@@ -657,21 +657,21 @@ video::cue {
    position:   relative;
    min-height: var(--track-height);
    max-width:  100%;
-   
    user-select: none;
-   cursor: pointer;
-   
    --minimum: 0;
    --maximum: 100;
    --value:   0;
-   
    --fill-gradient: linear-gradient(to bottom, #7fc9fa, #014cb6, #619ff2);
-   
    --track-border-color-upper: #A8A8A9;
    --track-border-color-lower: #CECDCF;
-   
    /* private */
    --track-height: calc(4px * var(--scale, 1));
+}
+
+.track-full,
+.track-bare,
+.thumb {
+   cursor: pointer;
 }
 
 .track-full,
@@ -1303,14 +1303,32 @@ video::cue {
 }
 
 .basic-button:disabled,
+.controls button:disabled,
+.play-pause:disabled,
 .prev-rw:disabled,
 .next-ff:disabled {
+    cursor: default;
     opacity: 0.5;
-    /* Optionally, you can add pointer-events: none; and cursor: default; for better UX */
-    /* pointer-events: none; */
-    /* cursor: default; */
+}
+/* --- End media-player.buttons.css --- */
 
-    /* Remove or override the glyph column switch for disabled */
-    /* --glyph-current-col: var(--glyph-col-disabled); */
+/* Only show pointer cursor on interactive controls and slider thumb */
+.basic-button,
+.controls button,
+.play-pause,
+.prev-rw,
+.next-ff {
+    cursor: pointer;
+}
+
+wm-slider,
+wm-slider .thumb {
+    cursor: pointer;
+}
+
+/* Remove pointer from .track-full and .track-bare */
+.track-full,
+.track-bare {
+    cursor: default;
 }
 /* --- End media-player.buttons.css --- */ 

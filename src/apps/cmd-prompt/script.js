@@ -158,7 +158,7 @@ function println(text) {
 
 // Initialize the command prompt with the Windows XP version banner
 function init() {
-    println('Microsoft Windows XP [Version 5.1.2600]<br>(C) Copyright 1985-2001 Microsoft Corp.');
+    println('OS Simulation [Version 1.0]<br>Developed by Mitchell Ivin');
 }
 
 // Move the caret to the end of the input field and focus it
