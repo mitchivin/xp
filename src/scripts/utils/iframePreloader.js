@@ -11,7 +11,8 @@ function preloadIframes() {
     Object.keys(programData).forEach(key => {
         const program = programData[key];
         // Only preload iframes for programs that have an appPath
-        if (program.appPath) {
+        // SKIP preloading for media-player
+        if (program.appPath && key !== 'media-player') {
             const iframe = document.createElement('iframe');
             iframe.src = program.appPath;
             iframe.style.position = 'absolute';
@@ -26,9 +27,10 @@ function preloadIframes() {
             document.body.appendChild(iframe); // Add to DOM to trigger loading
 
             preloadedIframes[key] = iframe;
-            if (key === 'media-player') {
-                persistentIframes[key] = iframe;
-            }
+            // REMOVE persistent iframe logic for media-player
+            // if (key === 'media-player') {
+            //     persistentIframes[key] = iframe;
+            // }
         }
     });
 }

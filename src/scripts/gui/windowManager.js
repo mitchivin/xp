@@ -18,36 +18,12 @@ class WindowTemplates {
      * @returns {HTMLElement} DOM element containing the window content
      */
     static getTemplate(templateName, programConfig) {
-        // Handle standard iframe apps via appPath - TRY PRELOADED FIRST
+        // Handle standard iframe apps via appPath - ALWAYS CREATE NEW IFRAME FOR MEDIA PLAYER
         if (templateName === 'iframe-standard' && programConfig?.appPath) {
             const programKey = programConfig.id.replace('-window', '');
-            // Special handling for persistent media-player iframe
-            if (programKey === 'media-player') {
-                const persistentIframe = getPersistentIframe(programKey);
-                if (persistentIframe) {
-                    const container = this.createEmptyContainer();
-                    container.classList.add('iframe-container');
-                    persistentIframe.style.position = '';
-                    persistentIframe.style.left = '';
-                    persistentIframe.style.top = '';
-                    persistentIframe.style.width = '100%';
-                    persistentIframe.style.height = '100%';
-                    persistentIframe.style.display = '';
-                    container.appendChild(persistentIframe);
-                    return container;
-                }
-            }
-            const preloadedIframe = getPreloadedIframe(programKey);
-            if (preloadedIframe) {
-                const container = this.createEmptyContainer();
-                container.classList.add('iframe-container');
-                container.appendChild(preloadedIframe);
-                return container;
-            } else {
-                 // Fallback if not preloaded for some reason
-                console.warn(`No preloaded iframe for ${programKey}, creating standard iframe container.`);
-                return this.createIframeContainer(programConfig.appPath, programConfig.id);
-            }
+            // REMOVE persistent/preloaded iframe logic for media-player
+            // Always create a new iframe for media-player
+            return this.createIframeContainer(programConfig.appPath, programConfig.id);
         }
         
         // Create error container for invalid templates or non-iframe types
