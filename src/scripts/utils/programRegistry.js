@@ -153,7 +153,7 @@ const programData = {
         "My Projects", 
         "desktop/my-projects.webp", 
         "my-projects", 
-        { dimensions: { width: 1150, height: 775 }, statusBarText: "Browsing project portfolio" }
+        { dimensions: { width: 1050, height: 775 }, statusBarText: "Browsing project portfolio" }
     ),
 
     // Special format entries with custom properties
