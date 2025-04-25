@@ -276,7 +276,7 @@ video::cue {
    --height:  calc(62px * var(--scale,1) / (2 * 0.92));
    --padding: calc(4px * var(--scale,1));
    
-   --tray-spritesheet:            url(/assets/apps/mediaPlayer/icons/spritesheet-tray-background-overlay.svg);
+   --tray-spritesheet:            url(assets/apps/mediaPlayer/icons/spritesheet-tray-background-overlay.svg);
    --tray-spritesheet-w-unitless: 96;
    --tray-spritesheet-w:          calc(1px * var(--tray-spritesheet-w-unitless));
    --tray-spritesheet-h:          416px;
@@ -467,7 +467,7 @@ video::cue {
    --height:  calc(31px * var(--scale,1));
    --padding: 4px;
    
-   --tray-spritesheet:            url(/assets/apps/mediaPlayer/icons/spritesheet-tray-background-non-overlay.svg#lite);
+   --tray-spritesheet:            url(assets/apps/mediaPlayer/icons/spritesheet-tray-background-non-overlay.svg#lite);
    --tray-spritesheet-w-unitless: 52;
    --tray-spritesheet-w:          calc(1px * var(--tray-spritesheet-w-unitless));
    --tray-spritesheet-h:          219px;
@@ -607,7 +607,7 @@ video::cue {
    }
    
    .controls {
-      --tray-spritesheet: url(/assets/apps/mediaPlayer/icons/spritesheet-tray-background-non-overlay.svg#dark);
+      --tray-spritesheet: url(assets/apps/mediaPlayer/icons/spritesheet-tray-background-non-overlay.svg#dark);
       
       margin:  calc(var(--extra-diff) - 3px * var(--scale,1)) 0 var(--extra-diff) 0;
       
@@ -773,14 +773,14 @@ video::cue {
 
 :host(.constant-thumb) .thumb,
 :host(:hover) .thumb {
-   --sprite: url(/assets/apps/mediaPlayer/icons/spritesheet-slider-thumb.svg#normal);
+   --sprite: url(assets/apps/mediaPlayer/icons/spritesheet-slider-thumb.svg#normal);
 }
 :host(:hover:not(:active):not(:state(active))) .thumb:hover {
-   --sprite: url(/assets/apps/mediaPlayer/icons/spritesheet-slider-thumb.svg#hover);
+   --sprite: url(assets/apps/mediaPlayer/icons/spritesheet-slider-thumb.svg#hover);
 }
 :host(:active) .thumb,
 :host(:state(active)) .thumb {
-   --sprite: url(/assets/apps/mediaPlayer/icons/spritesheet-slider-thumb.svg#active);
+   --sprite: url(assets/apps/mediaPlayer/icons/spritesheet-slider-thumb.svg#active);
 }
 :host(:disabled) .thumb {
    display: none;
@@ -1025,14 +1025,14 @@ video::cue {
    width:  calc(23px * var(--scale,1));
    height: calc(23px * var(--scale,1));
    
-   --glass-spritesheet:   url(/assets/apps/mediaPlayer/icons/spritesheet-generic.svg);
+   --glass-spritesheet:   url(assets/apps/mediaPlayer/icons/spritesheet-generic.svg);
    --glass-sprite-width:  58px;
    --glass-sprite-height: 60px;
    --glass-sprite-scale:  2;
    --glass-x: -8px;
    --glass-y: -4px;
    
-   --glyph-spritesheet:      url(/assets/apps/mediaPlayer/icons/spritesheet-glyphs-general.svg);
+   --glyph-spritesheet:      url(assets/apps/mediaPlayer/icons/spritesheet-glyphs-general.svg);
    --glyph-spritesheet-rows: 5;
    --glyph-spritesheet-cols: 5;
    --glyph-x: -1.5px;
@@ -1113,7 +1113,7 @@ video::cue {
    }
 }
 :host(:is([data-overlay-controls], [data-theme="dark" i])) .basic-button {
-   --glyph-spritesheet: url(/assets/apps/mediaPlayer/icons/spritesheet-glyphs-general.svg#theater);
+   --glyph-spritesheet: url(assets/apps/mediaPlayer/icons/spritesheet-glyphs-general.svg#theater);
 }
 
 /*
@@ -1130,7 +1130,7 @@ video::cue {
       clip-path: ellipse(var(--radius) var(--radius) at center center);
    }
    
-   --glass-spritesheet:   url(/assets/apps/mediaPlayer/icons/spritesheet-jewel.svg);;
+   --glass-spritesheet:   url(assets/apps/mediaPlayer/icons/spritesheet-jewel.svg);;
    --glass-sprite-width:  100px;
    --glass-sprite-height: 100px;
    --glass-sprite-scale:  2;
@@ -1138,7 +1138,7 @@ video::cue {
    --glass-x: -7px;
    --glass-y: -8px;
    
-   --glyph-spritesheet:      url(/assets/apps/mediaPlayer/icons/spritesheet-glyphs-play-pause.svg);
+   --glyph-spritesheet:      url(assets/apps/mediaPlayer/icons/spritesheet-glyphs-play-pause.svg);
    --glyph-spritesheet-rows: 1;
    --glyph-spritesheet-cols: 2;
    
@@ -1191,7 +1191,7 @@ video::cue {
       );
    }
    
-   --glass-spritesheet:   url(/assets/apps/mediaPlayer/icons/spritesheet-next.svg);
+   --glass-spritesheet:   url(assets/apps/mediaPlayer/icons/spritesheet-next.svg);
    --glass-sprite-count:  5;
    --glass-sprite-width:  112px;
    --glass-sprite-height:  70px;
@@ -1200,7 +1200,7 @@ video::cue {
    --glass-x:  -5px;
    --glass-y: -12px;
    
-   --glyph-spritesheet:      url(/assets/apps/mediaPlayer/icons/spritesheet-glyphs-next.svg);
+   --glyph-spritesheet:      url(assets/apps/mediaPlayer/icons/spritesheet-glyphs-next.svg);
    --glyph-spritesheet-rows: 2;
    --glyph-spritesheet-cols: 2;
    
@@ -1228,11 +1228,11 @@ video::cue {
    */
    
    :host(:is([data-theme="dark" i])) & {
-      --glyph-spritesheet: url(/assets/apps/mediaPlayer/icons/spritesheet-glyphs-next.svg#white);
+      --glyph-spritesheet: url(assets/apps/mediaPlayer/icons/spritesheet-glyphs-next.svg#white);
    }
    :host(:is([data-overlay-controls]:not([data-overlay-controls="video-only"]))) &,
    :host(:is([data-overlay-controls="video-only"])) .main.video & {
-      --glyph-spritesheet: url(/assets/apps/mediaPlayer/icons/spritesheet-glyphs-next.svg#overlay);
+      --glyph-spritesheet: url(assets/apps/mediaPlayer/icons/spritesheet-glyphs-next.svg#overlay);
       &:not(:hover, :active),
       &:disabled {
          --glass-current-sprite: 4;

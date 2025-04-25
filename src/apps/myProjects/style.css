@@ -719,10 +719,6 @@ article {
 .project-img:hover .project-hover-preview {
   display: block;
 }
-.project-img:hover img {
-  opacity: 0.2;
-  transition: opacity 0.2s;
-}
 
 .gallery-arrow {
   position: absolute;
