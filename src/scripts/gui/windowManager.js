@@ -1,14 +1,27 @@
 /**
- * Window manager module for handling window operations
+ * @fileoverview Window manager module for handling all window operations in the Windows XP simulation.
+ * Handles window creation, focus, minimize, maximize, close, drag, cascade, and integration with the taskbar and event bus.
+ *
+ * Usage:
+ *   import WindowManager from './windowManager.js';
+ *   const windowManager = new WindowManager(eventBus);
+ *
+ * Edge Cases:
+ *   - If required DOM containers are missing, window creation will fail.
+ *   - If program registry is missing entries, unknown apps cannot be opened.
  */
 import programData from '../utils/programRegistry.js';
 import { EVENTS } from '../utils/eventBus.js';
-import { getPreloadedIframe, getPersistentIframe } from '../utils/iframePreloader.js'; // Import preloader and persistent preloader getters
+
 
 const TASKBAR_HEIGHT = 30; // Define constant taskbar height
 
 /**
- * Window Templates class - provides templates for different window types
+ * WindowTemplates provides templates for different window types (iframe, error, empty).
+ *
+ * @class
+ * @example
+ * const content = WindowTemplates.getTemplate('iframe-standard', programConfig);
  */
 class WindowTemplates {
     /**
@@ -21,8 +34,8 @@ class WindowTemplates {
         // Handle standard iframe apps via appPath - ALWAYS CREATE NEW IFRAME FOR MEDIA PLAYER
         if (templateName === 'iframe-standard' && programConfig?.appPath) {
             const programKey = programConfig.id.replace('-window', '');
-            // REMOVE persistent/preloaded iframe logic for media-player
-            // Always create a new iframe for media-player
+            
+            // Always create a new iframe for mediaPlayer
             return this.createIframeContainer(programConfig.appPath, programConfig.id);
         }
         
@@ -47,38 +60,138 @@ class WindowTemplates {
     }
 
     /**
-     * Creates an iframe container for apps (NOW MOSTLY A FALLBACK)
+     * Creates an iframe container for apps
      * @param {string} appPath - Path to the application's index.html
      * @param {string} windowId - The unique ID of the window element
      * @returns {HTMLElement} Container with an iframe
      */
     static createIframeContainer(appPath, windowId) {
-        console.log(`Fallback: Creating new iframe for ${windowId}`); // Debug
+        console.log(`Fallback: Creating new iframe for ${windowId}`); // Log iframe creation for debugging
         const container = document.createElement('div');
         container.className = 'window-body iframe-container'; 
         
+        // Special handling for mediaPlayer: show loading indicator for 2s, then reveal iframe
+        if (windowId === 'mediaPlayer-window') {
+            // Create loading indicator
+            const loading = document.createElement('div');
+            loading.className = 'window-loading-indicator';
+            // REMOVED TEXT, only show loader
+            loading.innerHTML = `<div class="loader"></div>`;
+
+            // Add spinner CSS if not present
+            if (!document.getElementById('window-loading-indicator-style')) {
+                const style = document.createElement('style');
+                style.id = 'window-loading-indicator-style';
+                // UPDATED CSS for simpler XP-style spinner
+                style.textContent = `
+                .window-loading-indicator {
+                  position: absolute;
+                  inset: 0;
+                  background: #000; /* Changed to black background */
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  z-index: 10;
+                  opacity: 1;
+                  transition: opacity 0.25s;
+                }
+                .window-loading-indicator.fade-out {
+                  opacity: 0;
+                  pointer-events: none;
+                }
+                .window-loading-indicator .loader {
+                  border: 4px solid rgba(255, 255, 255, 0.3); /* Lighter border */
+                  border-top: 4px solid #ffffff; /* White loading part */
+                  border-radius: 50%;
+                  width: 36px; /* Smaller size */
+                  height: 36px;
+                  animation: spin 1.5s linear infinite;
+                }
+                @keyframes spin {
+                  0% { transform: rotate(0deg);}
+                  100% { transform: rotate(360deg);}
+                }
+                `;
+                document.head.appendChild(style);
+            }
+            // Create iframe, hidden offscreen but loading
+            const iframe = document.createElement('iframe');
+            Object.assign(iframe, { src: appPath, title: `${windowId}-content` });
+            const attrs = {
+                frameborder: '0',
+                width: '100%',
+                height: '100%',
+                sandbox: 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals',
+                style: 'visibility:hidden; position:absolute; left:-9999px;'
+            };
+            for (const [attr, value] of Object.entries(attrs))
+                iframe.setAttribute(attr, value);
+            container.appendChild(loading);
+            container.appendChild(iframe);
+
+            // Logic for minimum 1-second display + readiness check
+            let ready = false;
+            let minTimePassed = false;
+
+            function tryFadeOut() {
+              if (ready && minTimePassed) {
+                console.log('Media Player Ready and Min Time Passed. Revealing...'); // Debug
+                loading.classList.add('fade-out');
+                iframe.style.visibility = 'visible';
+                iframe.style.position = '';
+                iframe.style.left = '';
+                setTimeout(() => loading.remove(), 300); // Remove after 0.3s fade
+                window.removeEventListener('message', onPlayerReady); // Clean up listener
+              }
+            }
+
+            // Timer for minimum display time
+            setTimeout(() => {
+              minTimePassed = true;
+              tryFadeOut();
+            }, 1000); // 1 second delay
+
+            // Listen for ready message from the iframe
+            function onPlayerReady(event) {
+                if (event.source === iframe.contentWindow && event.data && event.data.type === 'mediaPlayer-ready') {
+                    ready = true;
+                    tryFadeOut();
+                } else if (event.source === iframe.contentWindow) {
+                }
+            }
+            window.addEventListener('message', onPlayerReady);
+
+            return container;
+        }
+        // Default: create iframe immediately
         const iframe = document.createElement('iframe');
-        
-        // Set all iframe properties and attributes in one go
         Object.assign(iframe, { src: appPath, title: `${windowId}-content` });
-        
-        // Security and display attributes
         const attrs = {
             frameborder: '0',
             width: '100%',
             height: '100%',
             sandbox: 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals'
         };
-        
         for (const [attr, value] of Object.entries(attrs))
             iframe.setAttribute(attr, value);
-        
         container.appendChild(iframe);
         return container;
     }
 }
 
-export default class WindowManager {
+export default /**
+ * WindowManager handles all window operations, stacking, drag, focus, and taskbar integration.
+ *
+ * @class
+ * @example
+ * import WindowManager from './windowManager.js';
+ * const windowManager = new WindowManager(eventBus);
+ */
+class WindowManager {
+    /**
+     * Create a new WindowManager instance.
+     * @param {EventBus} eventBus - The event bus instance for communication.
+     */
     constructor(eventBus) {
         this.eventBus = eventBus;
         this.windows = {};
@@ -139,6 +252,11 @@ export default class WindowManager {
         this.eventBus.subscribe(EVENTS.TASKBAR_ITEM_CLICKED, data => this._handleTaskbarClick(data.windowId));
     }
     
+    /**
+     * Open a program window by name. Handles overlays and standard windows.
+     * @param {string} programName - The name/key of the program to open.
+     * @returns {void}
+     */
     openProgram(programName) {
         const program = this.programData[programName];
         if (!program || !program.id) {
@@ -211,6 +329,12 @@ export default class WindowManager {
         if (program.isOpen) {
             program.isOpen = false;
         }
+
+        // TODO: Integrate iframe preloading.
+        // The following calls retrieve preloaded/persistent iframes but they are currently unused.
+        // The actual iframe is created later in _createWindowElement -> WindowTemplates.getTemplate.
+        // const iframe = getPreloadedIframe(programName);
+        // const persistentIframe = getPersistentIframe(programName);
 
         const windowElement = this._createWindowElement(program);
         if (!windowElement) return;
@@ -490,8 +614,10 @@ export default class WindowManager {
     }
     
     _handleWindowMinimize(windowId) {
-        this._setWindowState(windowId, 'minimized');
-        this._refreshActiveWindow();
+        const windowElement = this.windows[windowId];
+        if (windowElement) {
+            this.minimizeWindow(windowElement);
+        }
     }
     
     _handleWindowCloseCleanup(windowId) {
@@ -552,32 +678,19 @@ export default class WindowManager {
                 taskbarItem.classList.add('active');
             }
         }
-    }
+
+        }
     
-    _setWindowState(windowId, state) {
-        // Helper to handle state changes triggered by events (future use?)
-        // Currently handled directly by minimize/maximize/restore etc.
-    }
-    
+    /**
+     * Close a window and clean up associated DOM and taskbar items.
+     * @param {HTMLElement} windowElement - The window DOM element to close.
+     * @returns {void}
+     */
     closeWindow(windowElement) {
         if (!windowElement) return;
         const windowId = windowElement.id;
         
-        // Special handling for persistent media-player iframe
-        const programName = windowElement.getAttribute('data-program');
-        if (programName === 'media-player') {
-            const persistentIframe = getPersistentIframe('media-player');
-            if (persistentIframe && persistentIframe.parentNode) {
-                // Move it offscreen and hide it, but do not remove from DOM
-                persistentIframe.style.position = 'absolute';
-                persistentIframe.style.left = '-9999px';
-                persistentIframe.style.top = '-9999px';
-                persistentIframe.style.width = '1px';
-                persistentIframe.style.height = '1px';
-                persistentIframe.style.display = 'none';
-                document.body.appendChild(persistentIframe);
-            }
-        }
+        // No special handling for mediaPlayer; close like any other window
         
         // First clean up internal state and taskbar
         this._handleWindowCloseCleanup(windowId);
@@ -606,6 +719,11 @@ export default class WindowManager {
         this.eventBus.publish(EVENTS.WINDOW_CLOSED, { windowId });
     }
     
+    /**
+     * Minimize a window (hide and update taskbar state).
+     * @param {HTMLElement} windowElement - The window DOM element to minimize.
+     * @returns {void}
+     */
     minimizeWindow(windowElement) {
          if (!windowElement || windowElement.windowState.isMinimized) return;
 
@@ -631,6 +749,11 @@ export default class WindowManager {
         this.eventBus.publish(EVENTS.WINDOW_MINIMIZED, { windowId: windowElement.id });
     }
     
+    /**
+     * Restore a minimized window to its previous state and focus.
+     * @param {HTMLElement} windowElement - The window DOM element to restore.
+     * @returns {void}
+     */
     restoreWindow(windowElement) {
         if (!windowElement || !windowElement.windowState.isMinimized) return;
 
@@ -645,6 +768,11 @@ export default class WindowManager {
         this.bringToFront(windowElement);
     }
     
+    /**
+     * Toggle maximize/restore for a window.
+     * @param {HTMLElement} windowElement - The window DOM element to maximize/restore.
+     * @returns {void}
+     */
     toggleMaximize(windowElement) {
         if (!windowElement) return;
         const state = windowElement.windowState;
@@ -710,6 +838,11 @@ export default class WindowManager {
         }
     }
     
+    /**
+     * Bring the specified window to the front/top of the stack.
+     * @param {HTMLElement} windowElement - The window DOM element to bring to front.
+     * @returns {void}
+     */
     bringToFront(windowElement) {
         if (!windowElement || this.activeWindow === windowElement || windowElement.windowState.isMinimized) {
             return;
@@ -739,6 +872,11 @@ export default class WindowManager {
         }
     }
     
+    /**
+     * Deactivate all windows except the optionally specified one.
+     * @param {HTMLElement|null} excludeWindow - A window to exclude from deactivation.
+     * @returns {void}
+     */
     deactivateAllWindows(excludeWindow = null) {
         Object.values(this.windows).forEach(win => {
             if (win !== excludeWindow) {
@@ -939,6 +1077,12 @@ export default class WindowManager {
         }
     }
     
+    /**
+     * Make a window draggable by its handle element.
+     * @param {HTMLElement} windowElement - The window DOM element to drag.
+     * @param {HTMLElement} handleElement - The handle (e.g., titlebar) to initiate drag.
+     * @returns {void}
+     */
     makeDraggable(windowElement, handleElement) {
         let isDragging = false;
         let startX, startY, initialX, initialY;

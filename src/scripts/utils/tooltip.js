@@ -1,6 +1,14 @@
 /**
- * Provides a utility for displaying tooltips on elements that match a selector.
- * Tooltips appear on hover and are positioned relative to the element.
+ * @fileoverview Utility for displaying tooltips on elements in the Windows XP simulation.
+ * Tooltips appear on hover, are positioned relative to the element, and are styled for XP look.
+ *
+ * Usage:
+ *   import { setupTooltips } from './tooltip.js';
+ *   setupTooltips('.has-tooltip');
+ *
+ * Edge Cases:
+ *   - If an element does not have a tooltip text (via data-tooltip or title), no tooltip is shown.
+ *   - If the tooltip would overflow the viewport, it is repositioned to stay visible.
  */
 
 /**
@@ -9,6 +17,17 @@
  * @param {string} selector - CSS selector for elements that should have tooltips.
  * @param {HTMLElement} [tooltipContainer=document.body] - The container where the tooltip will be appended.
  * @param {number} [delay=100] - Delay in milliseconds before hiding the tooltip after mouseleave.
+ */
+/**
+ * Set up tooltips for all elements matching the selector. Tooltips are shown on hover and hidden on mouse leave or click.
+ *
+ * @param {string} selector - CSS selector for elements that should have tooltips.
+ * @param {HTMLElement} [tooltipContainer=document.body] - The container where the tooltip will be appended.
+ * @param {number} [delay=100] - Delay in milliseconds before hiding the tooltip after mouseleave.
+ * @returns {void}
+ * @example
+ * // Attach tooltips to all elements with the class 'has-tooltip'
+ * setupTooltips('.has-tooltip');
  */
 export function setupTooltips(selector, tooltipContainer = document.body, delay = 100) {
     let activeTooltip = null;
@@ -79,9 +98,13 @@ export function setupTooltips(selector, tooltipContainer = document.body, delay 
  * Calculate the top and left position for the tooltip so it appears below the element and stays within the viewport.
  *
  * @param {HTMLElement} element - The element the tooltip is for.
- * @param {HTMLElement} tooltipElement - The tooltip element.
- * @param {DOMRect|Object} containerRect - The bounding rect of the tooltip container.
+ * @param {HTMLElement} tooltipElement - The tooltip element (must already be in the DOM).
+ * @param {DOMRect|Object} containerRect - The bounding rect of the tooltip container (usually document.body or a custom container).
  * @returns {{top: number, left: number}} The calculated top and left position for the tooltip.
+ *
+ * @example
+ * const pos = _calculateTooltipPosition(elem, tooltipElem, document.body.getBoundingClientRect());
+ * // pos.top, pos.left can be used to set tooltip position
  */
 function _calculateTooltipPosition(element, tooltipElement, containerRect) {
     const targetRect = element.getBoundingClientRect();

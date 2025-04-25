@@ -266,7 +266,7 @@
 
 /* Apply bold ONLY to specific items - using ID selectors for reliability */
 #menu-email .item-title,
-#menu-my-projects .item-title,
+#menu-internet .item-title,
 .all-programs-button span, /* Changed from .all-programs-button to target span */
 #menu-instagram .item-title,
 #menu-linkedin .item-title,
@@ -666,12 +666,12 @@
 }
 
 /* Make portfolio items bold */
-.middle-right .menu-item#menu-my-projects .item-title {
+.middle-right .menu-item#menu-internet .item-title {
     font-weight: 600;
 }
 
 /* Ensure portfolio items have the same height as program items */
-.middle-right .menu-item#menu-my-projects {
+.middle-right .menu-item#menu-internet {
     padding: 8px 7.5px 8px 9px;
     height: 36px; /* Changed from 38px */
     flex: 0 0 36px; /* Changed from 38px */

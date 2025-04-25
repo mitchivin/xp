@@ -309,7 +309,7 @@
     top: -10px; /* Start slightly off-screen */
     left: 0;
     width: 100%;
-    height: 1px; /* Thinner line */
+    height: 0.6px; /* Changed from 1px */
     background: linear-gradient(
         to bottom,
         rgb(255 255 255 / 1%),

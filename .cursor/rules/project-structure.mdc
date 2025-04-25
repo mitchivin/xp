@@ -1,34 +1,18 @@
 ---
 description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 # Project Structure Guide
 
-This project is a web-based simulation of the Windows XP desktop environment, used as a creative portfolio.
+This project is organized as follows:
 
-## Main Entry Point
-- [index.html](mdc:index.html): Loads the desktop simulation and all core scripts/styles.
+- The main entry point is [index.html](mdc:index.html).
+- Source code is located in the [src](mdc:src) directory, which contains:
+  - [apps](mdc:src/apps): Individual application modules (e.g., media-player, notepad, etc.)
+  - [scripts](mdc:src/scripts): Main logic and utility scripts, including [main.js](mdc:src/scripts/main.js)
+  - [styles](mdc:src/styles): CSS and style utilities, including [main.css](mdc:src/styles/main.css)
+- Static assets are in the [assets](mdc:assets) directory (apps, sounds, gui, etc.)
+- Documentation is in the [docs](mdc:docs) directory, including [README.md](mdc:docs/README.md) and [ISSUES.md](mdc:docs/ISSUES.md)
 
-## Source Code
-- [src/scripts/](mdc:src/scripts): Core logic, utilities, and GUI managers.
-  - [main.js](mdc:src/scripts/main.js): Main script for initializing the environment.
-  - [utils/](mdc:src/scripts/utils): Utility modules (menu bar, toolbar, event bus, etc.).
-  - [gui/](mdc:src/scripts/gui): GUI managers (window, desktop, taskbar, start menu).
-- [src/apps/](mdc:src/apps): Individual app modules (About Me, Notepad, etc.), each in its own subdirectory.
-
-## Styles
-- [src/styles/](mdc:src/styles): Main, GUI, and utility CSS files.
-  - [gui/](mdc:src/styles/gui): Styles for desktop, windows, taskbar, start menu, etc.
-  - [utils/](mdc:src/styles/utils): Utility and reset styles.
-
-## Assets
-- [assets/](mdc:assets): Images, icons, sounds, and GUI assets.
-  - [gui/](mdc:assets/gui): GUI-related images and icons.
-
-## Documentation
-- [docs/README.md](mdc:docs/README.md): Project overview and documentation index.
-- [docs/ISSUES.md](mdc:docs/ISSUES.md): Implementation notes, UI conventions, and known issues.
-
----
-For more details on app/module conventions, see [ISSUES.md](mdc:docs/ISSUES.md).
+All rules should reference files using the `[filename](mdc:filename)` format as shown above.

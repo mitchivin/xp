@@ -1,10 +1,31 @@
 /**
- * Start Menu module for Windows XP simulation
- * Handles the start menu display, interaction, and submenus
+ * @fileoverview Start Menu module for Windows XP simulation.
+ * Handles start menu display, interaction, submenus, and event-driven integration.
+ *
+ * Usage:
+ *   import StartMenu from './startMenuManager.js';
+ *   const startMenu = new StartMenu(eventBus);
+ *
+ * Edge Cases:
+ *   - If #start-button is missing, menu cannot be toggled by user.
+ *   - If .startmenu already exists, it is replaced.
+ *   - Submenus are dynamically created and destroyed as needed.
  */
 import { EVENTS } from '../utils/eventBus.js';
 
+/**
+ * StartMenu manages the Windows XP start menu UI, submenus, and event-driven logic.
+ *
+ * @class
+ * @example
+ * import StartMenu from './startMenuManager.js';
+ * const startMenu = new StartMenu(eventBus);
+ */
 export default class StartMenu {
+    /**
+     * Create a new StartMenu instance.
+     * @param {EventBus} eventBus - The event bus instance for communication.
+     */
     constructor(eventBus) {
         this.eventBus = eventBus;
         this.startButton = document.getElementById('start-button');
@@ -32,6 +53,11 @@ export default class StartMenu {
     
     /**
      * Create the start menu DOM element
+     */
+    /**
+     * Create and insert the main start menu DOM element.
+     * Replaces any existing .startmenu element.
+     * @returns {void}
      */
     createStartMenuElement() {
         const existingMenu = document.querySelector('.startmenu');
@@ -62,6 +88,13 @@ export default class StartMenu {
      * @param {string} propertyName - The name of the class property to assign the element to.
      * @returns {HTMLElement} The created submenu element.
      */
+    /**
+     * Helper function to create a submenu element.
+     * @param {string} className - The CSS class for the submenu container.
+     * @param {string} menuHTML - The HTML content for the submenu.
+     * @param {string} propertyName - The name of the class property to assign the element to.
+     * @returns {HTMLElement} The created submenu element.
+     */
     _createSubMenu(className, menuHTML, propertyName) {
         if (!this[propertyName]) {
             const menuElement = document.createElement('div');
@@ -77,36 +110,40 @@ export default class StartMenu {
     /**
      * Create the All Programs submenu
      */
+    /**
+     * Create the All Programs submenu and attach to DOM.
+     * @returns {void}
+     */
     createAllProgramsMenu() {
         const menuHTML = `
             <ul class="all-programs-items">
-                <li class="all-programs-item" data-program-name="media-player">
-                    <img src="./assets/gui/start-menu/media-player.webp" alt="Media Player">
+                <li class="all-programs-item" data-program-name="mediaPlayer">
+                    <img src="./assets/gui/start-menu/mediaPlayer.webp" alt="Media Player">
                     Media Player
                 </li>
                 <li class="all-programs-item" data-program-name="my-pictures">
-                    <img src="./assets/gui/start-menu/photo-viewer.webp" alt="My Photos">
+                    <img src="./assets/gui/start-menu/photos.webp" alt="My Photos">
                     My Photos
                 </li>
                 <li class="all-programs-item" data-program-name="notepad">
                     <img src="./assets/gui/start-menu/notepad.webp" alt="Notepad">
                     Notepad
                 </li>
-                <li class="all-programs-item" data-program-name="cmd-prompt">
-                    <img src="./assets/gui/start-menu/command-prompt.webp" alt="Command Prompt">
+                <li class="all-programs-item" data-program-name="cmd">
+                    <img src="./assets/gui/start-menu/cmd.webp" alt="Command Prompt">
                     Command Prompt
                 </li>
                 <li class="all-programs-separator"></li>
-                <li class="all-programs-item" data-program-name="about-me">
-                    <img src="./assets/gui/desktop/about-me.webp" alt="About Me">
-                    About Me
+                <li class="all-programs-item" data-program-name="about">
+                    <img src="./assets/gui/desktop/about.webp" alt="About">
+                    About
                 </li>
-                <li class="all-programs-item" data-program-name="my-projects">
-                    <img src="./assets/gui/desktop/my-projects.webp" alt="My Projects">
+                <li class="all-programs-item" data-program-name="internet">
+                    <img src="./assets/gui/desktop/internet.webp" alt="My Projects">
                     My Projects
                 </li>
-                <li class="all-programs-item" data-program-name="contact-me">
-                    <img src="./assets/gui/desktop/email.webp" alt="Contact Me">
+                <li class="all-programs-item" data-program-name="contact">
+                    <img src="./assets/gui/desktop/contact.webp" alt="Contact Me">
                     Contact Me
                 </li>
                 <li class="all-programs-item" data-action="open-url" data-url="https://www.linkedin.com">
@@ -144,6 +181,11 @@ export default class StartMenu {
     
     /**
      * Create the Most Used Tools submenu (previously Creative Suite)
+     */
+    /**
+     * Create the Most Used Tools submenu (formerly Creative Suite) and attach to DOM.
+     * All items are disabled by default.
+     * @returns {void}
      */
     createMostUsedToolsMenu() {
         const menuHTML = `
@@ -213,6 +255,11 @@ export default class StartMenu {
     /**
      * Create the AI Tools submenu
      */
+    /**
+     * Create the AI Tools submenu and attach to DOM.
+     * All items are disabled by default.
+     * @returns {void}
+     */
     createAiToolsMenu() {
         const menuHTML = `
             <ul class="ai-tools-items">
@@ -261,6 +308,10 @@ export default class StartMenu {
     /**
      * Get HTML template for the start menu
      */
+    /**
+     * Get the HTML template string for the main start menu.
+     * @returns {string} HTML string for the start menu.
+     */
     getMenuTemplate() {
         return `
             <div class="menutopbar">
@@ -270,41 +321,41 @@ export default class StartMenu {
             <div class="start-menu-middle">
                 <div class="middle-section middle-left">
                     <ul class="menu-items">
-                        <li class="menu-item" id="menu-my-projects" data-action="open-program" data-program-name="my-projects">
-                            <img src="./assets/gui/desktop/my-projects.webp" alt="My Projects">
+                        <li class="menu-item" id="menu-internet" data-action="open-program" data-program-name="internet">
+                            <img src="./assets/gui/desktop/internet.webp" alt="My Projects">
                             <div class="item-details" style="display: flex; flex-direction: column;">
                                 <span class="item-title">My Projects</span>
                                 <span class="item-description">View my work</span>
                             </div>
                         </li>
-                        <li class="menu-item" id="menu-contact-me" data-action="open-program" data-program-name="contact-me">
-                            <img src="./assets/gui/desktop/email.webp" alt="Contact Me">
+                        <li class="menu-item" id="menu-contact" data-action="open-program" data-program-name="contact">
+                            <img src="./assets/gui/desktop/contact.webp" alt="Contact Me">
                             <div class="item-details" style="display: flex; flex-direction: column;">
                                 <span class="item-title" style="font-weight: bold;">Contact Me</span>
                                 <span class="item-description">Send me a message</span>
                             </div>
                         </li>
                         <li class="menu-divider"><hr class="divider"></li>
-                        <li class="menu-item" id="menu-about-me" data-action="open-program" data-program-name="about-me">
-                            <img src="./assets/gui/desktop/about-me.webp" alt="About Me">
+                        <li class="menu-item" id="menu-about" data-action="open-program" data-program-name="about">
+                            <img src="./assets/gui/desktop/about.webp" alt="About">
                             <div class="item-content">
-                                <span class="item-title">About Me</span>
+                                <span class="item-title">About</span>
                             </div>
                         </li>
-                        <li class="menu-item" id="menu-media-player" data-action="open-program" data-program-name="media-player">
-                            <img src="./assets/gui/start-menu/media-player.webp" alt="Media Player">
+                        <li class="menu-item" id="menu-mediaPlayer" data-action="open-program" data-program-name="mediaPlayer">
+                            <img src="./assets/gui/start-menu/mediaPlayer.webp" alt="Media Player">
                             <div class="item-content">
                                 <span class="item-title">Media Player</span>
                             </div>
                         </li>
-                        <li class="menu-item" id="menu-photo-viewer" data-action="open-program" data-program-name="my-pictures">
-                            <img src="./assets/gui/start-menu/photo-viewer.webp" alt="My Photos">
+                        <li class="menu-item" id="menu-photos" data-action="open-program" data-program-name="my-pictures">
+                            <img src="./assets/gui/start-menu/photos.webp" alt="My Photos">
                             <div class="item-details">
                                 <span class="item-title">My Photos</span>
                             </div>
                         </li>
-                        <li class="menu-item" id="menu-cmd-prompt" data-action="open-program" data-program-name="cmd-prompt">
-                            <img src="./assets/gui/start-menu/command-prompt.webp" alt="Command Prompt">
+                        <li class="menu-item" id="menu-cmd" data-action="open-program" data-program-name="cmd">
+                            <img src="./assets/gui/start-menu/cmd.webp" alt="Command Prompt">
                             <div class="item-content">
                                 <span class="item-title" style="font-weight: normal; padding: 5px 0;">Command Prompt</span>
                             </div>
@@ -346,7 +397,7 @@ export default class StartMenu {
                         </li>
                         <li class="menu-divider right-section-divider"><hr class="divider"></li>
                         <li class="menu-item" id="menu-program4" data-action="toggle-most-used-tools">
-                            <img src="./assets/gui/start-menu/favorite-apps.webp" alt="Most Used Tools">
+                            <img src="./assets/gui/start-menu/most-used.webp" alt="Most Used Tools">
                             <div class="item-content">
                                 <span class="item-title">Most Used Tools</span>
                             </div>
@@ -358,7 +409,7 @@ export default class StartMenu {
                             </div>
                         </li>
                         <li class="menu-divider right-section-divider"><hr class="divider"></li>
-                        <li class="menu-item" id="menu-help-support" data-action="open-program" data-program-name="sys-info">
+                        <li class="menu-item" id="menu-help-support" data-action="open-program" data-program-name="info">
                             <img src="./assets/gui/start-menu/help.webp" alt="System Information">
                             <div class="item-details">
                                 <span class="item-title">System Information</span>
@@ -384,6 +435,11 @@ export default class StartMenu {
     
     /**
      * Set up all necessary event listeners
+     */
+    /**
+     * Set up all necessary event listeners for menu open/close, overlay, and key handling.
+     * Handles outside clicks, overlay logic, and Escape key to close menu.
+     * @returns {void}
      */
     setupEventListeners() {
         window.addEventListener('mousedown', (e) => {
@@ -430,6 +486,12 @@ export default class StartMenu {
     
     /**
      * Handle clicks on menu items using event delegation.
+     */
+    /**
+     * Handle clicks on menu items using event delegation.
+     * Ignores clicks on disabled items in submenus.
+     * @param {MouseEvent} event - The click event object.
+     * @returns {void}
      */
     _handleMenuClick(event) {
         const target = event.target.closest('[data-action], [data-program-name], [data-url]');

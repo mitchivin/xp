@@ -68,7 +68,6 @@ export function initBootSequence(eventBus, EVENTS) {
         desktop.style.pointerEvents = 'auto';
         
         // CRT effects remain visible by default CSS
-        // if (crtGlow) crtGlow.style.display = 'block';
     }
     
     /**

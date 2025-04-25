@@ -1,10 +1,31 @@
 /**
- * Desktop Component
- * Manages the Windows XP desktop icons and basic interactions
+ * @fileoverview Desktop Component for the Windows XP simulation.
+ * Manages desktop icons, selection, drag, and wallpaper logic.
+ *
+ * Usage:
+ *   import Desktop from './desktopManager.js';
+ *   const desktop = new Desktop(eventBus);
+ *
+ * Edge Cases:
+ *   - If .desktop element is missing, most functionality is disabled.
+ *   - If there are no .desktop-icon elements, icon logic is skipped.
+ *   - Wallpaper selection adapts to ultrawide screens.
  */
 import { EVENTS } from '../utils/eventBus.js';
 
+/**
+ * Desktop class manages the Windows XP desktop UI, including icon selection, drag, and wallpaper.
+ *
+ * @class
+ * @example
+ * import Desktop from './desktopManager.js';
+ * const desktop = new Desktop(eventBus);
+ */
 export default class Desktop {
+    /**
+     * Create a new Desktop instance.
+     * @param {EventBus} eventBus - The event bus instance for communication.
+     */
     constructor(eventBus) {
         this.eventBus = eventBus;
         this.desktop = document.querySelector('.desktop');
@@ -33,6 +54,11 @@ export default class Desktop {
     }
 
     // Set the appropriate wallpaper based on screen aspect ratio
+    /**
+     * Set the wallpaper based on the current window aspect ratio.
+     * Uses ultrawide wallpaper for aspect ratios >= 2.1.
+     * @returns {void}
+     */
     setWallpaperBasedOnAspectRatio() {
         const aspectRatio = window.innerWidth / window.innerHeight;
 
@@ -52,10 +78,18 @@ export default class Desktop {
     }
 
     // Utility: Selection overlay for desktop icons
+    /**
+     * Remove any existing selection box artifacts from previous interactions.
+     * @returns {void}
+     */
     cleanupArtifacts() {
         document.querySelectorAll('#selection-box, .selection-box').forEach((box) => box.remove());
     }
 
+    /**
+     * Create the selection overlay element if it does not exist.
+     * @returns {void}
+     */
     createSelectionOverlay() {
         if (!this.overlay) {
             this.overlay = document.createElement('div');
@@ -64,6 +98,10 @@ export default class Desktop {
         }
     }
 
+    /**
+     * Attach click and interaction events to desktop icons.
+     * @returns {void}
+     */
     setupIconEvents() {
         this.icons.forEach((icon) => {
             const iconSpan = icon.querySelector('span');
@@ -89,8 +127,7 @@ export default class Desktop {
                 let programName = icon.getAttribute('data-program-name');
 
                 // Only keep necessary special cases
-                if (programName === 'windows-messenger') programName = 'messenger';
-                if (programName === 'command-prompt') programName = 'cmd-prompt';
+                if (programName === 'command-prompt') programName = 'cmd';
 
                 this.eventBus.publish(EVENTS.PROGRAM_OPEN, { programName });
             });
@@ -100,6 +137,10 @@ export default class Desktop {
         });
     }
 
+    /**
+     * Attach click handler to desktop background for clearing selection.
+     * @returns {void}
+     */
     setupDesktopEvents() {
         this.desktop.addEventListener('click', (e) => {
             if (e.target === this.desktop || e.target === this.overlay) {
@@ -110,6 +151,11 @@ export default class Desktop {
         });
     }
 
+    /**
+     * Set up pointer events for click-and-drag selection of desktop icons.
+     * Handles pointerdown, pointermove, pointerup for selection box.
+     * @returns {void}
+     */
     setupPointerSelectionEvents() {
         window.addEventListener('pointerdown', (e) => {
             if (e.target !== this.overlay && e.target !== this.desktop) return;
@@ -183,6 +229,14 @@ export default class Desktop {
         });
     }
 
+    /**
+     * Highlight desktop icons that intersect with the selection rectangle.
+     * @param {number} left - Left X of selection box (relative to desktop)
+     * @param {number} top - Top Y of selection box (relative to desktop)
+     * @param {number} width - Width of selection box
+     * @param {number} height - Height of selection box
+     * @returns {void}
+     */
     highlightIconsIntersecting(left, top, width, height) {
         const selectionRect = { left, top, right: left + width, bottom: top + height };
         this.icons.forEach((icon) => {

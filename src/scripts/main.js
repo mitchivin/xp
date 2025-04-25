@@ -12,7 +12,6 @@ import WindowManager from './gui/windowManager.js';
 import { eventBus, EVENTS } from './utils/eventBus.js';
 import programData from './utils/programRegistry.js';
 import { initBootSequence } from './utils/boot.js'; // Import the boot sequence initializer
-import { preloadIframes } from './utils/iframePreloader.js'; // Import preloader
 
 // Animation timing constants for CRT scanline effect
 const SCANLINE_MIN_DELAY_MS = 1000; // Minimum delay between scanline animations (ms)
@@ -30,10 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // IMPORTANT: Must be called after eventBus initialization
     initBootSequence(eventBus, EVENTS);
 
-    // Start preloading application iframes with slight delay
-    // NOTE: Delay prevents competing with critical rendering tasks
-    setTimeout(preloadIframes, 100);
-
     // Handle system shutdown requests
     // Confirmation dialog intentionally omitted for streamlined UX
     eventBus.subscribe(EVENTS.SHUTDOWN_REQUESTED, () => {
@@ -43,32 +38,36 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.assign(currentPath + '?forceBoot=true');
     });
 
-    // Handle cross-iframe communication
+    // Handle cross-iframe communication and login success events
     window.addEventListener('message', ({ data }) => {
+        if (!data || !data.type) return; // Ignore messages without type
+
         // Propagate focus events from iframes to parent window manager
-        if (data?.type === EVENTS.IFRAME_CLICKED) {
+        if (data.type === EVENTS.IFRAME_CLICKED) {
             eventBus.publish(EVENTS.WINDOW_FOCUSED, { windowId: null });
         }
-
-        // Handle open-app messages from child iframes (e.g., about-me app)
-        if (data?.type === 'open-app' && typeof data.app === 'string') {
+        // Handle open-app messages from child iframes (e.g., about app)
+        else if (data.type === 'open-app' && typeof data.app === 'string') {
             eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: data.app });
-            return;
         }
-
         // Handle project navigation from Project Hub
-        if (data?.type !== 'openProject') return;
+        else if (data.type === 'openProject' && typeof data.id === 'string') {
+            // Map project IDs to their detail view program names
+            const programMap = { 'retro-os': 'retro-os-details' }; // Consider moving if grows
+            const detailProgramName = programMap[data.id];
 
-        // Map project IDs to their detail view program names
-        const programMap = { 'retro-os': 'retro-os-details' };
-        const detailProgramName = programMap[data.id];
-
-        if (!detailProgramName) {
-            console.warn(`Hub requested unknown project ID: ${data.id}`);
-            return;
+            if (!detailProgramName) {
+                console.warn(`Hub requested unknown project ID: ${data.id}`);
+            } else {
+                eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: detailProgramName });
+            }
         }
-
-        eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: detailProgramName });
+        // Handle login success to auto-open apps
+        else if (data.type === 'loginSuccess') {
+            // Open About Me first, then My Projects so My Projects is on top
+            eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: 'about' });
+            eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: 'internet' });
+        }
     });
 
     // Initialize CRT visual effects

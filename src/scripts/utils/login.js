@@ -1,3 +1,16 @@
+/**
+ * @fileoverview Handles the Windows XP simulation login screen logic.
+ * - Manages login cooldown after logoff
+ * - Handles profile click for login
+ * - Handles shutdown icon click
+ *
+ * Usage:
+ *   Included in the login window iframe.
+ *
+ * Edge Cases:
+ *   - If .back-gradient element is missing, login will not be possible and an error is logged.
+ *   - If #shutdown-icon is missing, shutdown will not be available.
+ */
 // Login Screen Logic
 // Variable to track if login is in cooldown period
 let loginCooldown = false; // Start with NO cooldown by default
@@ -5,19 +18,18 @@ let loginCooldown = false; // Start with NO cooldown by default
 // Check if this is being loaded after a log off (via URL parameter)
 const urlParams = new URLSearchParams(window.location.search);
 const isLogOff = urlParams.get('logoff') === 'true';
-const isInitial = urlParams.get('initial') === 'true';
+
 
 // Only activate cooldown if this is loaded after a log off
 if (isLogOff) {
     loginCooldown = true;
-} else {
-    // If it's the initial load (not logoff), log that
 }
 
-const userProfiles = document.querySelectorAll('.back-gradient'); // Now selects only one
 
-userProfiles.forEach((profileElement) => {
-    // No need to remove 'active' from others if there's only one
+// Assuming only one profile element matches
+const profileElement = document.querySelector('.back-gradient');
+
+if (profileElement) {
     profileElement.addEventListener('click', function () {
         // Check if login is in cooldown period
         if (loginCooldown) {
@@ -30,7 +42,9 @@ userProfiles.forEach((profileElement) => {
         // Trigger login immediately by sending message to parent
         window.parent.postMessage({ type: 'loginSuccess' }, '*');
     });
-});
+} else {
+    console.error("Login profile element (.back-gradient) not found.");
+}
 
 // Wait for the login screen's DOM to be ready before adding listeners
 document.addEventListener('DOMContentLoaded', () => {

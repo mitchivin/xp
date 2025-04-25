@@ -1,0 +1,19 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Scripts and Styles Guide
+
+- The [src/scripts](mdc:src/scripts) directory contains core JavaScript logic, utilities, and GUI managers.
+  - Main entry: [main.js](mdc:src/scripts/main.js)
+  - Utilities: [utils](mdc:src/scripts/utils)
+  - GUI managers: [gui](mdc:src/scripts/gui)
+
+- The [src/styles](mdc:src/styles) directory contains CSS files for the project.
+  - Main stylesheet: [main.css](mdc:src/styles/main.css)
+  - GUI styles: [gui](mdc:src/styles/gui)
+  - Utility styles: [utils](mdc:src/styles/utils)
+
+Use these directories for shared logic and styling across all apps.
+

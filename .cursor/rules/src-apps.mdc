@@ -1,0 +1,22 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# src/apps Directory Guide
+
+The [src/apps](mdc:src/apps) directory contains individual application modules, each in its own subdirectory. Example apps include:
+
+- [media-player](mdc:src/apps/media-player)
+- [notepad](mdc:src/apps/notepad)
+- [photo-viewer](mdc:src/apps/photo-viewer)
+- [resume-pdf](mdc:src/apps/resume-pdf)
+- [about-me](mdc:src/apps/about-me)
+- [sys-info](mdc:src/apps/sys-info)
+- [contact-me](mdc:src/apps/contact-me)
+- [cmd-prompt](mdc:src/apps/cmd-prompt)
+- [my-projects](mdc:src/apps/my-projects)
+
+Each app is self-contained and may include its own scripts, styles, and assets.
+
+

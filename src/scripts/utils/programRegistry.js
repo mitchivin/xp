@@ -74,11 +74,11 @@ const createProgram = (key, title, icon, path, extraProps = {}) => ({
  */
 const programData = {
     // Communication and Messaging
-    "media-player": createProgram(
-        "media-player",
+    "mediaPlayer": createProgram(
+        "mediaPlayer",
         "Media Player",
-        "start-menu/media-player.webp",
-        "media-player",
+        "start-menu/mediaPlayer.webp",
+        "mediaPlayer",
         { 
             dimensions: { width: 750, height: 500 },
             initialDynamicStatus: true,
@@ -87,18 +87,18 @@ const programData = {
     ),
     
     // System and Utility Programs
-    "sys-info": createProgram(
-        "sys-info",
+    "info": createProgram(
+        "info",
         "System Information",
         "start-menu/help.webp",
-        "sys-info", 
+        "info", 
         { dimensions: { width: 390, height: 475 }, canMinimize: false, canMaximize: false }
     ),
-    "cmd-prompt": createProgram(
-        "cmd-prompt", 
+    "cmd": createProgram(
+        "cmd", 
         "Command Prompt", 
-        "start-menu/command-prompt.webp", 
-        "cmd-prompt", 
+        "start-menu/cmd.webp", 
+        "cmd", 
         { initialHeight: 600 }
     ),
     "notepad": createProgram(
@@ -110,36 +110,38 @@ const programData = {
     ),
     
     // Portfolio Content
-    "about-me": createProgram(
-        "about-me",
+    "about": createProgram(
+        "about",
         "About Me",
-        "desktop/about-me.webp",
-        "about-me",
-        { dimensions: { width: 800, height: 600 }, statusBarText: "Viewing information about Mitchell Ivin" }
+        "desktop/about.webp",
+        "about",
+        { 
+          dimensions: { width: 800, height: 600 }, 
+          statusBarText: "Viewing information about Mitchell Ivin",
+          position: { type: "custom", align: "top-left", offsetX: 120, offsetY: 40 }
+        }
     ),
-    "contact-me": createProgram(
-        "contact-me",
+    "contact": createProgram(
+        "contact",
         "Contact Me",
-        "desktop/email.webp",
-        "contact-me",
+        "desktop/contact.webp",
+        "contact",
         { dimensions: { width: 600, height: 450 }, statusBarText: "Send a message" }
     ),
-    "resume-pdf": createProgram(
-        "resume-pdf",
+    "resume": createProgram(
+        "resume",
         "Resume.pdf",
         "desktop/resume.webp",
-        "resume-pdf",
+        "resume",
         { dimensions: { width: 700, height: 800 }, statusBarText: "Viewing Resume.pdf" }
     ),
 
     // Media Programs
-    // --- Photo Viewer Window Size ---
-    // The default window size for the Photo Viewer is set here. Adjust width/height as needed.
     "my-pictures": createProgram(
         "my-pictures", 
         "My Photos", 
-        "start-menu/photo-viewer.webp", 
-        "photo-viewer", 
+        "start-menu/photos.webp", 
+        "photos", 
         { 
             dimensions: { width: 440, height: 561 }, 
             initialDynamicStatus: true, 
@@ -148,16 +150,19 @@ const programData = {
     ),
     
     // Project Showcase Programs
-    "my-projects": createProgram(
-        "my-projects", 
+    "internet": createProgram(
+        "internet", 
         "My Projects", 
-        "desktop/my-projects.webp", 
-        "my-projects", 
-        { dimensions: { width: 1050, height: 775 }, statusBarText: "Browsing project portfolio" }
+        "desktop/internet.webp", 
+        "internet", 
+        { 
+          dimensions: { width: 1030, height: 780 }, 
+          statusBarText: "Browsing project portfolio",
+          position: { type: "custom", align: "bottom-right", offsetX: 40, offsetY: 40 }
+        }
     ),
 
     // Special format entries with custom properties
-    // (Removed: retro-os-details, video-tab, images-tab, code-tab)
 };
 
 export default programData; 

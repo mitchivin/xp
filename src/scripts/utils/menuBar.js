@@ -1,4 +1,20 @@
 /**
+ * @fileoverview Shared Menu Bar Utility for Windows XP-style UI.
+ * Handles dropdown show/hide, positioning, and the 'Exit' action.
+ * Works in both iframe and standalone contexts.
+ *
+ * Usage:
+ *   import { setupMenuBar } from '../../../src/scripts/utils/menuBar.js';
+ *   setupMenuBar({ menuBarSelector: '.menu-bar' });
+ *
+ * Edge Cases:
+ *   - If menuBarSelector does not match any element, no menu is set up.
+ *   - If a menu item does not have a corresponding dropdown, clicking does nothing.
+ *   - If .dropdown-menu .menu-option has data-action=exit, calls shared exit handler.
+ */
+import { handleExit } from './common.js'; // Import shared exit handler
+
+/**
  * Shared Menu Bar Utility for Windows XP-style UI
  * Handles dropdown show/hide, positioning, and the 'Exit' action.
  * Works in both iframe and standalone contexts.
@@ -6,6 +22,17 @@
  * Usage:
  *   import { setupMenuBar } from '../../../src/scripts/utils/menuBar.js';
  *   setupMenuBar({ menuBarSelector: '.menu-bar' });
+ */
+/**
+ * Sets up a Windows XP-style menu bar with dropdowns and shared actions.
+ *
+ * @param {Object} options
+ * @param {string} options.menuBarSelector - CSS selector for the menu bar element.
+ * @param {Object<string, HTMLElement>} [options.dropdownMenus=null] - Optional map of menu names to dropdown menu elements.
+ * @param {Object<string, function>} [options.actions={}] - Optional map of action names to handler functions.
+ * @returns {void}
+ * @example
+ * setupMenuBar({ menuBarSelector: '.menu-bar' });
  */
 export function setupMenuBar({ menuBarSelector, dropdownMenus = null, actions = {} }) {
   const menuBar = document.querySelector(menuBarSelector);
@@ -88,23 +115,16 @@ export function setupMenuBar({ menuBarSelector, dropdownMenus = null, actions = 
         if (actions && typeof actions[action] === 'function') {
           actions[action](option, e);
         } else {
-          handleMenuAction(action);
+          // Use shared handler for exit, otherwise log warning for unhandled shared actions
+          if (action === 'exit') {
+            handleExit(); // Use imported handler
+          } else {
+             console.warn(`Unhandled shared menu action: ${action}`);
+          }
         }
       }
       closeActiveMenu();
       e.stopPropagation();
     });
   });
-
-  function handleMenuAction(action) {
-    if (action === 'exit') {
-      // Try to close the window using the parent if in an iframe, otherwise window.close()
-      if (window.parent && window.parent !== window) {
-        window.parent.postMessage({ type: 'close-window' }, '*');
-      } else {
-        window.close();
-      }
-    }
-    // Add more shared actions as needed
-  }
 } 

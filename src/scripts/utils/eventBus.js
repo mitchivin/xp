@@ -51,6 +51,17 @@ export const EVENTS = {
  *
  * @class
  */
+/**
+ * EventBus implements the publish-subscribe pattern for decoupled communication.
+ *
+ * Usage:
+ *   import { eventBus, EVENTS } from './eventBus.js';
+ *   eventBus.subscribe(EVENTS.PROGRAM_OPEN, handler);
+ *
+ * Edge Cases:
+ *   - If there are no subscribers for an event, publish does nothing.
+ *   - Unsubscribing a callback that was never subscribed is a no-op.
+ */
 class EventBus {
     /**
      * Create a new EventBus instance
@@ -82,6 +93,16 @@ class EventBus {
      * // Later, to unsubscribe:
      * unsubscribe();
      */
+    /**
+     * Subscribe to an event.
+     *
+     * @param {string} event - Event name to subscribe to.
+     * @param {function} callback - Function to call when event is triggered.
+     * @returns {function} Unsubscribe function for easy cleanup.
+     * @example
+     * const unsubscribe = eventBus.subscribe(EVENTS.PROGRAM_OPEN, handler);
+     * // Later: unsubscribe();
+     */
     subscribe(event, callback) {
         // Initialize array if needed with nullish coalescing, then push callback
         (this.events[event] ??= []).push(callback);
@@ -102,6 +123,15 @@ class EventBus {
      *   console.log(`Window created with ID: ${data.windowId}`);
      * });
      */
+    /**
+     * Subscribe to an event and automatically unsubscribe after first trigger.
+     *
+     * @param {string} event - Event name to subscribe to.
+     * @param {function} callback - Function to call when event is triggered.
+     * @returns {void}
+     * @example
+     * eventBus.once(EVENTS.WINDOW_CREATED, handler);
+     */
     once(event, callback) {
         const onceCallback = (...args) => {
             this.unsubscribe(event, onceCallback);
@@ -115,6 +145,15 @@ class EventBus {
      *
      * @param {string} event - Event name to unsubscribe from
      * @param {function} callback - Function to unsubscribe
+     */
+    /**
+     * Unsubscribe from an event.
+     *
+     * @param {string} event - Event name to unsubscribe from.
+     * @param {function} callback - Function to unsubscribe.
+     * @returns {void}
+     * @example
+     * eventBus.unsubscribe(EVENTS.PROGRAM_OPEN, handler);
      */
     unsubscribe(event, callback) {
         // Check if event exists and has subscribers before filtering
@@ -132,6 +171,15 @@ class EventBus {
      * // Publish an event to open notepad
      * eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: 'notepad' });
      */
+    /**
+     * Publish an event to all subscribers.
+     *
+     * @param {string} event - Event name to publish.
+     * @param {any} data - Data to pass to subscribers.
+     * @returns {void}
+     * @example
+     * eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: 'notepad' });
+     */
     publish(event, data) {
         // Execute each callback with the provided data
         this.events[event]?.forEach((callback) => callback(data));
@@ -139,4 +187,8 @@ class EventBus {
 }
 
 // Create and export a singleton instance
+/**
+ * Singleton instance of EventBus for global use.
+ * @type {EventBus}
+ */
 export const eventBus = new EventBus(); 

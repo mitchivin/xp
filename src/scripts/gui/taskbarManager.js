@@ -1,14 +1,28 @@
 /**
- * Taskbar module for managing the start menu and system tray
+ * @fileoverview Taskbar module for managing the Windows XP start menu, system tray, and clock.
+ * Integrates with StartMenu, EventBus, and tooltip utilities.
+ *
+ * Usage:
+ *   import Taskbar from './taskbarManager.js';
+ *   const taskbar = new Taskbar(eventBus);
+ *
+ * Edge Cases:
+ *   - If required DOM elements are missing, some features are disabled.
+ *   - Tooltips and clock are initialized on startup.
  */
 import StartMenu from './startMenuManager.js';
 import { eventBus, EVENTS } from '../utils/eventBus.js';
-import Desktop from './desktopManager.js'; // Update the import path to use the new filename
-import programData from '../utils/programRegistry.js';
+
+
 import { setupTooltips } from '../utils/tooltip.js'; // Import the new utility
 
 /**
- * Clock class for managing the system clock display and time updates
+ * Clock class for managing the system clock display and time updates.
+ *
+ * @class
+ * @example
+ * const clock = new Clock('.time');
+ * clock.destroy(); // Stop updates
  */
 class Clock {
     #clockElement;
@@ -62,7 +76,19 @@ class Clock {
     }
 }
 
+/**
+ * Taskbar manages the Windows XP taskbar UI, start menu, tray icons, and clock.
+ *
+ * @class
+ * @example
+ * import Taskbar from './taskbarManager.js';
+ * const taskbar = new Taskbar(eventBus);
+ */
 export default class Taskbar {
+    /**
+     * Create a new Taskbar instance.
+     * @param {EventBus} eventBus - The event bus instance for communication.
+     */
     constructor(eventBus) {
         this.eventBus = eventBus;
         this.startButton = document.getElementById('start-button');
@@ -107,6 +133,10 @@ export default class Taskbar {
     /**
      * Set up hover and click effects for start button
      */
+    /**
+     * Set up hover and click effects for the Start button.
+     * @returns {void}
+     */
     setupStartButtonEffects() {
         this.startButton.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -117,18 +147,26 @@ export default class Taskbar {
     /**
      * Set up event handlers for tray icons
      */
+    /**
+     * Set up event listeners for system tray icons (e.g., volume, network).
+     * @returns {void}
+     */
     setupTrayIconEvents() {
         // Add click event to Media Player icon
-        const mediaPlayerIcon = document.querySelector('.tray-media-player-icon');
+        const mediaPlayerIcon = document.querySelector('.tray-mediaPlayer-icon');
         if (mediaPlayerIcon) {
             mediaPlayerIcon.addEventListener('click', () => {
-                this.eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: 'media-player' });
+                this.eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: 'mediaPlayer' });
             });
         }
     }
 
     /**
      * Setup responsive taskbar that adjusts program item widths based on available space
+     */
+    /**
+     * Set up responsive behavior for the taskbar on window resize.
+     * @returns {void}
      */
     setupResponsiveTaskbar() {
         this.updateTaskbarLayout();

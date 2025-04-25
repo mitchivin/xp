@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Windows XP Menu Bar Demo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Menu bar markup for Windows XP-style UI -->
+  <div class="menu-bar-container">
+      <div class="menu-bar">
+          <div class="menu-item" data-menu="file">File</div>
+          <div class="menu-item disabled" data-menu="edit">Edit</div>
+          <div class="menu-item disabled" data-menu="view">View</div>
+          <div class="menu-item disabled" data-menu="help">Help</div>
+      </div>
+  </div>
+          <div id="file-menu" class="dropdown-menu">
+              <div class="menu-option disabled">Open...</div>
+              <div class="menu-option disabled">Save As...</div>
+              <div class="menu-option disabled">Print...</div>
+              <div class="menu-separator"></div>
+              <div class="menu-option" data-action="exit">Exit</div>
+  </div>
+  <!-- Main content area that fills the rest of the available space -->
+  <div class="main-content">
+    <!-- Your main app content goes here -->
+    <img class="main-image" src="../../../assets/apps/photos/image1.webp" alt="Main Content" />
+  </div>
+  <!-- Toolbar markup for Windows XP-style UI -->
+  <div class="toolbar-container">
+    <div class="toolbar-row">
+      <div class="back" data-tooltip="Back">
+        <img alt="back" width="25" height="25" src="../../../assets/gui/components/back.webp" />
+      </div>
+      <div class="slideshow" data-tooltip="Slideshow">
+        <img alt="slideshow" width="25" height="25" src="../../../assets/gui/components/slideshow.webp" />
+      </div>
+      <div class="forward" data-tooltip="Forward">
+        <img alt="forward" width="25" height="25" src="../../../assets/gui/components/forward.webp" />
+      </div>
+      <div class="vertical_line"></div>
+      <div class="printphoto disabled" data-tooltip="Open Photo Viewer">
+        <img alt="photos" width="25" height="25" src="../../../assets/gui/components/printphoto.webp" />
+      </div>
+      <div class="webphoto disabled" data-tooltip="Open Media Player">
+        <img alt="videos" width="25" height="25" src="../../../assets/gui/components/webphoto.webp" />
+      </div>
+      <div class="vertical_line"></div>
+      <div class="delete disabled">
+        <img alt="delete" width="25" height="25" src="../../../assets/gui/components/delete.webp" />
+      </div>
+    </div>
+  </div>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
