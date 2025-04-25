@@ -16,6 +16,40 @@ import { EVENTS } from '../utils/eventBus.js';
 
 const TASKBAR_HEIGHT = 30; // Define constant taskbar height
 
+// At the top, after imports
+let iframePool = null;
+let preloadedIframes = {};
+
+function createIframePool(apps) {
+    iframePool = document.getElementById('iframe-pool');
+    if (!iframePool) {
+        iframePool = document.createElement('div');
+        iframePool.id = 'iframe-pool';
+        iframePool.style.position = 'absolute';
+        iframePool.style.left = '-9999px';
+        iframePool.style.top = '0';
+        iframePool.style.zIndex = '-1';
+        document.body.appendChild(iframePool);
+    }
+    // Preload iframes for each app
+    Object.entries(apps).forEach(([programName, program]) => {
+        if (!program.appPath || preloadedIframes[programName]) return;
+        const iframe = document.createElement('iframe');
+        iframe.src = program.appPath;
+        iframe.title = `${programName}-content`;
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('width', '100%');
+        iframe.setAttribute('height', '100%');
+        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals');
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        iframe.style.background = 'transparent';
+        iframePool.appendChild(iframe);
+        preloadedIframes[programName] = iframe;
+    });
+}
+
 /**
  * WindowTemplates provides templates for different window types (iframe, error, empty).
  *
@@ -209,6 +243,9 @@ class WindowManager {
         
         this._setupGlobalHandlers();
         this._subscribeToEvents();
+
+        // In WindowManager constructor, after this.programData = programData;
+        createIframePool(this.programData);
     }
     
     _setupGlobalHandlers() {
@@ -371,18 +408,26 @@ class WindowManager {
     _createWindowElement(program) {
         const windowElement = document.createElement('div');
         windowElement.id = program.id;
-        windowElement.className = 'app-window'; // Use app-window for custom app styling
+        windowElement.className = 'app-window';
         windowElement.setAttribute('data-program', program.id.replace('-window', ''));
 
         windowElement.innerHTML = this._getWindowBaseHTML(program);
 
-        const content = WindowTemplates.getTemplate(program.template, program);
+        let content;
+        if (program.template === 'iframe-standard' && preloadedIframes[program.id.replace('-window', '')]) {
+            // Use preloaded iframe
+            const iframe = preloadedIframes[program.id.replace('-window', '')];
+            content = document.createElement('div');
+            content.className = 'window-body iframe-container';
+            content.appendChild(iframe);
+        } else {
+            content = WindowTemplates.getTemplate(program.template, program);
+        }
         if (!content) {
-             console.error(`Failed to get template "${program.template}" for ${program.id}`);
-             return null;
+            console.error(`Failed to get template "${program.template}" for ${program.id}`);
+            return null;
         }
         windowElement.appendChild(content);
-
         this._addStartMenuOverlay(windowElement, content);
 
         // Create Status Bar
@@ -656,6 +701,13 @@ class WindowManager {
         // Remove from stack and update Z-indices
         this._updateStackOrder(windowId, 'remove');
         this._updateZIndices();
+
+        // If this window used a preloaded iframe, move it back to the pool
+        const programName = windowId.replace('-window', '');
+        const iframe = preloadedIframes[programName];
+        if (iframe && iframe.parentNode && iframe.parentNode !== iframePool) {
+            iframePool.appendChild(iframe);
+        }
     }
     
     _refreshActiveWindow() {
