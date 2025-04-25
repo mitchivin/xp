@@ -370,8 +370,8 @@ function animateLightboxTransition(callback) {
     setTimeout(() => {
       imgContainer.classList.remove('lightbox-animating');
       detailsContainer.classList.remove('lightbox-animating');
-    }, 350); // Match transition duration
-  }, 350); // Match transition duration
+    }, 175); // Match transition duration (was 350)
+  }, 175); // Match transition duration (was 350)
 }
 
 if (lightboxPrevBtn) {
@@ -430,3 +430,20 @@ document.querySelectorAll('.project-img').forEach(figure => {
     video.currentTime = 0;
   });
 });
+
+// Preload ALL project videos at startup
+(function preloadAllProjectVideos() {
+  const videoLinks = document.querySelectorAll('.project-item > a[data-video]');
+  videoLinks.forEach(link => {
+    const videoSrc = link.getAttribute('data-video');
+    if (videoSrc && !document.querySelector(`video[data-preload-src='${videoSrc}']`)) {
+      const preloadVid = document.createElement('video');
+      preloadVid.src = videoSrc;
+      preloadVid.preload = 'auto';
+      preloadVid.muted = true;
+      preloadVid.setAttribute('data-preload-src', videoSrc);
+      preloadVid.style.display = 'none';
+      document.body.appendChild(preloadVid);
+    }
+  });
+})();

@@ -444,6 +444,7 @@ article {
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
   z-index: 1000; /* Ensure it's above other content */
+  border: none;
 }
 
 .lightbox.active {
@@ -466,7 +467,7 @@ article {
   flex-direction: row;
   align-items: stretch;
   gap: 36px;
-  border: none;
+  border: 0.5px solid #65f04d;
 }
 
 .lightbox-image-container {
@@ -486,7 +487,7 @@ article {
   border-radius: var(--radius-8, 8px);
   flex-shrink: 0;
   box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.18), 0 1.5px 8px 0 rgba(0, 0, 0, 0.25);
-  border: 1.5px solid #65f04d;
+  border: 1.5px solid #fff;
 }
 
 .lightbox-details-container {
@@ -619,7 +620,6 @@ article {
   filter: none;
   background-color: transparent;
   display: block;
-  vertical-align: middle;
   mix-blend-mode: lighten;
 }
 
@@ -668,8 +668,8 @@ article {
 
 .lightbox-nav {
   background: #232323;
-  color: #65f04d;
-  border: 2px solid #65f04d;
+  color: #fff;
+  border: 2px solid #fff;
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -681,9 +681,9 @@ article {
   transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 .lightbox-nav:hover {
-  background: #65f04d;
+  background: #fff;
   color: #232323;
-  border-color: #65f04d;
+  border-color: #fff;
 }
 
 .lightbox-nav:focus, .lightbox-nav:active {
@@ -694,7 +694,7 @@ article {
 /* Fade animation for lightbox navigation */
 .lightbox-image-container,
 .lightbox-details-container {
-  transition: opacity 0.35s cubic-bezier(.4,0,.2,1);
+  transition: opacity 0.175s cubic-bezier(.4,0,.2,1);
   opacity: 1;
 }
 
@@ -756,4 +756,12 @@ article {
   font-size: 1rem;
   z-index: 4;
   pointer-events: none;
+}
+
+/* Prevent user selection in all project and lightbox UI */
+.project-list, .project-item, .project-title, .project-category, .lightbox, .lightbox * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
