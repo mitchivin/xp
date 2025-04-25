@@ -773,14 +773,14 @@ video::cue {
 
 :host(.constant-thumb) .thumb,
 :host(:hover) .thumb {
-   --sprite: url(../../../assets/apps/mediaPlayer/icons/spritesheet-slider-thumb.svg#normal);
+   --sprite: url(../../../../assets/apps/mediaPlayer/icons/spritesheet-slider-thumb.svg#normal);
 }
 :host(:hover:not(:active):not(:state(active))) .thumb:hover {
-   --sprite: url(../../../assets/apps/mediaPlayer/icons/spritesheet-slider-thumb.svg#hover);
+   --sprite: url(../../../../assets/apps/mediaPlayer/icons/spritesheet-slider-thumb.svg#hover);
 }
 :host(:active) .thumb,
 :host(:state(active)) .thumb {
-   --sprite: url(../../../assets/apps/mediaPlayer/icons/spritesheet-slider-thumb.svg#active);
+   --sprite: url(../../../../assets/apps/mediaPlayer/icons/spritesheet-slider-thumb.svg#active);
 }
 :host(:disabled) .thumb {
    display: none;

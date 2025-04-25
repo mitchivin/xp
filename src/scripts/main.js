@@ -62,16 +62,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: detailProgramName });
             }
         }
-        // Handle login success to auto-open apps
-        else if (data.type === 'loginSuccess') {
-            // Open About Me first, then My Projects so My Projects is on top
-            eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: 'about' });
-            eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: 'internet' });
-        }
     });
 
     // Initialize CRT visual effects
     initRandomScanline();
+
+    // Open About Me and My Projects (Internet) on page load
+    eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: 'about' });
+    eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: 'internet' });
 });
 
 /**

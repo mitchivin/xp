@@ -62,3 +62,20 @@ body {
 
 .desktop {
 }
+
+#boot-screen,
+#login-screen {
+    cursor: default !important;
+}
+
+#desktop-blocker {
+    position: fixed;
+    z-index: 50; /* Must be less than boot/login, but more than desktop/windows */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: transparent;
+    pointer-events: all;
+    cursor: default !important;
+}

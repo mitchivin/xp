@@ -67,6 +67,9 @@ export function initBootSequence(eventBus, EVENTS) {
         desktop.style.opacity = '1';
         desktop.style.pointerEvents = 'auto';
         
+        // Hide the desktop blocker overlay
+        const blocker = document.getElementById('desktop-blocker');
+        if (blocker) blocker.style.display = 'none';
         // CRT effects remain visible by default CSS
     }
     
@@ -145,7 +148,11 @@ export function initBootSequence(eventBus, EVENTS) {
         // Show desktop and enable interaction
         desktop.style.opacity = '1';
         desktop.style.pointerEvents = 'auto';
-
+        
+        // Hide the desktop blocker overlay
+        const blocker = document.getElementById('desktop-blocker');
+        if (blocker) blocker.style.display = 'none';
+        
         // Restore CRT effects after login
         if (crtScanline) crtScanline.style.display = 'block'; 
         if (crtVignette) crtVignette.style.display = 'block';
