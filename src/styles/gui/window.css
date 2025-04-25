@@ -468,3 +468,65 @@ iframe {
 }
 
 /* --- End Notepad Status Bar Styles --- */
+
+/* Remove all XP-style window open/close/minimize animations */
+
+@keyframes windowOpenFadeSlide {
+    from {
+        opacity: 0;
+        transform: translate(-24px, -24px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.window-opening {
+    animation: windowOpenFadeSlide 0.2s ease-out;
+}
+
+@keyframes windowCloseFade {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.window-closing {
+    animation: windowCloseFade 0.15s ease-in;
+}
+
+@keyframes windowMinimizeZoom {
+    from {
+        opacity: 1;
+        transform: none;
+    }
+    to {
+        opacity: 0.5;
+        transform: var(--window-minimize-transform, scale(0.55));
+    }
+}
+
+.window-minimizing {
+    animation: windowMinimizeZoom 0.15s ease-in forwards;
+    transform-origin: bottom center;
+}
+
+@keyframes windowRestoreZoom {
+    from {
+        opacity: 0.5;
+        transform: var(--window-restore-transform, scale(0.55));
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.window-restoring {
+    animation: windowRestoreZoom 0.15s ease-out;
+    transform-origin: bottom center;
+}

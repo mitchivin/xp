@@ -339,6 +339,16 @@ class WindowManager {
         const windowElement = this._createWindowElement(program);
         if (!windowElement) return;
 
+        // Add opening animation class before appending
+        windowElement.classList.add('window-opening');
+        // Remove the class after animation ends
+        windowElement.addEventListener('animationend', function handler(e) {
+            if (e.animationName === 'windowOpenFadeSlide') {
+                windowElement.classList.remove('window-opening');
+                windowElement.removeEventListener('animationend', handler);
+            }
+        });
+
         this.windowsContainer.appendChild(windowElement);
         this._registerWindow(windowElement, program);
         this.positionWindow(windowElement);
@@ -689,13 +699,20 @@ class WindowManager {
     closeWindow(windowElement) {
         if (!windowElement) return;
         const windowId = windowElement.id;
-        
-        // No special handling for mediaPlayer; close like any other window
-        
-        // First clean up internal state and taskbar
+        // Prevent double-close
+        if (windowElement.classList.contains('window-closing')) return;
+        // Add closing animation class
+        windowElement.classList.add('window-closing');
+        windowElement.addEventListener('animationend', function handler(e) {
+            if (e.animationName === 'windowCloseFade') {
+                windowElement.removeEventListener('animationend', handler);
+                // Remove from DOM after animation
+                if (windowElement.parentNode) {
+                    windowElement.parentNode.removeChild(windowElement);
+                }
+            }
+        });
         this._handleWindowCloseCleanup(windowId);
-
-        // Then clean up window-specific resources
         if (windowElement.responsiveObserver) {
             windowElement.responsiveObserver.disconnect();
             windowElement.responsiveObserver = null;
@@ -704,18 +721,9 @@ class WindowManager {
             windowElement.iframeResizeObserver.disconnect();
             windowElement.iframeResizeObserver = null;
         }
-
-        // Remove window element from DOM
-        if (windowElement.parentNode) {
-            windowElement.parentNode.removeChild(windowElement);
-        }
-
-        // Update program data state
-        if (programName && this.programData[programName]) {
+        if (typeof programName !== 'undefined' && this.programData[programName]) {
             this.programData[programName].isOpen = false;
         }
-
-        // Notify that the window was closed
         this.eventBus.publish(EVENTS.WINDOW_CLOSED, { windowId });
     }
     
@@ -725,19 +733,42 @@ class WindowManager {
      * @returns {void}
      */
     minimizeWindow(windowElement) {
-         if (!windowElement || windowElement.windowState.isMinimized) return;
-
+        if (!windowElement || windowElement.windowState.isMinimized) return;
+        // Calculate transform to taskbar icon (bottom center to icon center)
+        const taskbarItem = this.taskbarItems[windowElement.id];
+        let minimizeTransform = 'scale(0.55)'; // fallback
+        if (taskbarItem) {
+            const winRect = windowElement.getBoundingClientRect();
+            const taskbarRect = taskbarItem.getBoundingClientRect();
+            // Window bottom center
+            const winBottomCenterX = winRect.left + winRect.width / 2;
+            const winBottomCenterY = winRect.top + winRect.height;
+            // Taskbar icon center
+            const taskbarCenterX = taskbarRect.left + taskbarRect.width / 2;
+            const taskbarCenterY = taskbarRect.top + taskbarRect.height / 2;
+            // Scale factor (XP-like)
+            const scale = 0.55;
+            // Translate X and Y so window bottom center moves to taskbar icon center
+            const translateX = taskbarCenterX - winBottomCenterX;
+            const translateY = taskbarCenterY - winBottomCenterY;
+            minimizeTransform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
+        }
+        windowElement.style.setProperty('--window-minimize-transform', minimizeTransform);
+        windowElement.classList.add('window-minimizing');
+        windowElement.addEventListener('animationend', function handler(e) {
+            if (e.animationName === 'windowMinimizeZoom') {
+                windowElement.classList.remove('window-minimizing');
+                windowElement.style.removeProperty('--window-minimize-transform');
+                windowElement.style.display = 'none';
+                windowElement.removeEventListener('animationend', handler);
+            }
+        });
         windowElement.classList.add('minimized');
         windowElement.windowState.isMinimized = true;
-        windowElement.style.display = 'none';
-        this._setWindowZIndex(windowElement, ''); // Clear z-index when minimized
-
+        this._setWindowZIndex(windowElement, '');
         this._updateTaskbarItemState(windowElement.id, false);
-
-        // Remove from active stack and update others
         this._updateStackOrder(windowElement.id, 'remove');
         this._updateZIndices();
-
         if (this.activeWindow === windowElement) {
             this.activeWindow = null;
             const topWindow = this._findTopWindow();
@@ -745,7 +776,6 @@ class WindowManager {
                 this.bringToFront(topWindow);
             }
         }
-        
         this.eventBus.publish(EVENTS.WINDOW_MINIMIZED, { windowId: windowElement.id });
     }
     
@@ -756,15 +786,38 @@ class WindowManager {
      */
     restoreWindow(windowElement) {
         if (!windowElement || !windowElement.windowState.isMinimized) return;
-
         windowElement.classList.remove('minimized');
         windowElement.windowState.isMinimized = false;
         windowElement.style.display = 'flex';
-
-        // Add back to stack BEFORE bringing to front
+        // Calculate transform from taskbar icon (bottom center to icon center)
+        const taskbarItem = this.taskbarItems[windowElement.id];
+        let restoreTransform = 'scale(0.55)'; // fallback
+        if (taskbarItem) {
+            const winRect = windowElement.getBoundingClientRect();
+            const taskbarRect = taskbarItem.getBoundingClientRect();
+            // Window bottom center
+            const winBottomCenterX = winRect.left + winRect.width / 2;
+            const winBottomCenterY = winRect.top + winRect.height;
+            // Taskbar icon center
+            const taskbarCenterX = taskbarRect.left + taskbarRect.width / 2;
+            const taskbarCenterY = taskbarRect.top + taskbarRect.height / 2;
+            // Scale factor (XP-like)
+            const scale = 0.55;
+            // Translate X and Y so window bottom center moves from taskbar icon center
+            const translateX = taskbarCenterX - winBottomCenterX;
+            const translateY = taskbarCenterY - winBottomCenterY;
+            restoreTransform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
+        }
+        windowElement.style.setProperty('--window-restore-transform', restoreTransform);
+        windowElement.classList.add('window-restoring');
+        windowElement.addEventListener('animationend', function handler(e) {
+            if (e.animationName === 'windowRestoreZoom') {
+                windowElement.classList.remove('window-restoring');
+                windowElement.style.removeProperty('--window-restore-transform');
+                windowElement.removeEventListener('animationend', handler);
+            }
+        });
         this._updateStackOrder(windowElement.id, 'add');
-        // Note: _updateZIndices() will be called by bringToFront
-
         this.bringToFront(windowElement);
     }
     
@@ -1248,5 +1301,25 @@ class WindowManager {
                  this._setWindowZIndex(windowElement, '');
             }
         });
+    }
+
+    // Helper: Calculate transform from window to taskbar button
+    _getTaskbarFlyTransform(windowElement) {
+        const taskbarItem = this.taskbarItems[windowElement.id];
+        if (!taskbarItem) return null;
+        const winRect = windowElement.getBoundingClientRect();
+        const taskbarRect = taskbarItem.getBoundingClientRect();
+        // Center points
+        const winCenterX = winRect.left + winRect.width / 2;
+        const winCenterY = winRect.top + winRect.height / 2;
+        const taskbarCenterX = taskbarRect.left + taskbarRect.width / 2;
+        const taskbarCenterY = taskbarRect.top + taskbarRect.height / 2;
+        // Scale factors
+        const scaleX = taskbarRect.width / winRect.width;
+        const scaleY = taskbarRect.height / winRect.height;
+        // Translate so window center moves to taskbar center
+        const translateX = taskbarCenterX - winCenterX;
+        const translateY = taskbarCenterY - winCenterY;
+        return { scaleX, scaleY, translateX, translateY };
     }
 }
