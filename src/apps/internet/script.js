@@ -22,10 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         '.forward': () => {},
         '.home': () => {
-            // Navigate to myProjects (home)
+            // Navigate to projects (home)
             const projectFrame = document.getElementById('project-frame');
             if (projectFrame) {
-                projectFrame.src = '../myProjects/index.html';
+                projectFrame.src = '../projects/index.html';
             }
         },
         '.search': () => {},
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Initialization ---
     const projectFrame = document.getElementById('project-frame');
     function initializeApp() {
-        const initialPath = '../myProjects/index.html';
+        const initialPath = '../projects/index.html';
         projectFrame.src = initialPath;
     }
     initializeApp();

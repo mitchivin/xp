@@ -89,15 +89,15 @@ const projectTools = {
 };
 
 const toolIconData = {
-  ps: { src: '../../../../assets/apps/myProjects/icons/ps.webp', alt: 'Photoshop', label: 'Photoshop' },
-  ai: { src: '../../../../assets/apps/myProjects/icons/ai.webp', alt: 'Illustrator', label: 'Illustrator' },
-  id: { src: '../../../../assets/apps/myProjects/icons/id.webp', alt: 'InDesign', label: 'InDesign' },
-  ae: { src: '../../../../assets/apps/myProjects/icons/ae.webp', alt: 'After Effects', label: 'After Effects' },
-  blender: { src: '../../../../assets/apps/myProjects/icons/blender.webp', alt: 'Blender', label: 'Blender' },
-  pr: { src: '../../../../assets/apps/myProjects/icons/pr.webp', alt: 'Premiere Pro', label: 'Premiere Pro' },
-  lr: { src: '../../../../assets/apps/myProjects/icons/lr.webp', alt: 'Lightroom', label: 'Lightroom' },
-  chat: { src: '../../../../assets/apps/myProjects/icons/chat.webp', alt: 'ChatGPT', label: 'ChatGPT' },
-  cursor: { src: '../../../../assets/apps/myProjects/icons/cursor.webp', alt: 'Cursor', label: 'Cursor' }
+  ps: { src: '../../../../assets/apps/projects/icons/ps.webp', alt: 'Photoshop', label: 'Photoshop' },
+  ai: { src: '../../../../assets/apps/projects/icons/ai.webp', alt: 'Illustrator', label: 'Illustrator' },
+  id: { src: '../../../../assets/apps/projects/icons/id.webp', alt: 'InDesign', label: 'InDesign' },
+  ae: { src: '../../../../assets/apps/projects/icons/ae.webp', alt: 'After Effects', label: 'After Effects' },
+  blender: { src: '../../../../assets/apps/projects/icons/blender.webp', alt: 'Blender', label: 'Blender' },
+  pr: { src: '../../../../assets/apps/projects/icons/pr.webp', alt: 'Premiere Pro', label: 'Premiere Pro' },
+  lr: { src: '../../../../assets/apps/projects/icons/lr.webp', alt: 'Lightroom', label: 'Lightroom' },
+  chat: { src: '../../../../assets/apps/projects/icons/chat.webp', alt: 'ChatGPT', label: 'ChatGPT' },
+  cursor: { src: '../../../../assets/apps/projects/icons/cursor.webp', alt: 'Cursor', label: 'Cursor' }
 };
 
 const lightboxTools = document.querySelector('[data-lightbox-tools]');
@@ -185,9 +185,9 @@ function preloadVideoForIndex(index) {
 // Gallery images for internet (add more as needed)
 const projectImages = {
   'OS Simulation :: My Portfolio': [
-    '../../../../assets/apps/myProjects/images/cover-10.webp',
-    '../../../../assets/apps/myProjects/images/test1.webp',
-    '../../../../assets/apps/myProjects/images/test2.webp'
+    '../../../../assets/apps/projects/images/cover-10.webp',
+    '../../../../assets/apps/projects/images/test1.webp',
+    '../../../../assets/apps/projects/images/test2.webp'
   ]
   // Add more internet as needed
 };
