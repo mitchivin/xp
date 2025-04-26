@@ -1101,11 +1101,11 @@ class WindowManager {
                 break;
             case "center-right":
                 leftPos = viewportWidth - windowWidth - (posConfig.offsetX || 0);
-                topPos = Math.max(0, (adjustedViewportHeight - windowHeight) / 2);
+                topPos = Math.max(0, (adjustedViewportHeight - windowHeight) / 2 + (posConfig.offsetY || 0));
                 break;
             case "center-left":
                 leftPos = posConfig.offsetX || 0;
-                topPos = Math.max(0, (adjustedViewportHeight - windowHeight) / 2);
+                topPos = Math.max(0, (adjustedViewportHeight - windowHeight) / 2 + (posConfig.offsetY || 0));
                 break;
             case "left-of-browser":
                 const browserWidth = 1000;

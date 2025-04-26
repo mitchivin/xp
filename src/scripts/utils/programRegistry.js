@@ -118,7 +118,7 @@ const programData = {
         { 
           dimensions: { width: 800, height: 600 }, 
           statusBarText: "Viewing information about Mitchell Ivin",
-          position: { type: "custom", align: "center-left", offsetX: 140 }
+          position: { type: "custom", align: "center-left", offsetX: 120, offsetY: -50 }
         }
     ),
     "contact": createProgram(
@@ -158,7 +158,7 @@ const programData = {
         { 
           dimensions: { width: 1030, height: 780 }, 
           statusBarText: "Browsing project portfolio",
-          position: { type: "custom", align: "center-right", offsetX: 300 }
+          position: { type: "custom", align: "center-right", offsetX: 340, offsetY: -50 }
         }
     ),
 

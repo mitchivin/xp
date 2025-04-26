@@ -47,3 +47,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+// Highlight corresponding software on skill hover
+function setupSkillSoftwareHighlight() {
+  const skills = document.querySelectorAll('.skills-grid [data-software]');
+  const softwares = document.querySelectorAll('.software-grid [data-software]');
+  skills.forEach(skill => {
+    skill.addEventListener('mouseenter', () => {
+      const keys = skill.getAttribute('data-software').split(',').map(k => k.trim());
+      if (keys.includes('all')) {
+        softwares.forEach(soft => soft.classList.add('force-hover'));
+      } else {
+        softwares.forEach(soft => {
+          if (keys.includes(soft.getAttribute('data-software'))) {
+            soft.classList.add('force-hover');
+          }
+        });
+      }
+    });
+    skill.addEventListener('mouseleave', () => {
+      softwares.forEach(soft => soft.classList.remove('force-hover'));
+    });
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupSkillSoftwareHighlight);
+} else {
+  setupSkillSoftwareHighlight();
+}

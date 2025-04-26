@@ -53,7 +53,9 @@ body {
 
 .main {
   width: 100%;
+  max-width: 700px;
   padding-left: 24px;
+  padding-top: 24px;
   box-sizing: border-box;
   position: relative;
 }
@@ -207,8 +209,11 @@ body {
 
 .main {
   width: 100%;
+  max-width: 700px;
   padding-left: 24px;
+  padding-top: 24px;
   box-sizing: border-box;
+  position: relative;
 }
 
 .left-panel-title {
@@ -279,14 +284,8 @@ body, body * {
 
 .main {
   width: 100%;
-  max-width: 100%;
-  margin: 0;
+  padding-left: 24px;
   box-sizing: border-box;
-  padding: 24px 24px 24px 24px;
-  font-family: Tahoma, Segoe UI, Verdana, Arial, sans-serif;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
 }
 
 body, .scroll-content {
@@ -322,8 +321,7 @@ body, .scroll-content {
   flex-direction: row;
   gap: 20px;
   justify-content: flex-start;
-  padding-left: 0;
-  padding-right: 0;
+  padding-right: 24px;
   max-width: 100%;
   box-sizing: border-box;
 }
@@ -407,6 +405,21 @@ body, .scroll-content {
   display: block;
   margin-bottom: 0;
   overflow-wrap: break-word;
+  text-shadow: 1px 1px 0 #000, 0 0px 1px #000;
+  opacity: 1;
+  transition: opacity 0.25s, background 0.18s, border-color 0.18s, font-weight 0.13s;
+}
+
+.skills-grid > div:hover,
+.software-grid li:hover,
+.software-grid li.force-hover {
+  background: rgba(174,231,255,0.28);
+  border-color: #fff;
+  color: #fff;
+  font-weight: bold;
+  opacity: 1;
+  transition: opacity 0.25s, background 0.18s, border-color 0.18s, font-weight 0.13s;
+  cursor: default;
 }
 
 .software-grid {
@@ -415,7 +428,7 @@ body, .scroll-content {
   gap: 10px;
   list-style: none;
   padding: 0;
-  margin-bottom: 0;
+  margin-bottom: 32px;
   max-width: 100%;
   width: 100%;
 }
@@ -848,5 +861,12 @@ h3.subtitle_header + .software-grid {
 
 .left-panel__card__row + .left-panel__card__row {
   margin-top: 1px;
+}
+
+.software-highlight {
+  background: rgba(174,231,255,0.18);
+  border-color: #aee7ff;
+  color: #fff;
+  transition: background 0.18s, border-color 0.18s;
 }
 
