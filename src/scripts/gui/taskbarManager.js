@@ -251,9 +251,9 @@ export function showNetworkBalloon() {
       <button class="balloon__close" aria-label="Close"></button>
       <div class="balloon__header">
         <img class="balloon__header__img" src="assets/gui/taskbar/welcome.webp" alt="welcome" />
-        <span class="balloon__header__text">Welcome to my Portfolio</span>
+        <span class="balloon__header__text">Welcome to my Portfolio.</span>
       </div>
-      <p class="balloon__text__first">Hey I'm Mitch, I'm a graphic designer<br>exploring new creative ground with AI.</p>
+      <p class="balloon__text__first">Hey! I'm Mitch, I'm a graphic designer<br>exploring how AI can bring my ideas to life.</p>
       <p class="balloon__text__second">Deliberately different. Meant to be explored.</p>
     </div>
   `;

@@ -32,7 +32,7 @@ const profileElement = document.querySelector('.back-gradient');
 if (profileElement) {
     profileElement.addEventListener('click', function () {
         // Check if login is in cooldown period
-        if (loginCooldown) {
+        if (window.loginCooldown || loginCooldown) {
             return;
         }
 
@@ -63,4 +63,13 @@ document.addEventListener('DOMContentLoaded', () => {
             loginCooldown = false;
         }, cooldownDuration);
     }
+});
+
+// Listen for custom event to trigger login cooldown after logoff
+document.addEventListener('triggerLoginCooldown', () => {
+    const cooldownDuration = 2000;
+    setTimeout(() => {
+        window.loginCooldown = false;
+        loginCooldown = false;
+    }, cooldownDuration);
 }); 

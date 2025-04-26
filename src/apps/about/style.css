@@ -336,7 +336,7 @@ body, .scroll-content {
   margin-top: 0;
   margin-bottom: 12px;
   letter-spacing: 0.5px;
-  text-shadow: 0 1px 4px #000;
+  text-shadow: 1px 1px 0 #000, 0 0px 1px #000;
   padding-left: 0;
   line-height: 1;
 }
@@ -349,7 +349,7 @@ body, .scroll-content {
   margin-bottom: 12px;
   font-family: Tahoma, Segoe UI, Verdana, Arial, sans-serif;
   padding-bottom: 2px;
-  text-shadow: 0 1px 4px #000;
+  text-shadow: 1px 1px 0 #000, 0 0px 1px #000;
 }
 
 .subtitle {
@@ -367,10 +367,10 @@ body, .scroll-content {
   color: #fff;
   font-weight: normal;
   margin-top: 0;
-  margin-bottom: 10px;
+  margin-bottom: 18px;
   padding: 0;
-  line-height: 1.6;
-  text-shadow: 0 1px 4px #000;
+  line-height: 1.35;
+  text-shadow: 1px 1px 0 #000, 0 0px 1px #000;
   font-family: Tahoma, Segoe UI, Verdana, Arial, sans-serif;
   width: 100%;
   max-width: 100%;

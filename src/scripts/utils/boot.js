@@ -191,6 +191,8 @@ export function initBootSequence(eventBus, EVENTS) {
                 showNetworkBalloon();
             }
         }, 3000);
+
+        window.loginCooldown = false;
     }
 
     // Event listener for communication with login iframe
@@ -218,95 +220,37 @@ export function initBootSequence(eventBus, EVENTS) {
      * Shows login screen without full reboot
      */
     eventBus.subscribe(EVENTS.LOG_OFF_REQUESTED, () => {
-        // If in cooldown period, ignore the log off request
-        if (logOffCooldown) {
-            return;
-        }
-        
-        // Set cooldown flag to prevent rapid log off/on cycles
+        if (logOffCooldown) return;
         logOffCooldown = true;
-        
-        // Reset login iframe first to ensure it's ready when displayed
-        const loginIframe = document.getElementById('login-iframe');
-        if (loginIframe) {
-            // Add logoff parameter to signal iframe to activate cooldown
-            const currentSrc = loginIframe.src.split('?')[0]; // Remove any existing params
-            loginIframe.src = `${currentSrc}?logoff=true`;
-            
-            // Add an onload event to ensure iframe is loaded before showing
-            loginIframe.onload = () => {
-                // Play logoff sound
-                try {
-                    const logoffSound = new Audio('./assets/sounds/logoff.wav');
-                    logoffSound.play();
-                } catch (error) {
-                    console.error('Error playing logoff sound:', error); 
-                }
-                
-                // Hide CRT effects
-                if (crtScanline) crtScanline.style.display = 'none';
-                if (crtVignette) crtVignette.style.display = 'none';
-                
-                // Prepare login screen (hidden but ready)
-                loginScreen.style.display = 'flex';
-                loginScreen.style.opacity = '0';
-                loginScreen.style.pointerEvents = 'auto';
-                
-                // Force browser reflow to ensure display changes are processed
-                void loginScreen.offsetWidth;
-                
-                // Hide desktop and show login screen
-                desktop.style.opacity = '0';
-                desktop.style.pointerEvents = 'none';
-                
-                // Short timeout to ensure desktop starts fading before login appears
-                setTimeout(() => {
-                    loginScreen.style.opacity = '1';
-                    
-                    // Keep session storage intact but flag Windows as logged out
-                    // This lets us distinguish between full boot and log-off state
-                    sessionStorage.setItem('logged_in', 'false');
-                }, 50);
-            };
-            
-            // Fallback in case onload doesn't fire (e.g., cached iframe)
-            setTimeout(() => {
-                if (loginScreen.style.opacity !== '1') {
-                    console.log('Using fallback for login screen display');
-                    loginScreen.style.display = 'flex';
-                    loginScreen.style.opacity = '1';
-                    desktop.style.opacity = '0';
-                    desktop.style.pointerEvents = 'none';
-                    sessionStorage.setItem('logged_in', 'false');
-                }
-            }, 1000);
-        } else {
-            // Fallback if iframe element not found
-            console.error('Login iframe not found');
-            
-            // Play logoff sound
-            try {
-                const logoffSound = new Audio('./assets/sounds/logoff.wav');
-                logoffSound.play();
-            } catch (error) {
-                console.error('Error playing logoff sound:', error); 
-            }
-            
-            // Hide desktop during log off
-            desktop.style.opacity = '0';
-            desktop.style.pointerEvents = 'none';
-            
-            // Hide CRT effects during login screen
-            if (crtScanline) crtScanline.style.display = 'none';
-            if (crtVignette) crtVignette.style.display = 'none';
-            
-            // Show login screen
-            loginScreen.style.display = 'flex';
-            loginScreen.style.opacity = '1';
-            loginScreen.style.pointerEvents = 'auto';
-            
-            // Update session storage
-            sessionStorage.setItem('logged_in', 'false');
+        window.loginCooldown = true;
+
+        // Play logoff sound
+        try {
+            const logoffSound = new Audio('./assets/sounds/logoff.wav');
+            logoffSound.play();
+        } catch (error) {
+            console.error('Error playing logoff sound:', error);
         }
+
+        // Hide the balloon if it is showing
+        const balloon = document.getElementById('balloon-root');
+        if (balloon && balloon.parentNode) {
+            balloon.parentNode.removeChild(balloon);
+        }
+
+        // Show login screen
+        loginScreen.style.display = 'flex';
+        loginScreen.style.opacity = '0';
+        loginScreen.style.pointerEvents = 'auto';
+        desktop.style.opacity = '0';
+        desktop.style.pointerEvents = 'none';
+        if (crtScanline) crtScanline.style.display = 'none';
+        if (crtVignette) crtVignette.style.display = 'none';
+        void loginScreen.offsetWidth;
+        setTimeout(() => {
+            loginScreen.style.opacity = '1';
+            sessionStorage.setItem('logged_in', 'false');
+            document.dispatchEvent(new CustomEvent('triggerLoginCooldown'));
+        }, 50);
     });
 } 

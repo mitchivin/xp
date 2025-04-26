@@ -65,12 +65,19 @@ class WindowTemplates {
      * @returns {HTMLElement} DOM element containing the window content
      */
     static getTemplate(templateName, programConfig) {
-        // Handle standard iframe apps via appPath - ALWAYS CREATE NEW IFRAME FOR MEDIA PLAYER
+        // Use preloaded iframe for all apps, including mediaPlayer
+        const programKey = programConfig.id.replace('-window', '');
         if (templateName === 'iframe-standard' && programConfig?.appPath) {
-            const programKey = programConfig.id.replace('-window', '');
-            
-            // Always create a new iframe for mediaPlayer
-            return this.createIframeContainer(programConfig.appPath, programConfig.id);
+            if (preloadedIframes[programKey]) {
+                // Use preloaded iframe
+                const content = document.createElement('div');
+                content.className = 'window-body iframe-container';
+                content.appendChild(preloadedIframes[programKey]);
+                return content;
+            } else {
+                // Fallback: create a new iframe (should be rare)
+                return this.createIframeContainer(programConfig.appPath, programConfig.id);
+            }
         }
         
         // Create error container for invalid templates or non-iframe types
@@ -100,28 +107,21 @@ class WindowTemplates {
      * @returns {HTMLElement} Container with an iframe
      */
     static createIframeContainer(appPath, windowId) {
-        console.log(`Fallback: Creating new iframe for ${windowId}`); // Log iframe creation for debugging
         const container = document.createElement('div');
         container.className = 'window-body iframe-container'; 
-        
-        // Special handling for mediaPlayer: show loading indicator for 2s, then reveal iframe
+        // Only show loading indicator for mediaPlayer if not using preloaded iframe
         if (windowId === 'mediaPlayer-window') {
-            // Create loading indicator
             const loading = document.createElement('div');
             loading.className = 'window-loading-indicator';
-            // REMOVED TEXT, only show loader
             loading.innerHTML = `<div class="loader"></div>`;
-
-            // Add spinner CSS if not present
             if (!document.getElementById('window-loading-indicator-style')) {
                 const style = document.createElement('style');
                 style.id = 'window-loading-indicator-style';
-                // UPDATED CSS for simpler XP-style spinner
                 style.textContent = `
                 .window-loading-indicator {
                   position: absolute;
                   inset: 0;
-                  background: #000; /* Changed to black background */
+                  background: #000;
                   display: flex;
                   align-items: center;
                   justify-content: center;
@@ -134,10 +134,10 @@ class WindowTemplates {
                   pointer-events: none;
                 }
                 .window-loading-indicator .loader {
-                  border: 4px solid rgba(255, 255, 255, 0.3); /* Lighter border */
-                  border-top: 4px solid #ffffff; /* White loading part */
+                  border: 4px solid rgba(255, 255, 255, 0.3);
+                  border-top: 4px solid #ffffff;
                   border-radius: 50%;
-                  width: 36px; /* Smaller size */
+                  width: 36px;
                   height: 36px;
                   animation: spin 1.5s linear infinite;
                 }
@@ -148,7 +148,6 @@ class WindowTemplates {
                 `;
                 document.head.appendChild(style);
             }
-            // Create iframe, hidden offscreen but loading
             const iframe = document.createElement('iframe');
             Object.assign(iframe, { src: appPath, title: `${windowId}-content` });
             const attrs = {
@@ -162,39 +161,29 @@ class WindowTemplates {
                 iframe.setAttribute(attr, value);
             container.appendChild(loading);
             container.appendChild(iframe);
-
-            // Logic for minimum 1-second display + readiness check
             let ready = false;
             let minTimePassed = false;
-
             function tryFadeOut() {
               if (ready && minTimePassed) {
-                console.log('Media Player Ready and Min Time Passed. Revealing...'); // Debug
                 loading.classList.add('fade-out');
                 iframe.style.visibility = 'visible';
                 iframe.style.position = '';
                 iframe.style.left = '';
-                setTimeout(() => loading.remove(), 300); // Remove after 0.3s fade
-                window.removeEventListener('message', onPlayerReady); // Clean up listener
+                setTimeout(() => loading.remove(), 300);
+                window.removeEventListener('message', onPlayerReady);
               }
             }
-
-            // Timer for minimum display time
             setTimeout(() => {
               minTimePassed = true;
               tryFadeOut();
-            }, 1000); // 1 second delay
-
-            // Listen for ready message from the iframe
+            }, 1000);
             function onPlayerReady(event) {
                 if (event.source === iframe.contentWindow && event.data && event.data.type === 'mediaPlayer-ready') {
                     ready = true;
                     tryFadeOut();
-                } else if (event.source === iframe.contentWindow) {
                 }
             }
             window.addEventListener('message', onPlayerReady);
-
             return container;
         }
         // Default: create iframe immediately
@@ -1112,6 +1101,10 @@ class WindowManager {
                 break;
             case "center-right":
                 leftPos = viewportWidth - windowWidth - (posConfig.offsetX || 0);
+                topPos = Math.max(0, (adjustedViewportHeight - windowHeight) / 2);
+                break;
+            case "center-left":
+                leftPos = posConfig.offsetX || 0;
                 topPos = Math.max(0, (adjustedViewportHeight - windowHeight) / 2);
                 break;
             case "left-of-browser":
