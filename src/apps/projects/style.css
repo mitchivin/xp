@@ -631,29 +631,6 @@ article {
   width: 1.725rem;
 }
 
-.tool-tooltip {
-  display: none;
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, 0);
-  top: 120%;
-  white-space: nowrap;
-  color: #fff;
-  font-size: 0.85rem;
-  font-weight: var(--fw400);
-  pointer-events: none;
-  z-index: 10;
-  background: none;
-  border: none;
-  padding: 0;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.25);
-  margin-top: 4px;
-}
-
-.tool-icon-wrapper:hover .tool-tooltip {
-  display: block;
-}
-
 .lightbox-details-container .lightbox-title {
   margin-top: 24px;
   font-size: 26px;

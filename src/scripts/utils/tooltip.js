@@ -50,7 +50,8 @@ export function setupTooltips(selector, tooltipContainer = document.body, delay 
                 whiteSpace: 'nowrap',
                 fontFamily: 'Tahoma, sans-serif',
                 pointerEvents: 'none',
-                boxShadow: '1px 1px 3px rgba(0,0,0,0.2)'
+                boxShadow: '1px 1px 3px rgba(0,0,0,0.2)',
+                borderRadius: '3px'
             });
             tooltipContainer.appendChild(el);
             return el;
@@ -72,6 +73,8 @@ export function setupTooltips(selector, tooltipContainer = document.body, delay 
 
     // Show the tooltip for a given element and position it appropriately
     const showTooltip = (element) => {
+        // If the balloon is open, do not show the tooltip
+        if (document.getElementById('balloon-root')) return;
         const tooltipText = element.getAttribute('data-tooltip') || element.getAttribute('title');
         if (!tooltipText) return;
         clearTimeout(tooltipTimeout);

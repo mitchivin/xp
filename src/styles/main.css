@@ -55,11 +55,6 @@ body {
     overflow: hidden; /* Prevent scrollbars on body */
 }
 
-/* Hide the cursor during the loading screen */
-.loading-screen {
-    cursor: none;
-}
-
 .desktop {
 }
 

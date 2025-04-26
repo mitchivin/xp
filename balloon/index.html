@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Balloon Tooltip Demo</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: #e0e0e0;
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      height: 100vh;
+    }
+    .demo-footer {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      width: 320px;
+      height: 70px;
+      background: #d4d0c8;
+      border-top: 2px solid #fff;
+      border-left: 2px solid #fff;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      padding-right: 20px;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-footer">
+    <img src="risk.png" alt="risk icon" style="width:18px;height:18px;margin-right:8px;" />
+    <button onclick="showBalloon()" style="margin-right:10px;">Show Balloon</button>
+    <div id="balloon-root"></div>
+  </div>
+  <script src="balloon.js"></script>
+</body>
+</html>

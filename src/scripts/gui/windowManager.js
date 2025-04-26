@@ -424,8 +424,8 @@ class WindowManager {
             content = WindowTemplates.getTemplate(program.template, program);
         }
         if (!content) {
-            console.error(`Failed to get template "${program.template}" for ${program.id}`);
-            return null;
+             console.error(`Failed to get template "${program.template}" for ${program.id}`);
+             return null;
         }
         windowElement.appendChild(content);
         this._addStartMenuOverlay(windowElement, content);
@@ -785,7 +785,7 @@ class WindowManager {
      * @returns {void}
      */
     minimizeWindow(windowElement) {
-        if (!windowElement || windowElement.windowState.isMinimized) return;
+         if (!windowElement || windowElement.windowState.isMinimized) return;
         // Calculate transform to taskbar icon (bottom center to icon center)
         const taskbarItem = this.taskbarItems[windowElement.id];
         let minimizeTransform = 'scale(0.55)'; // fallback
@@ -812,12 +812,9 @@ class WindowManager {
                 windowElement.classList.remove('window-minimizing');
                 windowElement.style.removeProperty('--window-minimize-transform');
                 windowElement.style.display = 'none';
-                windowElement.removeEventListener('animationend', handler);
-            }
-        });
         windowElement.classList.add('minimized');
         windowElement.windowState.isMinimized = true;
-        this._setWindowZIndex(windowElement, '');
+                this._setWindowZIndex(windowElement, '');
         this._updateTaskbarItemState(windowElement.id, false);
         this._updateStackOrder(windowElement.id, 'remove');
         this._updateZIndices();
@@ -829,6 +826,9 @@ class WindowManager {
             }
         }
         this.eventBus.publish(EVENTS.WINDOW_MINIMIZED, { windowId: windowElement.id });
+                windowElement.removeEventListener('animationend', handler);
+            }
+        }.bind(this));
     }
     
     /**

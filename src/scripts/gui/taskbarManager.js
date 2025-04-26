@@ -235,3 +235,67 @@ export default class Taskbar {
         });
     }
 }
+
+// --- Balloon Tooltip for Network Icon ---
+export function showNetworkBalloon() {
+  if (document.getElementById('balloon-root')) return;
+  const icon = document.querySelector('.tray-network-icon');
+  if (!icon) return;
+  const balloonRoot = document.createElement('div');
+  balloonRoot.id = 'balloon-root';
+  balloonRoot.style.position = 'absolute';
+  balloonRoot.style.zIndex = '10010';
+  document.body.appendChild(balloonRoot);
+  balloonRoot.innerHTML = `
+    <div class="balloon">
+      <button class="balloon__close" aria-label="Close"></button>
+      <div class="balloon__header">
+        <img class="balloon__header__img" src="assets/gui/taskbar/welcome.webp" alt="welcome" />
+        <span class="balloon__header__text">Welcome to my Portfolio</span>
+      </div>
+      <p class="balloon__text__first">Hey I'm Mitch, I'm a graphic designer<br>exploring new creative ground with AI.</p>
+      <p class="balloon__text__second">Deliberately different. Meant to be explored.</p>
+    </div>
+  `;
+  setTimeout(() => {
+    const iconRect = icon.getBoundingClientRect();
+    const balloon = balloonRoot.querySelector('.balloon');
+    const balloonRect = balloon.getBoundingClientRect();
+    balloonRoot.style.left = (iconRect.left + iconRect.width / 2 - balloonRect.width / 2 + window.scrollX - 114) + 'px';
+    balloonRoot.style.top = (iconRect.top - balloonRect.height - 8 - 14 + window.scrollY) + 'px';
+  }, 0);
+  const balloon = balloonRoot.querySelector('.balloon');
+  const closeBtn = balloonRoot.querySelector('.balloon__close');
+  let balloonTimeouts = [];
+  closeBtn.onclick = () => hideBalloon();
+  // Remove balloon.onclick handler so clicking the balloon does nothing
+  balloon.classList.remove('hide');
+  balloonTimeouts.push(setTimeout(() => balloon.classList.add('hide'), 15000)); // Start fade out after 15s
+  balloonTimeouts.push(setTimeout(() => hideBalloon(), 16000)); // Remove after 16s
+  function hideBalloon() {
+    balloon.classList.add('hide');
+    balloonTimeouts.push(setTimeout(() => clearBalloon(), 1000));
+  }
+  function clearBalloon() {
+    balloonTimeouts.forEach(t => clearTimeout(t));
+    balloonTimeouts = [];
+    if (balloonRoot.parentNode) balloonRoot.parentNode.removeChild(balloonRoot);
+  }
+}
+
+// Remove the DOMContentLoaded event for auto-show
+// Instead, show balloon on click of the network icon
+const setupBalloonClick = () => {
+  const icon = document.querySelector('.tray-network-icon');
+  if (!icon) return;
+  icon.addEventListener('click', showNetworkBalloon);
+};
+window.addEventListener('DOMContentLoaded', () => {
+  setupBalloonClick();
+  // Show balloon automatically on login (page load), after 3s delay
+  // setTimeout(() => {
+  //   if (!document.getElementById('balloon-root')) {
+  //     showNetworkBalloon();
+  //   }
+  // }, 3000);
+});

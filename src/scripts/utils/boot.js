@@ -8,6 +8,8 @@
  * @module boot
  */
 
+import { showNetworkBalloon } from '../gui/taskbarManager.js';
+
 // Variable to track if log off is in cooldown period
 let logOffCooldown = false;
 
@@ -152,7 +154,7 @@ export function initBootSequence(eventBus, EVENTS) {
         // Hide the desktop blocker overlay
         const blocker = document.getElementById('desktop-blocker');
         if (blocker) blocker.style.display = 'none';
-        
+
         // Restore CRT effects after login
         if (crtScanline) crtScanline.style.display = 'block'; 
         if (crtVignette) crtVignette.style.display = 'block';
@@ -178,6 +180,13 @@ export function initBootSequence(eventBus, EVENTS) {
         setTimeout(() => {
             logOffCooldown = false;
         }, 4250); // Changed from 5000ms to 4250ms
+        
+        // Show network balloon after login, with 3s delay
+        setTimeout(() => {
+            if (typeof showNetworkBalloon === 'function' && !document.getElementById('balloon-root')) {
+                showNetworkBalloon();
+            }
+        }, 3000);
     }
 
     // Event listener for communication with login iframe

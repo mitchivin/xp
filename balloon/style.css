@@ -1,0 +1,99 @@
+/* Balloon Tooltip Styles */
+#balloon-root {
+  position: relative;
+}
+.balloon {
+  position: absolute;
+  right: -4px;
+  bottom: 19px;
+  border: 1px solid black;
+  border-radius: 7px;
+  padding: 6px 28px 10px 10px;
+  background-color: #ffffe1;
+  font-size: 11px;
+  white-space: nowrap;
+  filter: drop-shadow(2px 2px 1px rgba(0,0,0,0.4));
+  opacity: 0;
+  display: block;
+  animation: fadein 1s forwards;
+  z-index: 10;
+}
+.balloon.hide {
+  animation: fadeout 1s forwards;
+}
+@keyframes fadein {
+  0% { opacity: 0; display: block; }
+  100% { opacity: 1; display: block; }
+}
+@keyframes fadeout {
+  0% { opacity: 1; display: block; }
+  99% { opacity: 0; display: block; }
+  100% { opacity: 0; display: none; }
+}
+.balloon:before {
+  content: '';
+  position: absolute;
+  display: block;
+  bottom: -19px;
+  right: 14px;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 0 19px 19px 0;
+  border-color: transparent black transparent transparent;
+}
+.balloon:after {
+  content: '';
+  position: absolute;
+  display: block;
+  bottom: -17px;
+  right: 15px;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 0 18px 18px 0;
+  border-color: transparent #ffffe1 transparent transparent;
+}
+.balloon__close {
+  outline: none;
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  width: 14px;
+  height: 14px;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 3px;
+  background-color: transparent;
+  cursor: pointer;
+}
+.balloon__close:before, .balloon__close:after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  height: 8px;
+  width: 2px;
+  background-color: rgba(170,170,170);
+}
+.balloon__close:before {
+  transform: rotate(45deg);
+}
+.balloon__close:after {
+  transform: rotate(-45deg);
+}
+.balloon__close:hover {
+  background-color: #ffa90c;
+  border-color: white;
+  box-shadow: 1px 1px rgba(0,0,0,0.1);
+}
+.balloon__header {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+}
+.balloon__header__img {
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+}
+.balloon__text__first {
+  margin: 5px 0 10px;
+}
