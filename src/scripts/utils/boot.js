@@ -13,6 +13,10 @@ import { showNetworkBalloon } from '../gui/taskbarManager.js';
 // Variable to track if log off is in cooldown period
 let logOffCooldown = false;
 
+// Preload login sound at the top scope so it loads during boot
+const loginSoundPreload = new Audio('./assets/sounds/login.wav');
+loginSoundPreload.load();
+
 /**
  * Initializes the boot sequence for the Windows XP simulation
  * 
@@ -162,10 +166,10 @@ export function initBootSequence(eventBus, EVENTS) {
         // Trigger a custom event to reinitialize scanline animation
         document.dispatchEvent(new CustomEvent('reinitScanline'));
 
-        // Play login sound
+        // Play login sound using preloaded audio
         try {
-            const loginSound = new Audio('./assets/sounds/login.wav');
-            loginSound.play();
+            loginSoundPreload.currentTime = 0;
+            loginSoundPreload.play();
         } catch (error) {
             console.error('Error playing login sound:', error); 
         }
