@@ -74,6 +74,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Enable XP-style tooltips globally for all elements with data-tooltip
     setupTooltips('[data-tooltip]');
+
+    // Preload the first music player audio as soon as the simulation starts
+    window.musicPlayerPreloadAudio = new Audio('assets/apps/musicPlayer/songs/track1.mp3');
+    window.musicPlayerPreloadAudio.preload = 'auto';
+    window.musicPlayerPreloadAudio.load();
+
+    // Preload the music player iframe in the background
+    const hiddenMusicIframe = document.createElement('iframe');
+    hiddenMusicIframe.src = 'src/apps/musicPlayer/index.html';
+    hiddenMusicIframe.style.display = 'none';
+    hiddenMusicIframe.setAttribute('data-preload-music-player', 'true');
+    document.body.appendChild(hiddenMusicIframe);
 });
 
 /**
