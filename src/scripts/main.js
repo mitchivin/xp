@@ -64,6 +64,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: detailProgramName });
             }
         }
+        // Handle toggle-music-widget from iframes (About Me left panel)
+        else if (data.type === 'toggle-music-widget') {
+            const overlay = document.getElementById('music-widget-overlay');
+            if (overlay) {
+                eventBus.publish('MUSIC_WIDGET_CLOSE');
+            } else {
+                eventBus.publish('MUSIC_WIDGET_OPEN');
+            }
+        }
+        // Handle open-music-widget from iframes (About Me left panel)
+        else if (data.type === 'open-music-widget') {
+            const overlay = document.getElementById('music-widget-overlay');
+            if (!overlay) {
+                eventBus.publish('MUSIC_WIDGET_OPEN');
+            }
+        }
     });
 
     // Initialize CRT visual effects

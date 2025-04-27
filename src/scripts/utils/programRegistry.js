@@ -117,7 +117,7 @@ const programData = {
         "about",
         { 
           dimensions: { width: 800, height: 600 }, 
-          statusBarText: "Viewing information about Mitchell Ivin",
+          statusBarText: "Getting to know the designer",
           position: { type: "custom", align: "center-left", offsetX: 120, offsetY: -50 }
         }
     ),
@@ -126,14 +126,14 @@ const programData = {
         "Contact Me",
         "desktop/contact.webp",
         "contact",
-        { dimensions: { width: 600, height: 450 }, statusBarText: "Send a message" }
+        { dimensions: { width: 600, height: 450 }, statusBarText: "Let's start a conversation" }
     ),
     "resume": createProgram(
         "resume",
         "Resume.pdf",
         "desktop/resume.webp",
         "resume",
-        { dimensions: { width: 700, height: 800 }, statusBarText: "Viewing Resume.pdf" }
+        { dimensions: { width: 700, height: 800 }, statusBarText: "Skills and experience overview" }
     ),
 
     // Media Programs
@@ -157,8 +157,8 @@ const programData = {
         "internet", 
         { 
           dimensions: { width: 1030, height: 780 }, 
-          statusBarText: "Browsing project portfolio",
-          position: { type: "custom", align: "center-right", offsetX: 340, offsetY: -50 }
+          statusBarText: "Projects ready to explore",
+          position: { type: "custom", align: "center-left", offsetX: 640, offsetY: -50 }
         }
     ),
 

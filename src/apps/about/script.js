@@ -39,6 +39,15 @@ document.addEventListener('DOMContentLoaded', () => {
     row.addEventListener('click', e => {
       e.preventDefault();
       const app = row.getAttribute('data-app');
+      if (app === 'musicPlayer') {
+        // Only open the music widget if not already open
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'open-music-widget' }, '*');
+        } else {
+          alert('Open Music Player widget (not implemented in standalone mode)');
+        }
+        return;
+      }
       if (window.parent && window.parent !== window) {
         window.parent.postMessage({ type: 'open-app', app }, '*');
       } else {

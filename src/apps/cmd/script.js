@@ -209,6 +209,7 @@ input.addEventListener('input', () => {
     if (input.innerText.length === 0) {
         input.classList.remove('noCaret');
     }
+    scrollPromptIntoView();
 });
 
 // Listen for keydown events to keep the input focused when typing outside the field
@@ -225,11 +226,24 @@ input.addEventListener('keydown', (e) => {
         const commandText = input.textContent;
         const outputText = processCommand(commandText);
         const currentPrompt = ps1.textContent; // Get prompt from #ps1 span
-        println(`${currentPrompt} ${commandText}<br>${outputText}`);
+        // Append the static prompt + command to history
+        println(`${currentPrompt} ${commandText}`);
+        // Append the output (if any) to history
+        if (outputText) {
+            println(outputText);
+        }
         input.textContent = '';
+        scrollPromptIntoView();
     }
 });
 
 // Focus the input field and print the initial banner when the app loads
 input.focus();
 init();
+
+function scrollPromptIntoView() {
+    setTimeout(() => {
+        input.scrollIntoView({ block: "end" });
+        window.scrollTo(0, document.body.scrollHeight);
+    }, 0);
+}

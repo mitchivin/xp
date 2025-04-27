@@ -235,6 +235,15 @@ class WindowManager {
 
         // In WindowManager constructor, after this.programData = programData;
         createIframePool(this.programData);
+
+        // --- RUNTIME CHECK: Ensure .taskbar is a sibling of #windows-container, not a child ---
+        const windowsContainer = document.getElementById('windows-container');
+        const taskbar = document.querySelector('.taskbar');
+        if (windowsContainer && taskbar) {
+            if (taskbar.parentElement === windowsContainer) {
+                console.warn('[WindowManager] .taskbar is inside #windows-container! This will break z-index stacking. Move .taskbar to be a sibling of #windows-container in the DOM.');
+            }
+        }
     }
     
     _setupGlobalHandlers() {
@@ -373,49 +382,44 @@ class WindowManager {
 
         // Create Status Bar
         const programName = program.id.replace('-window', ''); // Get program name
-        const statusBar = document.createElement('div');
-        statusBar.className = 'status-bar';
-        
-        // --- Create main text field (dynamic or static) ---
-        const statusBarField = document.createElement('p');
-        statusBarField.className = 'status-bar-field'; // Class for the main/dynamic field
-        
-        // Determine initial text based on flags and program data
-        let initialText = 'Ready'; // Default fallback
-        if (program.initialDynamicStatus) {
-            initialText = program.initialStatusText || ''; // Use specific initial text or empty
-        } else if (program.statusBarText) {
-            initialText = program.statusBarText; // Use static text from registry
+        if (programName !== 'cmd') {
+            const statusBar = document.createElement('div');
+            statusBar.className = 'status-bar';
+            // --- Create main text field (dynamic or static) ---
+            const statusBarField = document.createElement('p');
+            statusBarField.className = 'status-bar-field'; // Class for the main/dynamic field
+            // Determine initial text based on flags and program data
+            let initialText = 'Ready';
+            if (program.initialDynamicStatus) {
+                initialText = program.initialStatusText || ''; // Use specific initial text or empty
+            } else if (program.statusBarText) {
+                initialText = program.statusBarText; // Use static text from registry
+            }
+            statusBarField.textContent = initialText;
+            // --- Add Notepad-specific static items --- 
+            if (programName === 'notepad') {
+                statusBar.classList.add('notepad-statusbar'); // Add class for flex layout
+                // Append dynamic field (Ln/Col) FIRST for Notepad
+                statusBarField.classList.add('status-bar-item-dynamic');
+                // Set Notepad's initial text here, overriding the general initialText if needed
+                statusBarField.textContent = 'Ln 1, Col 1'; 
+                statusBar.appendChild(statusBarField);
+                // Then append static items
+                ['ANSI', 'Windows (CRLF)', '100%'].forEach(text => {
+                    const staticItem = document.createElement('p');
+                    staticItem.className = 'status-bar-item-static';
+                    staticItem.textContent = text;
+                    statusBar.appendChild(staticItem);
+                });
+            } else {
+                // For other apps, just append the default/custom field
+                statusBar.appendChild(statusBarField);
+            }
+            // Append the status bar to the window element itself
+            windowElement.appendChild(statusBar);
+            // Store reference for dynamic updates (always points to the main field)
+            windowElement.statusBarField = statusBarField; 
         }
-        statusBarField.textContent = initialText;
-
-        // --- Add Notepad-specific static items --- 
-        if (programName === 'notepad') {
-            statusBar.classList.add('notepad-statusbar'); // Add class for flex layout
-            
-            // Append dynamic field (Ln/Col) FIRST for Notepad
-            statusBarField.classList.add('status-bar-item-dynamic');
-            // Set Notepad's initial text here, overriding the general initialText if needed
-            statusBarField.textContent = 'Ln 1, Col 1'; 
-            statusBar.appendChild(statusBarField);
-            
-            // Then append static items
-            ['ANSI', 'Windows (CRLF)', '100%'].forEach(text => {
-                const staticItem = document.createElement('p');
-                staticItem.className = 'status-bar-item-static';
-                staticItem.textContent = text;
-                statusBar.appendChild(staticItem);
-            });
-        } else {
-            // For other apps, just append the default/custom field
-             statusBar.appendChild(statusBarField);
-        }
-        
-        // Append the status bar to the window element itself
-        windowElement.appendChild(statusBar);
-        
-        // Store reference for dynamic updates (always points to the main field)
-        windowElement.statusBarField = statusBarField; 
 
         const defaultWidth = 600;
         const defaultHeight = 400;
@@ -1288,11 +1292,18 @@ class WindowManager {
     // New method to apply z-index based on stack order
     _updateZIndices() {
         const stackLength = this.zIndexStack.length;
+        // Get the taskbar z-index from CSS variable
+        const taskbarZIndex = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--z-taskbar')) || 500;
+        const maxWindowZIndex = taskbarZIndex - 1;
         this.zIndexStack.forEach((id, index) => {
             const windowElement = this.windows[id];
             if (windowElement && !windowElement.windowState.isMinimized) { // Only apply to non-minimized
                 // Higher index in array means lower stack position visually
-                const zIndexValue = this.baseZIndex + (stackLength - 1 - index);
+                let zIndexValue = this.baseZIndex + (stackLength - 1 - index);
+                // Cap window z-index so it never reaches or exceeds the taskbar
+                if (zIndexValue >= taskbarZIndex) {
+                    zIndexValue = maxWindowZIndex;
+                }
                 this._setWindowZIndex(windowElement, zIndexValue);
             } else if (windowElement) {
                  // Clear z-index for minimized windows

@@ -345,9 +345,9 @@ export default class StartMenu {
                         </li>
                         <li class="menu-divider"><hr class="divider"></li>
                         <li class="menu-item" id="menu-about" data-action="open-program" data-program-name="about">
-                            <img src="./assets/gui/desktop/about.webp" alt="About">
+                            <img src="./assets/gui/desktop/about.webp" alt="About Me">
                             <div class="item-content">
-                                <span class="item-title">About</span>
+                                <span class="item-title">About Me</span>
                             </div>
                         </li>
                         <li class="menu-item" id="menu-mediaPlayer" data-action="open-program" data-program-name="mediaPlayer">
