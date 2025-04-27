@@ -117,13 +117,29 @@ export default class StartMenu {
     createAllProgramsMenu() {
         const menuHTML = `
             <ul class="all-programs-items">
-                <li class="all-programs-item" data-program-name="mediaPlayer">
-                    <img src="./assets/gui/start-menu/mediaPlayer.webp" alt="Media Player">
-                    Media Player
+                <li class="all-programs-item" data-program-name="about">
+                    <img src="./assets/gui/desktop/about.webp" alt="About Me">
+                    About Me
+                </li>
+                <li class="all-programs-item" data-program-name="internet">
+                    <img src="./assets/gui/desktop/internet.webp" alt="My Projects">
+                    My Projects
+                </li>
+                <li class="all-programs-item" data-program-name="contact">
+                    <img src="./assets/gui/desktop/contact.webp" alt="Contact Me">
+                    Contact Me
                 </li>
                 <li class="all-programs-item" data-program-name="my-pictures">
                     <img src="./assets/gui/start-menu/photos.webp" alt="My Photos">
                     My Photos
+                </li>
+                <li class="all-programs-item" data-program-name="musicPlayer">
+                    <img src="./assets/gui/start-menu/musicPlayer.webp" alt="Music Player">
+                    Music Player
+                </li>
+                <li class="all-programs-item" data-program-name="mediaPlayer">
+                    <img src="./assets/gui/start-menu/mediaPlayer.webp" alt="Media Player">
+                    Media Player
                 </li>
                 <li class="all-programs-item" data-program-name="notepad">
                     <img src="./assets/gui/start-menu/notepad.webp" alt="Notepad">
@@ -134,29 +150,21 @@ export default class StartMenu {
                     Command Prompt
                 </li>
                 <li class="all-programs-separator"></li>
-                <li class="all-programs-item" data-program-name="about">
-                    <img src="./assets/gui/desktop/about.webp" alt="About">
-                    About
-                </li>
-                <li class="all-programs-item" data-program-name="internet">
-                    <img src="./assets/gui/desktop/internet.webp" alt="My Projects">
-                    My Projects
-                </li>
-                <li class="all-programs-item" data-program-name="contact">
-                    <img src="./assets/gui/desktop/contact.webp" alt="Contact Me">
-                    Contact Me
-                </li>
                 <li class="all-programs-item" data-action="open-url" data-url="https://www.linkedin.com">
                     <img src="./assets/gui/start-menu/linkedin.webp" alt="LinkedIn">
                     LinkedIn
+                </li>
+                <li class="all-programs-item" data-action="open-url" data-url="https://www.instagram.com">
+                    <img src="./assets/gui/start-menu/instagram.webp" alt="Instagram">
+                    Instagram
                 </li>
                 <li class="all-programs-item" data-action="open-url" data-url="https://github.com">
                     <img src="./assets/gui/start-menu/github.webp" alt="GitHub">
                     GitHub
                 </li>
-                <li class="all-programs-item" data-action="open-url" data-url="https://www.instagram.com">
-                    <img src="./assets/gui/start-menu/instagram.webp" alt="Instagram">
-                    Instagram
+                <li class="all-programs-item" data-action="open-url" data-url="https://www.behance.net">
+                    <img src="./assets/gui/start-menu/behance.webp" alt="Behance">
+                    Behance
                 </li>
             </ul>
         `;
@@ -354,11 +362,9 @@ export default class StartMenu {
                                 <span class="item-title">My Photos</span>
                             </div>
                         </li>
-                        <li class="menu-item" id="menu-cmd" data-action="open-program" data-program-name="cmd">
-                            <img src="./assets/gui/start-menu/cmd.webp" alt="Command Prompt">
-                            <div class="item-content">
-                                <span class="item-title" style="font-weight: normal; padding: 5px 0;">Command Prompt</span>
-                            </div>
+                        <li class="menu-item" id="menu-musicPlayer" data-action="open-musicPlayer">
+                            <img src="./assets/gui/start-menu/musicPlayer.webp" alt="Music Player">
+                            <span class="item-title">Music Player</span>
                         </li>
                         <li class="menu-item" id="menu-notepad" data-action="open-program" data-program-name="notepad">
                             <img src="./assets/gui/start-menu/notepad.webp" alt="Notepad">
@@ -409,6 +415,12 @@ export default class StartMenu {
                             </div>
                         </li>
                         <li class="menu-divider right-section-divider"><hr class="divider"></li>
+                        <li class="menu-item" id="menu-cmd" data-action="open-program" data-program-name="cmd">
+                            <img src="./assets/gui/start-menu/cmd.webp" alt="Command Prompt">
+                            <div class="item-content">
+                                <span class="item-title" style="font-weight: normal; padding: 5px 0;">Command Prompt</span>
+                            </div>
+                        </li>
                         <li class="menu-item" id="menu-help-support" data-action="open-program" data-program-name="info">
                             <img src="./assets/gui/start-menu/help.webp" alt="System Information">
                             <div class="item-details">
@@ -521,6 +533,9 @@ export default class StartMenu {
         // --- End custom popup ---
 
         if (action === 'open-program' && programName) {
+            if (programName === 'musicPlayer') {
+                this.eventBus.publish('MUSIC_WIDGET_OPEN');
+            }
             this.openProgram(programName);
             this.closeStartMenu();
         } else if (action === 'open-url' && url) {
@@ -539,6 +554,9 @@ export default class StartMenu {
         if (target.classList.contains('all-programs-item') && target.hasAttribute('data-program-name')) {
             const programName = target.getAttribute('data-program-name');
             if (programName) {
+                if (programName === 'musicPlayer') {
+                    this.eventBus.publish('MUSIC_WIDGET_OPEN');
+                }
                 this.openProgram(programName); // Will open or restore the window
                 this.closeStartMenu();
                 return;
@@ -562,6 +580,16 @@ export default class StartMenu {
         if (this.aiToolsMenu) {
             this.aiToolsMenu.addEventListener('click', this._handleMenuClick.bind(this));
         }
+        document.body.addEventListener('click', (event) => {
+            const musicWidgetItem = event.target.closest('#menu-musicPlayer');
+            if (musicWidgetItem) {
+                this.eventBus.publish('MUSIC_WIDGET_OPEN');
+                this.closeStartMenu();
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+            }
+        });
     }
     
     /**

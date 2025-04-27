@@ -1332,4 +1332,8 @@ wm-slider .thumb {
   0% { transform: rotate(0deg);}
   100% { transform: rotate(360deg);}
 }
-/* --- End mediaPlayer.css --- */ 
+/* --- End mediaPlayer.css --- */
+
+.video-hidden video {
+  visibility: hidden !important;
+} 

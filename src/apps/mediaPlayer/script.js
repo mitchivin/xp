@@ -768,6 +768,9 @@ class WMPlayerElement extends HTMLElement {
       this.#playlist.addEventListener("current-item-changed", this.#on_playlist_current_item_changed.bind(this));
       
       this.#media = this.#shadow.querySelector("video");
+      // Hide video until ready
+      const main = this.#shadow.querySelector('.main');
+      if (main) main.classList.add('video-hidden');
       this.#media.addEventListener("loadedmetadata", this.#on_loaded_metadata.bind(this));
       this.#media.addEventListener("timeupdate", this.#on_current_time_change.bind(this));
       this.#media.addEventListener("durationchange", this.#on_duration_change.bind(this));
@@ -1374,6 +1377,9 @@ class WMPlayerElement extends HTMLElement {
       this.#media.width  = this.#media.videoWidth  || 0;
       this.#media.height = this.#media.videoHeight || 0;
       this.#update_content_type_classes();
+      // Show video now that it's ready
+      const main = this.#shadow.querySelector('.main');
+      if (main) main.classList.remove('video-hidden');
       // Notify parent that the player is ready (metadata loaded)
       if (window.parent && window.parent !== window) {
           window.parent.postMessage({ type: "mediaPlayer-ready" }, "*");

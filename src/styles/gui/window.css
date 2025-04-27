@@ -319,7 +319,7 @@
 .iframe-overlay {
     position: absolute;
     inset: 0;
-    z-index: 5;
+    z-index: 1;
     background-color: transparent;
     display: none;
 }

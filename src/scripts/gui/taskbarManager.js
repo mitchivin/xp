@@ -159,6 +159,29 @@ export default class Taskbar {
                 this.eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: 'mediaPlayer' });
             });
         }
+
+        // Add click event to Music Player icon
+        const musicPlayerIcon = document.querySelector('.tray-music-icon');
+        if (musicPlayerIcon) {
+            const updateMusicTooltip = () => {
+                const overlay = document.getElementById('music-widget-overlay');
+                musicPlayerIcon.setAttribute('data-tooltip', overlay ? 'Close Music Player' : 'Open Music Player');
+            };
+            // Set initial tooltip
+            updateMusicTooltip();
+            musicPlayerIcon.addEventListener('click', () => {
+                const overlay = document.getElementById('music-widget-overlay');
+                if (overlay) {
+                    this.eventBus.publish('MUSIC_WIDGET_CLOSE');
+                } else {
+                    this.eventBus.publish('MUSIC_WIDGET_OPEN');
+                }
+                // Tooltip will update on event
+            });
+            // Listen for external open/close events to update tooltip
+            this.eventBus.subscribe('MUSIC_WIDGET_OPEN', updateMusicTooltip);
+            this.eventBus.subscribe('MUSIC_WIDGET_CLOSE', updateMusicTooltip);
+        }
     }
 
     /**

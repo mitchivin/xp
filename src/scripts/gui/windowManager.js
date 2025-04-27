@@ -290,57 +290,6 @@ class WindowManager {
             return;
         }
 
-        // === Standalone Overlay Support ===
-        if (program.standalone) {
-            // Prevent multiple overlays
-            if (document.getElementById('standalone-overlay')) {
-                return;
-            }
-            // Create overlay container
-            const overlay = document.createElement('div');
-            overlay.id = 'standalone-overlay';
-            overlay.style.position = 'fixed';
-            overlay.style.top = '0';
-            overlay.style.left = '0';
-            overlay.style.width = '100vw';
-            overlay.style.height = '100vh';
-            overlay.style.display = 'flex';
-            overlay.style.zIndex = '2';
-            overlay.style.pointerEvents = 'none'; // Overlay does not block clicks
-            overlay.style.background = 'none'; // No dark background
-
-            // Create iframe for the app
-            const iframe = document.createElement('iframe');
-            iframe.src = program.appPath;
-            iframe.style.border = 'none';
-                iframe.style.width = '100vw';
-                iframe.style.height = '100vh';
-            iframe.style.borderRadius = '';
-            iframe.style.background = '';
-            iframe.setAttribute('allow', 'autoplay');
-            iframe.setAttribute('title', program.title);
-            iframe.style.pointerEvents = 'auto'; // Only the player is clickable
-
-            overlay.appendChild(iframe);
-            const desktopElement = document.querySelector('.desktop');
-            if (desktopElement) {
-                document.body.insertBefore(overlay, desktopElement);
-            } else {
-                // Fallback if .desktop isn't found (shouldn't happen)
-                document.body.appendChild(overlay);
-            }
-
-            // Listen for close event from the iframe
-            window.addEventListener('message', function handleStandaloneClose(e) {
-                if (e.source === iframe.contentWindow && e.data && (e.data.type === 'close-overlay' || e.data.action === 'closeApp')) {
-                    overlay.remove();
-                    window.removeEventListener('message', handleStandaloneClose);
-                }
-            });
-            return;
-        }
-        // === End Standalone Overlay Support ===
-        
         const existingWindow = document.getElementById(program.id);
         if (existingWindow) {
             // FIX: If minimized, restore and bring to front
@@ -355,12 +304,6 @@ class WindowManager {
         if (program.isOpen) {
             program.isOpen = false;
         }
-
-        // TODO: Integrate iframe preloading.
-        // The following calls retrieve preloaded/persistent iframes but they are currently unused.
-        // The actual iframe is created later in _createWindowElement -> WindowTemplates.getTemplate.
-        // const iframe = getPreloadedIframe(programName);
-        // const persistentIframe = getPersistentIframe(programName);
 
         const windowElement = this._createWindowElement(program);
         if (!windowElement) return;
@@ -589,7 +532,7 @@ class WindowManager {
             overlay.style.left = '0';
             overlay.style.width = '100%';
             overlay.style.height = '100%';
-            overlay.style.zIndex = '10';
+            // Do not set z-index here; CSS ensures overlay is always below window content
             overlay.style.display = 'none';
             
             const iframeParent = iframe.parentElement;

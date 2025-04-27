@@ -75,7 +75,7 @@ assets/apps/internet/**
     position: absolute;
     inset: 0;
     background-color: transparent;
-    z-index: 100;
+    z-index: 1;
     display: none;
 }
 

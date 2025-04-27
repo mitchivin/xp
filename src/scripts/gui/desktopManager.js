@@ -13,6 +13,10 @@
  */
 import { EVENTS } from '../utils/eventBus.js';
 
+// Add these at the top of the file, after imports
+const MUSIC_WIDGET_OVERLAY_ID = 'music-widget-overlay';
+const MUSIC_WIDGET_IFRAME_ID = 'music-player-widget';
+
 /**
  * Desktop class manages the Windows XP desktop UI, including icon selection, drag, and wallpaper.
  *
@@ -51,6 +55,9 @@ export default class Desktop {
 
         // Recheck wallpaper on window resize
         window.addEventListener('resize', () => this.setWallpaperBasedOnAspectRatio());
+
+        this.eventBus.subscribe('MUSIC_WIDGET_OPEN', () => this.showMusicWidgetOverlay());
+        this.eventBus.subscribe('MUSIC_WIDGET_CLOSE', () => this.hideMusicWidgetOverlay());
     }
 
     // Set the appropriate wallpaper based on screen aspect ratio
@@ -295,5 +302,70 @@ export default class Desktop {
 
     clearTemporaryHighlights() {
         this.icons.forEach((icon) => icon.classList.remove('hover-by-selection'));
+    }
+
+    showMusicWidgetOverlay() {
+        if (document.getElementById(MUSIC_WIDGET_OVERLAY_ID)) return;
+        const overlay = document.createElement('div');
+        overlay.id = MUSIC_WIDGET_OVERLAY_ID;
+        overlay.style.position = 'fixed';
+        overlay.style.inset = '0';
+        overlay.style.zIndex = '1';
+        overlay.style.pointerEvents = 'none';
+
+        const iframe = document.createElement('iframe');
+        iframe.id = MUSIC_WIDGET_IFRAME_ID;
+        iframe.src = './src/apps/musicPlayer/index.html';
+        iframe.style.position = 'absolute';
+        iframe.style.top = '0';
+        iframe.style.right = '0';
+        iframe.style.bottom = '';
+        iframe.style.left = '';
+        iframe.style.width = '454px';
+        iframe.style.height = '264px';
+        iframe.style.border = 'none';
+        iframe.style.borderRadius = '16px';
+        iframe.style.boxShadow = 'none';
+        iframe.style.pointerEvents = 'auto';
+        iframe.style.overflow = 'hidden';
+        iframe.setAttribute('scrolling', 'no');
+        iframe.setAttribute('allow', 'none');
+
+        overlay.appendChild(iframe);
+        document.body.appendChild(overlay);
+        this.eventBus.publish('MUSIC_WIDGET_TRAY_SHOW');
+        this.eventBus.publish('MUSIC_WIDGET_OPEN');
+
+        // Add scaling logic for the music player inside the iframe
+        iframe.onload = function() {
+            try {
+                const doc = iframe.contentDocument || iframe.contentWindow.document;
+                const player = doc.querySelector('.music-player');
+                if (player) {
+                    const originalWidth = 697;
+                    const originalHeight = 372;
+                    const iframeWidth = iframe.clientWidth;
+                    const iframeHeight = iframe.clientHeight;
+                    const scale = 0.50; // Fixed scale factor
+                    player.style.transform = `scale(${scale})`;
+                    player.style.transformOrigin = 'top left';
+                    player.style.position = 'absolute';
+                    // Position 30px from the right
+                    player.style.left = `${iframeWidth - originalWidth * scale - 30}px`;
+                    player.style.top = `30px`;
+                    player.style.visibility = 'visible';
+                }
+            } catch (e) {
+                console.error('Error loading music player:', e);
+            }
+        };
+    }
+
+    hideMusicWidgetOverlay() {
+        const overlay = document.getElementById(MUSIC_WIDGET_OVERLAY_ID);
+        if (overlay) {
+            overlay.remove();
+            this.eventBus.publish('MUSIC_WIDGET_CLOSE');
+        }
     }
 }

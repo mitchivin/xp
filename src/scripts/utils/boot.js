@@ -125,18 +125,28 @@ export function initBootSequence(eventBus, EVENTS) {
         setTimeout(() => {
             bootScreen.style.display = 'none';
 
+            // Show black transition overlay
+            const blackTransition = document.getElementById('black-transition');
+            if (blackTransition) blackTransition.style.display = 'block';
+
             // Stage 2: Black screen transition (1s)
             setTimeout(() => {
+                // Hide black transition overlay
+                if (blackTransition) blackTransition.style.display = 'none';
                 // Stage 3: Login screen fade-in
-                // Make login screen visible but transparent initially
+                // Make login screen visible and fully opaque immediately
                 loginScreen.style.display = 'flex'; 
-                loginScreen.style.opacity = '0';
+                loginScreen.style.opacity = '1';
                 loginScreen.style.pointerEvents = 'auto';
 
-                // Small delay ensures display change is processed before opacity transition
-                setTimeout(() => {
-                    loginScreen.style.opacity = '1';
-                }, 50);
+                // Fade in the login content only
+                const loginContent = loginScreen.querySelector('.login-screen');
+                if (loginContent) {
+                    loginContent.style.opacity = '0';
+                    setTimeout(() => {
+                        loginContent.style.opacity = '1';
+                    }, 50);
+                }
             }, 1000);
         }, 6500); // Changed from 5000 to 6500 (added 1.5s)
     }

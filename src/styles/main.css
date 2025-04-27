@@ -74,3 +74,19 @@ body {
     pointer-events: all;
     cursor: default !important;
 }
+
+#windows-container {
+    position: absolute;
+    z-index: 100;
+}
+
+#black-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    z-index: 10000;
+    display: none;
+}

@@ -92,12 +92,12 @@
 
 /* Login screen - container for iframe */
 #login-screen {
-    background-color: #000; /* Reverted from transparent to original black */ /* Hidden initially */
+    background-color: #000; /* Reverted from transparent to original black */
     pointer-events: none; /* Disabled initially */
     padding: 0; /* Remove padding if any */
     overflow: hidden; /* Hide potential iframe scrollbars */
-    transition: opacity 0.3s ease-in-out; /* Restored original transition */
-    opacity: 0; /* Will be shown after login */
+    /* Remove transition and opacity */
+    opacity: 1;
 }
 
 #login-iframe {
@@ -155,4 +155,10 @@
     to {
         opacity: 1;
     }
+}
+
+/* Fade-in for login content */
+.login-screen {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
 }

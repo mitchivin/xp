@@ -90,6 +90,9 @@
         </div>
     </div>
 
+    <!-- Black Screen Transition Overlay -->
+    <div id="black-transition"></div>
+
     <!-- Login Screen -->
     <div id="login-screen">
         <div class="login-screen" style="display:block;">
@@ -151,9 +154,6 @@
                 <span>Resume.pdf</span>
             </div>
         </div>
-
-        <div id="windows-container"></div>
-        
         <div class="taskbar">
             <button class="start-button" id="start-button">
                 <img src="./assets/gui/taskbar/start-button.webp" alt="Start">
@@ -166,13 +166,14 @@
                     <div class="tray-icons">
                         
                         <img src="./assets/gui/taskbar/welcome.webp" alt="Welcome Icon" class="tray-network-icon" data-tooltip="Click to view 'Welcome'">
-                        <img src="./assets/gui/taskbar/internet.webp" alt="Internet Icon" class="tray-volume-icon" data-tooltip="Connection successful">
+                        <img src="./assets/gui/start-menu/musicPlayer.webp" alt="Music Player Icon" class="tray-music-icon" data-tooltip="Music Player">
                     </div>
                     <div class="time">12:00 PM</div>
                 </div>
             </div>
         </div>
     </div>
+    <div id="windows-container"></div>
 
     <script type="module" src="./src/scripts/main.js"></script>
     <script src="./src/scripts/utils/login.js"></script>

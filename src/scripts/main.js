@@ -12,6 +12,7 @@ import WindowManager from './gui/windowManager.js';
 import { eventBus, EVENTS } from './utils/eventBus.js';
 import programData from './utils/programRegistry.js';
 import { initBootSequence } from './utils/boot.js'; // Import the boot sequence initializer
+import { setupTooltips } from './utils/tooltip.js';
 
 // Animation timing constants for CRT scanline effect
 const SCANLINE_MIN_DELAY_MS = 1000; // Minimum delay between scanline animations (ms)
@@ -70,6 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Open About Me and My Projects (Internet) on page load
     eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: 'about' });
     eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: 'internet' });
+
+    // Enable XP-style tooltips globally for all elements with data-tooltip
+    setupTooltips('[data-tooltip]');
 });
 
 /**
