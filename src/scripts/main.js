@@ -13,6 +13,7 @@ import { eventBus, EVENTS } from './utils/eventBus.js';
 import programData from './utils/programRegistry.js';
 import { initBootSequence } from './utils/boot.js'; // Import the boot sequence initializer
 import { setupTooltips } from './utils/tooltip.js';
+import { createIframePool } from './gui/windowManager.js';
 
 // Animation timing constants for CRT scanline effect
 const SCANLINE_MIN_DELAY_MS = 1000; // Minimum delay between scanline animations (ms)
@@ -75,10 +76,31 @@ document.addEventListener('DOMContentLoaded', () => {
     // Enable XP-style tooltips globally for all elements with data-tooltip
     setupTooltips('[data-tooltip]');
 
-    // Preload the first music player audio as soon as the simulation starts
-    window.musicPlayerPreloadAudio = new Audio('assets/apps/musicPlayer/songs/track1.mp3');
-    window.musicPlayerPreloadAudio.preload = 'auto';
-    window.musicPlayerPreloadAudio.load();
+    // Preload all app iframes (including music player) at startup
+    createIframePool(programData);
+
+    // Preload all music player songs and covers
+    const songFiles = [
+        'track1.mp3',
+        'track2.mp3',
+        'track3.mp3',
+        'track4.mp3'
+    ];
+    const coverFiles = [
+        'cover1.webp',
+        'cover2.webp',
+        'cover3.webp',
+        'cover4.webp'
+    ];
+    songFiles.forEach(song => {
+        const audio = new Audio('assets/apps/musicPlayer/songs/' + song);
+        audio.preload = 'auto';
+        audio.load();
+    });
+    coverFiles.forEach(cover => {
+        const img = new Image();
+        img.src = 'assets/apps/musicPlayer/covers/' + cover;
+    });
 
     // Preload the music player iframe in the background
     const hiddenMusicIframe = document.createElement('iframe');

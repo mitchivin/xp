@@ -1321,3 +1321,5 @@ class WindowManager {
         return { scaleX, scaleY, translateX, translateY };
     }
 }
+
+export { createIframePool };
