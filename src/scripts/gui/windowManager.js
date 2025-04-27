@@ -339,6 +339,18 @@ class WindowManager {
         this._registerWindow(windowElement, program);
         this.positionWindow(windowElement);
 
+        // If this is the media player, send a message to load demo videos
+        if (programName === 'mediaPlayer') {
+            // Find the iframe (from pool or new)
+            let iframe = windowElement.querySelector('iframe');
+            if (!iframe && windowElement.querySelector('.iframe-container')) {
+                iframe = windowElement.querySelector('.iframe-container iframe');
+            }
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({ type: 'load-demo-videos' }, '*');
+            }
+        }
+
         program.isOpen = true;
         this.eventBus.publish(EVENTS.WINDOW_CREATED, {
             windowId: windowElement.id,
