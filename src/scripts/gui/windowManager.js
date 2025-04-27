@@ -251,7 +251,15 @@ class WindowManager {
             // Accept messages from same-origin or file protocol (local dev)
             if (!(window.location.protocol === 'file:' || event.origin === window.origin)) return;
 
-            const windowElement = this._getWindowFromIframeSource(event.source);
+            let windowElement = this._getWindowFromIframeSource(event.source);
+            // PATCH: Fallback if not found (e.g., iframe moved or not in DOM)
+            if (!windowElement) {
+                // Try to find any .app-window containing an iframe with this contentWindow
+                windowElement = Array.from(document.querySelectorAll('.app-window')).find(win => {
+                    const iframe = win.querySelector('iframe');
+                    return iframe && iframe.contentWindow === event.source;
+                });
+            }
             if (!windowElement) return;
 
             if (event.data?.type === 'minimize-window') {
@@ -349,6 +357,7 @@ class WindowManager {
         if (program.template === 'iframe-standard' && preloadedIframes[program.id.replace('-window', '')]) {
             // Use preloaded iframe
             const iframe = preloadedIframes[program.id.replace('-window', '')];
+            iframe.style.display = ''; // PATCH: Make visible when reused
             content = document.createElement('div');
             content.className = 'window-body iframe-container';
             content.appendChild(iframe);
@@ -639,6 +648,7 @@ class WindowManager {
         const iframe = preloadedIframes[programName];
         if (iframe && iframe.parentNode && iframe.parentNode !== iframePool) {
             iframePool.appendChild(iframe);
+            iframe.style.display = 'none'; // PATCH: Hide iframe in pool
         }
     }
     

@@ -1,11 +1,11 @@
 // --- Dynamic Song & Cover Loader ---
 
-const SONGS_PATH = '/assets/apps/musicPlayer/songs/';
-const COVERS_PATH = '/assets/apps/musicPlayer/covers/';
+const SONGS_PATH = '../../../assets/apps/musicPlayer/songs/';
+const COVERS_PATH = '../../../assets/apps/musicPlayer/covers/';
 
 // Helper: Get file list from a directory (works if files are known or pre-listed)
 // For demo, use a static list if directory is empty
-const demoSongs = ['track1.wav', 'track2.wav', 'track3.wav', 'track4.wav'];
+const demoSongs = ['track1.mp3', 'track2.mp3', 'track3.mp3', 'track4.mp3'];
 const demoCovers = ['cover1.webp', 'cover2.webp', 'cover3.webp', 'cover4.webp'];
 
 // Add this after demoSongs and demoCovers
@@ -31,17 +31,34 @@ const songInfo = demoSongInfo.length ? demoSongInfo : songs.map((song, i) => ({
 }));
 
 const audioContainer = document.getElementById('audio-container');
-let audioPlayer = [];
+let preloadedAudio = null;
+let audioPlayer = null; // The one used in the player
+let currentAudioIndex = null;
 
-function createAudioElements() {
+// Preload the first song as soon as the page loads
+function preloadAudio(idx) {
+  preloadedAudio = document.createElement('audio');
+  preloadedAudio.src = SONGS_PATH + songs[idx];
+  preloadedAudio.preload = 'auto';
+  preloadedAudio.volume = 0.1;
+  // Not attached to DOM yet
+}
+
+// When the player is opened, move the preloaded audio into the DOM
+function attachPreloadedAudio() {
+  if (!preloadedAudio) return;
   audioContainer.innerHTML = '';
-  audioPlayer = songs.map((song, i) => {
-    const audio = document.createElement('audio');
-    audio.className = 'audioPlayer';
-    audio.src = SONGS_PATH + song;
-    audioContainer.appendChild(audio);
-    return audio;
-  });
+  audioPlayer = preloadedAudio;
+  audioPlayer.className = 'audioPlayer';
+  audioContainer.appendChild(audioPlayer);
+  preloadedAudio = null; // Clear reference
+}
+
+// If the user changes song before opening, update the preloaded audio
+function updatePreload(idx) {
+  if (preloadedAudio) {
+    preloadedAudio.src = SONGS_PATH + songs[idx];
+  }
 }
 
 // Album art logic
@@ -69,13 +86,24 @@ function setSongImg() {
   artwork.style.backgroundImage = `url(${getCover(songPlaying)})`
   songTitle.innerText = songInfo[songPlaying]?.song || 'No Song';
   artist.innerText = songInfo[songPlaying]?.band || '';
+  if (audioPlayer) {
+    setAudioSource(songPlaying);
+  } else {
+    updatePreload(songPlaying);
+  }
+}
+
+function setAudioSource(idx) {
+  if (!audioPlayer) return;
+  audioPlayer.src = SONGS_PATH + songs[idx];
+  currentAudioIndex = idx;
 }
 
 // --- Controls (existing code, adapted for dynamic audioPlayer) ---
 
 play.addEventListener('click', function() {
-  if (audioPlayer[songPlaying]) {
-    audioPlayer[songPlaying].volume = 0.1;
+  if (audioPlayer) {
+    audioPlayer.volume = 0.1;
     toggleAudio(songPlaying);
   }
 });
@@ -94,10 +122,10 @@ back.addEventListener('click', () => {
   } else{
     songPlaying = songs.length - 1;
   }
-  if (audioPlayer[songPlaying]) {
-    audioPlayer[songPlaying].volume = 0.1;
+  setSongImg();
+  if (audioPlayer) {
+    audioPlayer.volume = 0.1;
     toggleAudio(songPlaying);
-    setSongImg();
   }
 });
 back.addEventListener('mousedown', function() {
@@ -114,9 +142,9 @@ forward.addEventListener('click', () => {
   }else{
     songPlaying = 0 
   }
-  if (audioPlayer[songPlaying]) {
-    audioPlayer[songPlaying].volume = 0.1;
-    setSongImg();
+  setSongImg();
+  if (audioPlayer) {
+    audioPlayer.volume = 0.1;
     toggleAudio(songPlaying);
   }
 });
@@ -128,8 +156,8 @@ forward.addEventListener('mouseup', function() {
 });
 
 volUp.addEventListener('click', (e) => {
-  if (audioPlayer[songPlaying] && audioPlayer[songPlaying].volume < 1) {
-    audioPlayer[songPlaying].volume += 0.1;
+  if (audioPlayer && audioPlayer.volume < 1) {
+    audioPlayer.volume = Math.min(1, audioPlayer.volume + 0.1);
   }
 });
 volUp.addEventListener('mousedown', function() {
@@ -140,8 +168,8 @@ volUp.addEventListener('mouseup', function() {
 });
 
 volDown.addEventListener('click', (e) => {
-  if (audioPlayer[songPlaying] && audioPlayer[songPlaying].volume > 0.1) {
-    audioPlayer[songPlaying].volume -= 0.1;
+  if (audioPlayer && audioPlayer.volume > 0.1) {
+    audioPlayer.volume = Math.max(0, audioPlayer.volume - 0.1);
   }
 });
 volDown.addEventListener('mousedown', function() {
@@ -151,20 +179,39 @@ volDown.addEventListener('mouseup', function() {
   controlBtn.classList.remove('down')
 });
 
-let playingAudio = null;
 function toggleAudio(idx) {
-  if (playingAudio !== null && playingAudio !== audioPlayer[idx]) {
-    playingAudio.pause();
+  if (!audioPlayer) return;
+  if (currentAudioIndex !== idx) {
+    setAudioSource(idx);
   }
-  if (audioPlayer[idx].paused) {
-    audioPlayer[idx].play();
-    playingAudio = audioPlayer[idx];
+  if (audioPlayer.paused) {
+    audioPlayer.play();
   } else {
-    audioPlayer[idx].pause();
-    playingAudio = null;
+    audioPlayer.pause();
   }
 }
 
-// --- Initialize ---
-createAudioElements();
+// --- Preload audio on page load ---
+preloadAudio(songPlaying);
+
+// --- Attach preloaded audio when player becomes visible ---
+const playerEl = document.querySelector('.music-player');
+if (playerEl) {
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (
+        mutation.type === 'attributes' &&
+        mutation.attributeName === 'style' &&
+        playerEl.style.visibility === 'visible' &&
+        !audioPlayer
+      ) {
+        attachPreloadedAudio();
+        setAudioSource(songPlaying); // Ensure correct song is set
+      }
+    });
+  });
+  observer.observe(playerEl, { attributes: true, attributeFilter: ['style'] });
+}
+
+// --- Initialize song info and cover ---
 setSongImg();
