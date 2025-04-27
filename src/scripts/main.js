@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize core UI components with shared event bus for communication
     new Taskbar(eventBus);
     new Desktop(eventBus);
-    new WindowManager(eventBus);
+    const windowManager = new WindowManager(eventBus);
 
     // Initialize boot/login sequence after component initialization
     // IMPORTANT: Must be called after eventBus initialization
@@ -124,6 +124,19 @@ document.addEventListener('DOMContentLoaded', () => {
     hiddenMusicIframe.style.display = 'none';
     hiddenMusicIframe.setAttribute('data-preload-music-player', 'true');
     document.body.appendChild(hiddenMusicIframe);
+
+    // Open and move the music player window off-screen during boot
+    eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: 'musicPlayer' });
+    setTimeout(() => {
+        // Find the music player window and move it off-screen
+        const musicWindow = document.getElementById('musicPlayer-window');
+        if (musicWindow) {
+            musicWindow.style.left = '-9999px';
+            musicWindow.style.top = '0';
+            musicWindow.style.display = 'block';
+            musicWindow.setAttribute('data-preinit', 'true');
+        }
+    }, 1000); // Give it a moment to fully initialize
 });
 
 /**
