@@ -475,6 +475,7 @@ article {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative; /* Ensure dots are positioned relative to this */
 }
 
 .lightbox-img,
@@ -491,6 +492,7 @@ article {
 }
 
 .lightbox-details-container {
+  position: relative;
   display: flex;
   flex-direction: column;
 }
@@ -505,14 +507,17 @@ article {
 .lightbox-tools {
   display: flex;
   align-items: center;
+  justify-content: left;
   gap: 12px;
   margin-top: 0;
+  width: 100%;
 }
 
 .tools-label {
   color: var(--light-gray70);
   font-weight: var(--fw500);
   font-size: 0.95rem;
+  margin-right: 10px;
 }
 
 .tools-icons {
@@ -521,14 +526,36 @@ article {
   gap: 24px;
 }
 
-.tools-icons ion-icon {
-  color: #fff;
-  font-size: 1.6rem;
-  margin-left: 8px;
+.tool-icon-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 1.725rem;
 }
 
-.tools-icons .tool-icon-wrapper:first-child {
-  margin-left: 16px;
+.tool-tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: -28px;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s, transform 0.18s;
+  z-index: 20;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+.tool-icon-wrapper:hover .tool-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(4px);
 }
 
 .lightbox-close {
@@ -623,44 +650,38 @@ article {
   mix-blend-mode: lighten;
 }
 
-.tool-icon-wrapper {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 1.725rem;
-}
-
 .lightbox-details-container .lightbox-title {
   margin-top: 24px;
   font-size: 26px;
 }
 
 .lightbox-nav-buttons {
-  flex-shrink: 0;
-  margin-top: auto;
   display: flex;
-  justify-content: space-between; /* Prev left, next right */
+  justify-content: space-between;
+  width: 100%;
+  margin-top: auto;
+  gap: 0;
 }
 
 .lightbox-nav {
-  background: #232323;
-  color: #fff;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 1.5rem;
+  padding: 6px 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  position: relative;
+  width: auto;
+  height: auto;
 }
-.lightbox-nav:hover {
-  background: #fff;
-  color: #232323;
-  border-color: #fff;
+.lightbox-nav.lightbox-nav-right {
+  justify-content: flex-end;
+}
+.lightbox-nav:hover,
+.lightbox-nav:focus {
+  color: #65f04d;
+  background: transparent;
 }
 
 .lightbox-nav:focus, .lightbox-nav:active {
@@ -671,7 +692,7 @@ article {
 /* Fade animation for lightbox navigation */
 .lightbox-image-container,
 .lightbox-details-container {
-  transition: opacity 0.175s cubic-bezier(.4,0,.2,1);
+  transition: opacity 0.1s cubic-bezier(.4,0,.2,1);
   opacity: 1;
 }
 
@@ -699,40 +720,93 @@ article {
 
 .gallery-arrow {
   position: absolute;
-  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
   background: rgba(30,30,33,0.85);
   color: #65f04d;
   border: none;
   border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  font-size: 2rem;
+  width: 52px;
+  height: 52px;
+  font-size: 2.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 4;
-  opacity: 0.92;
-  transition: background 0.15s, color 0.15s;
+  opacity: 0.96;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
 }
-.gallery-arrow-up {
-  top: 24px;
+.gallery-arrow-left {
+  left: 12px;
 }
-.gallery-arrow-down {
-  bottom: 24px;
+.gallery-arrow-right {
+  right: 12px;
+}
+.gallery-arrow ion-icon {
+  font-size: 2.2rem;
+  color: #65f04d;
+  pointer-events: none;
+}
+.gallery-arrow:hover,
+.gallery-arrow:focus {
+  background: #65f04d;
+  color: #232323;
+  box-shadow: 0 4px 16px rgba(101,240,77,0.18);
+}
+.gallery-arrow:hover ion-icon,
+.gallery-arrow:focus ion-icon {
+  color: #232323;
+}
+.gallery-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 14px;
+  bottom: auto;
+  z-index: 5;
+  pointer-events: auto;
+}
+.gallery-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  border: 2px solid #fff;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, opacity 0.45s cubic-bezier(.4,0,.2,1);
+  outline: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  display: inline-block;
+  /* Remove XP.css button styles */
+  font: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-clip: padding-box;
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+  border-style: solid;
+  border-width: 2px;
+  box-shadow: none;
+  opacity: 0.18;
+}
+.gallery-dot.active {
+  opacity: 0.65;
+  background: #65f04d;
+  border-color: #fff;
+}
+.lightbox-image-container:hover .gallery-dot {
+  opacity: 1;
 }
 .gallery-counter {
-  position: absolute;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(30,30,33,0.85);
-  color: #fff;
-  padding: 4px 16px;
-  border-radius: 12px;
-  font-size: 1rem;
-  z-index: 4;
-  pointer-events: none;
+  display: none !important;
 }
 
 /* Prevent user selection in all project and lightbox UI */
@@ -741,4 +815,50 @@ article {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.nav-arrow-img {
+  width: 30px;
+  height: 30px;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.12));
+  transition: filter 0.18s;
+}
+.lightbox-nav:hover .nav-arrow-img,
+.lightbox-nav:focus .nav-arrow-img {
+  filter: brightness(1.2) drop-shadow(0 2px 6px rgba(101,240,77,0.18));
+}
+.lightbox-nav {
+  position: relative;
+}
+
+.nav-tooltip-green {
+  position: absolute;
+  right: 50px;
+  left: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #65f04d;
+  background: none;
+  font-size: 0.93rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s;
+  z-index: 10;
+}
+.lightbox-nav-right:hover .nav-tooltip-green {
+  opacity: 1;
+}
+
+.nav-tooltip-prev {
+  left: 50px;
+  right: auto;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.lightbox-nav-left:hover .nav-tooltip-prev {
+  opacity: 1;
 }

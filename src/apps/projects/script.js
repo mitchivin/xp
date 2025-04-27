@@ -61,31 +61,29 @@ const lightboxDescription = document.querySelector('[data-lightbox-description]'
 const projectLinks = document.querySelectorAll('.project-item > a');
 
 const projectDescriptions = {
-  'Final Line :: Victory by Inches': `For this piece, I aimed to capture the intensity of the final play. Utilizing a top-down perspective, I integrated the score into the field's plane to maintain immersion. Selective sharpening and vignetting were applied to focus attention on the pivotal moment.`,
-  "Minnesota's Coldest :: Two Codes, One City": `This design blends NBA and NFL athletes into a cohesive winter scene. I employed snow overlays and blue-toned grading to unify the subjects. Attention was given to lighting and texture consistency to ensure realism across all elements.`,
-  'Final Shot :: Mavs Over Wolves': `A minimalist approach was taken here, with a desaturated background to highlight key players. The layout was structured vertically to establish a clear hierarchy. Warm and cool tones were utilized to create depth and separation between elements.`,
-  'Gridiron Giant :: Barkley Unleashed': `This piece features a stylized head enlargement to draw focus. The background was kept clean with subtle textures to support the main subject. Typography was minimized to avoid distraction from the visual impact.`,
-  'Dynasty Flame :: The Mahomes Era': `Layering dual poses conveyed movement and dominance in this design. Warm gradient overlays and textured backgrounds were applied to enhance energy. Background typography was repeated to frame the subject without overpowering the composition.​`,
-  'Ascend :: Mamba Forever': `Crafted as a tribute, this piece incorporates surreal elements like floating platforms and cloud rings. Soft lighting and muted colors were used to evoke a reflective mood. All components were directed to focus attention on the central figure.`,
-  'FLASHback :: Dwayne Wade': `This project involved the full video production lifecycle, from initial concept development and storyboarding through filming, editing, and final post-production. We focused on creating a compelling narrative using high-quality footage, dynamic motion graphics, and professional sound design. Careful attention was paid to color grading and visual effects to ensure the final product met the client's vision and exceeded expectations for engagement and visual appeal.`,
-  'Cold Blooded :: Saquon Barkley': `This project involved the full video production lifecycle, from initial concept development and storyboarding through filming, editing, and final post-production. We focused on creating a compelling narrative using high-quality footage, dynamic motion graphics, and professional sound design. Careful attention was paid to color grading and visual effects to ensure the final product met the client's vision and exceeded expectations for engagement and visual appeal.`,
-  'Code Switch :: Joseph Sua\'ali\'i': `This project involved the full video production lifecycle, from initial concept development and storyboarding through filming, editing, and final post-production. We focused on creating a compelling narrative using high-quality footage, dynamic motion graphics, and professional sound design. Careful attention was paid to color grading and visual effects to ensure the final product met the client's vision and exceeded expectations for engagement and visual appeal.`,
-  'Project 10': `This portfolio is built entirely inside a custom-made Windows XP environment — every window, program, and interaction is styled and behaves like the real OS. It started as a personal experiment to see what I could create using AI tools to help bring ideas to life that I couldn't code manually myself.\n\nEvery part of the system — from the boot screen to the Start menu, working apps, pop-ups, tooltips, and sound effects — was designed by me and assembled with AI-assisted code. I focused on matching the look and feel of the original XP as closely as possible, while turning it into a fully interactive portfolio that presents each project like a native program.\n\nThe result is something that feels more like an operating system than a website — a fully navigable, nostalgic experience that also works as a functional showcase of my design work.`,
-  'OS Simulation :: My Portfolio': `This project is a fully interactive portfolio built as a Windows XP simulation. Every window, app, and animation is custom-coded to recreate the look and feel of the classic OS, but reimagined as a showcase for my design and development work.<br><br>I used a combination of design tools and AI coding assistants to bring the experience to life, from the boot screen to draggable windows, sound effects, and pixel-perfect UI details. The result is a nostalgic, immersive environment that turns a simple portfolio into a playful, memorable journey—one that highlights both my creativity and technical skills.`
+  'All Blacks Win': `A dramatic final score graphic capturing the decisive moment from the All Blacks' narrow victory over England. Focused on raw storytelling through minimal design, the composition highlights the physical intensity of the try while integrating the score and team branding directly into the field. Lighting and texture enhancements were used to sharpen the action and draw attention to the clash at the goal line. Every detail was crafted to preserve the emotion of a game won by the smallest of margins.`,
+  'Mavericks Win': `A final score graphic celebrating the Dallas Mavericks' narrow win over the Minnesota Timberwolves. The design focuses on emotion and team unity, using a muted color treatment to spotlight the players while keeping the scoreline clear and dominant. Clean typography, strong visual hierarchy, and subtle logo integration ensure the final score stands out without overpowering the moment. Every choice was made to balance the storytelling with crisp, professional layout execution.`,
+  'FLASHback': `A career highlight reel for Dwyane Wade, designed to match the chaotic energy of Crazy Train by Ozzy Osbourne. Focused on aggressive pacing, tight audio sync, and momentum-driven editing without overloading the visuals. Built to reflect the explosive style that defined Wade's prime.`,
+  "Minnesota's Coldest": `An icy-themed graphic pairing two of Minnesota's brightest sports stars across football and basketball. Heavy snow textures, a cool blue palette, and layered cityscape elements were used to create a unified winter atmosphere. Careful compositing balances the personalities of both athletes while maintaining visual cohesion between the different sports. The design leans into the idea of resilience and swagger, reflecting the cold-weather grit that defines Minnesota's sports culture.`,
+  'Snow Day': `A playoff highlight reel focused on capturing the weight and atmosphere of Saquon Barkley's snow game against the Rams. Built around slow pacing and clean timing to match the haunting tone of the Deadpool choir version of Like a Prayer. Edited with minimal effects to preserve the natural intensity of the footage.`,
+  'Big Head Barkley': `A playful photo manipulation turning Saquon Barkley into an exaggerated, larger-than-life figure on the field. The design focuses on balancing realism with humor, carefully scaling and blending the oversized head while preserving the intensity of live-action movement. Textures and stadium detail were enhanced to ground the surreal edit in a believable environment. The final result captures both the energy of Barkley's playing style and the lighthearted fun of creative distortion.`,
+  'Dynasty Flame': `Capturing the intensity and dominance of Patrick Mahomes, this piece highlights the spirit of the Kansas City Chiefs' championship era. Layered photo compositing and dynamic lighting techniques bring out both action and emotion, while a fiery color palette symbolizes the heat of competition and the relentless drive for greatness. Background typography and textured gradients were integrated to add depth without overpowering the central figures. Every detail was crafted to mirror the explosive impact Mahomes has made on modern football.`,
+  'Code Swith': `A high-tempo edit tracking Joseph Sua'ali'i's transition from the NRL to the Wallabies. Synced to Jimmy Recard by Drapht, the project focuses on maintaining energy and rhythm while blending footage across two codes. Cuts and transitions were built to feel seamless without relying on heavy visual tricks.`,
+  'Mamba Forever': `This graphic honors the legacy of Kobe Bryant through a surreal, dreamlike composition. Using advanced photo manipulation techniques, the piece blends real-world photography with fantasy elements like floating islands and ethereal clouds. The snake wrapped around his arm symbolizes Kobe's "Black Mamba" persona, while the towering sky creature hints at the mythic status he holds in sports history. Every element was designed to feel weightless yet powerful, reflecting the idea of transcendence beyond the game. The result is a visual story that captures both the ambition and the immortality of Bryant's legacy.`,
+  'OS Simulation': `This project is a fully interactive portfolio built as a Windows XP simulation. Every window, app, and animation is custom-coded to recreate the look and feel of the classic OS, but reimagined as a showcase for my design and development work.<br><br>I used a combination of design tools and AI coding assistants to bring the experience to life, from the boot screen to draggable windows, sound effects, and pixel-perfect UI details. The result is a nostalgic, immersive environment that turns a simple portfolio into a playful, memorable journey—one that highlights both my creativity and technical skills.`
 };
 
 const projectTools = {
-  'Final Line :: Victory by Inches': ['ps'],
-  "Minnesota's Coldest :: Two Codes, One City": ['ps'],
-  'Final Shot :: Mavs Over Wolves': ['ps', 'ai'],
-  'Gridiron Giant :: Barkley Unleashed': ['ps'],
-  'Dynasty Flame :: The Mahomes Era': ['ps'],
-  'Ascend :: Mamba Forever': ['ps'],
-  'FLASHback :: Dwayne Wade': ['pr', 'ae'],
-  'Cold Blooded :: Saquon Barkley': ['pr', 'ae'],
-  'Code Switch :: Joseph Sua\'ali\'i': ['pr', 'ae'],
-  'OS Simulation :: My Portfolio': ['cursor', 'chat', 'ps', 'ai']
-  // Add more as needed
+  'All Blacks Win': ['ps'],
+  'Mavericks Win': ['ps', 'ai'],
+  'FLASHback': ['pr', 'ae'],
+  "Minnesota's Coldest": ['ps'],
+  'Snow Day': ['pr', 'ae'],
+  'Big Head Barkley': ['ps'],
+  'Dynasty Flame': ['ps'],
+  'Code Swith': ['pr', 'ae'],
+  'Mamba Forever': ['ps'],
+  'OS Simulation': ['cursor', 'chat', 'ps', 'ai']
 };
 
 const toolIconData = {
@@ -184,7 +182,7 @@ function preloadVideoForIndex(index) {
 
 // Gallery images for internet (add more as needed)
 const projectImages = {
-  'OS Simulation :: My Portfolio': [
+  'OS Simulation': [
     '../../../assets/apps/projects/images/cover-10.webp',
     '../../../assets/apps/projects/images/test1.webp',
     '../../../assets/apps/projects/images/test2.webp'
@@ -198,42 +196,49 @@ function setupGalleryForProject(projectTitle) {
   const gallery = document.querySelector('.lightbox-gallery');
   const img = gallery.querySelector('.lightbox-img');
   const container = document.querySelector('.lightbox-image-container');
-  const upArrow = container.querySelector('.gallery-arrow-up');
-  const downArrow = container.querySelector('.gallery-arrow-down');
-  const counter = container.querySelector('.gallery-counter');
+  const dotsContainer = container.querySelector('.gallery-dots');
   const images = projectImages[projectTitle];
 
   function showCurrentImage() {
     img.src = images[currentGalleryIndex];
-    counter.textContent = `${currentGalleryIndex + 1} / ${images.length}`;
+    // Update dots
+    if (dotsContainer) {
+      const dots = dotsContainer.querySelectorAll('.gallery-dot');
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === currentGalleryIndex);
+      });
+    }
   }
 
-  function prevImage() {
-    currentGalleryIndex = (currentGalleryIndex - 1 + images.length) % images.length;
-    showCurrentImage();
-  }
-  function nextImage() {
-    currentGalleryIndex = (currentGalleryIndex + 1) % images.length;
+  function goToImage(idx) {
+    currentGalleryIndex = idx;
     showCurrentImage();
   }
 
-  // Remove previous event listeners by cloning
-  upArrow.replaceWith(upArrow.cloneNode(true));
-  downArrow.replaceWith(downArrow.cloneNode(true));
-  // Re-select after cloning
-  const newUpArrow = container.querySelector('.gallery-arrow-up');
-  const newDownArrow = container.querySelector('.gallery-arrow-down');
+  // Remove previous dots
+  if (dotsContainer) {
+    dotsContainer.innerHTML = '';
+  }
 
   if (images && images.length > 1) {
-    newUpArrow.style.display = newDownArrow.style.display = counter.style.display = '';
+    dotsContainer.style.display = '';
     currentGalleryIndex = 0;
+    // Create dots
+    images.forEach((imgSrc, idx) => {
+      const dot = document.createElement('div');
+      dot.className = 'gallery-dot' + (idx === 0 ? ' active' : '');
+      dot.setAttribute('tabindex', '0');
+      dot.setAttribute('role', 'button');
+      dot.setAttribute('aria-label', `Go to image ${idx + 1}`);
+      dot.addEventListener('click', () => goToImage(idx));
+      dot.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') goToImage(idx);
+      });
+      dotsContainer.appendChild(dot);
+    });
     showCurrentImage();
-    newUpArrow.addEventListener('click', prevImage);
-    newDownArrow.addEventListener('click', nextImage);
-    newUpArrow.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') prevImage(); });
-    newDownArrow.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') nextImage(); });
   } else {
-    newUpArrow.style.display = newDownArrow.style.display = counter.style.display = 'none';
+    if (dotsContainer) dotsContainer.style.display = 'none';
     currentGalleryIndex = 0;
     if (images && images.length === 1) {
       img.src = images[0];
@@ -370,8 +375,8 @@ function animateLightboxTransition(callback) {
     setTimeout(() => {
       imgContainer.classList.remove('lightbox-animating');
       detailsContainer.classList.remove('lightbox-animating');
-    }, 175); // Match transition duration (was 350)
-  }, 175); // Match transition duration (was 350)
+    }, 100); // Reduced from 175ms
+  }, 100); // Reduced from 175ms
 }
 
 if (lightboxPrevBtn) {
