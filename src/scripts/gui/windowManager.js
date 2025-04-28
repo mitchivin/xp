@@ -241,7 +241,7 @@ class WindowManager {
         const taskbar = document.querySelector('.taskbar');
         if (windowsContainer && taskbar) {
             if (taskbar.parentElement === windowsContainer) {
-                console.warn('[WindowManager] .taskbar is inside #windows-container! This will break z-index stacking. Move .taskbar to be a sibling of #windows-container in the DOM.');
+                // console.warn('[WindowManager] .taskbar is inside #windows-container! This will break z-index stacking. Move .taskbar to be a sibling of #windows-container in the DOM.');
             }
         }
     }
@@ -303,7 +303,7 @@ class WindowManager {
     openProgram(programName) {
         const program = this.programData[programName];
         if (!program || !program.id) {
-            console.error(`Invalid program data for: ${programName}`);
+            // console.error(`Invalid program data for: ${programName}`);
             return;
         }
 
@@ -386,7 +386,7 @@ class WindowManager {
             content = WindowTemplates.getTemplate(program.template, program);
         }
         if (!content) {
-             console.error(`Failed to get template "${program.template}" for ${program.id}`);
+             // console.error(`Failed to get template "${program.template}" for ${program.id}`);
              return null;
         }
         windowElement.appendChild(content);

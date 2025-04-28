@@ -12,9 +12,7 @@
  */
 import StartMenu from './startMenuManager.js';
 import { eventBus, EVENTS } from '../utils/eventBus.js';
-
-
-import { setupTooltips } from '../utils/tooltip.js'; // Import the new utility
+import { setupTooltips } from '../utils/tooltip.js';
 
 /**
  * Clock class for managing the system clock display and time updates.
@@ -36,31 +34,20 @@ class Clock {
 
     constructor(selector) {
         this.#clockElement = document.querySelector(selector);
-
         if (!this.#clockElement) {
-            console.error(`Clock element not found with selector: ${selector}`);
             return;
         }
-
         this.setupClockUpdates();
     }
 
     setupClockUpdates() {
-        // Clear existing timers
         clearTimeout(this.#initialTimeoutId);
         clearInterval(this.#intervalId);
-
         const now = new Date();
-        // Calculate milliseconds until the start of the next minute
         const msUntilNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
-
-        // First update happens immediately
         this.updateClock();
-
-        // Set a timeout to fire exactly at the start of the next minute
         this.#initialTimeoutId = setTimeout(() => {
             this.updateClock();
-            // Then update every minute
             this.#intervalId = setInterval(() => this.updateClock(), 60000);
         }, msUntilNextMinute);
     }

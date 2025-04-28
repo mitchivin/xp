@@ -118,8 +118,6 @@ export function setupMenuBar({ menuBarSelector, dropdownMenus = null, actions = 
           // Use shared handler for exit, otherwise log warning for unhandled shared actions
           if (action === 'exit') {
             handleExit(); // Use imported handler
-          } else {
-             console.warn(`Unhandled shared menu action: ${action}`);
           }
         }
       }

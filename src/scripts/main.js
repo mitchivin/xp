@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const detailProgramName = programMap[data.id];
 
             if (!detailProgramName) {
-                console.warn(`Hub requested unknown project ID: ${data.id}`);
+                // console.warn(`Hub requested unknown project ID: ${data.id}`);
             } else {
                 eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: detailProgramName });
             }

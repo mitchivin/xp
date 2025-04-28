@@ -32,8 +32,6 @@
 export function setupTooltips(selector, tooltipContainer = document.body, delay = 100) {
     let activeTooltip = null;
     let tooltipTimeout = null;
-
-    // Create or reuse a tooltip element for displaying tooltip text
     const tooltipElement =
         tooltipContainer.querySelector('.dynamic-tooltip') ||
         (() => {
@@ -56,24 +54,17 @@ export function setupTooltips(selector, tooltipContainer = document.body, delay 
             tooltipContainer.appendChild(el);
             return el;
         })();
-
-    // Hide the tooltip immediately and clear any pending timeouts
     const hideImmediately = () => {
         clearTimeout(tooltipTimeout);
         if (!activeTooltip) return;
         activeTooltip.style.display = 'none';
         activeTooltip = null;
     };
-
-    // Hide the tooltip after a delay
     const hideTooltip = () => {
         clearTimeout(tooltipTimeout);
         tooltipTimeout = setTimeout(hideImmediately, delay);
     };
-
-    // Show the tooltip for a given element and position it appropriately
     const showTooltip = (element) => {
-        // If the balloon is open, do not show the tooltip
         if (document.getElementById('balloon-root')) return;
         const tooltipText = element.getAttribute('data-tooltip') || element.getAttribute('title');
         if (!tooltipText) return;
@@ -88,8 +79,6 @@ export function setupTooltips(selector, tooltipContainer = document.body, delay 
         const { top, left } = _calculateTooltipPosition(element, tooltipElement, containerRect);
         Object.assign(tooltipElement.style, { top: `${top}px`, left: `${left}px` });
     };
-
-    // Attach mouse event listeners to all elements matching the selector
     document.querySelectorAll(selector).forEach((element) => {
         element.addEventListener('mouseenter', () => showTooltip(element));
         element.addEventListener('mouseleave', hideTooltip);
@@ -117,15 +106,12 @@ function _calculateTooltipPosition(element, tooltipElement, containerRect) {
         containerRect.left +
         targetRect.width / 2 -
         tooltipElement.offsetWidth / 2;
-    // If the tooltip would overflow the bottom of the window, show it above the element
     if (top + tooltipElement.offsetHeight > window.innerHeight) {
         top = targetRect.top - containerRect.top - tooltipElement.offsetHeight - 5;
     }
-    // If the tooltip would overflow the right edge, shift it left
     if (left + tooltipElement.offsetWidth > window.innerWidth) {
         left = window.innerWidth - tooltipElement.offsetWidth - 5;
     }
-    // Ensure the tooltip does not go beyond the left edge
     if (left < 0) left = 5;
     return { top, left };
 } 

@@ -180,9 +180,7 @@ export function initBootSequence(eventBus, EVENTS) {
         try {
             loginSoundPreload.currentTime = 0;
             loginSoundPreload.play();
-        } catch (error) {
-            console.error('Error playing login sound:', error); 
-        }
+        } catch (error) {}
         
         // Persist login state for this session
         sessionStorage.setItem('logged_in', 'true');
@@ -246,9 +244,7 @@ export function initBootSequence(eventBus, EVENTS) {
         try {
             const logoffSound = new Audio('./assets/sounds/logoff.wav');
             logoffSound.play();
-        } catch (error) {
-            console.error('Error playing logoff sound:', error);
-        }
+        } catch (error) {}
 
         // Hide the balloon if it is showing
         const balloon = document.getElementById('balloon-root');

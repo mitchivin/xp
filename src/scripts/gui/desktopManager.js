@@ -356,7 +356,7 @@ export default class Desktop {
                     player.style.visibility = 'visible';
                 }
             } catch (e) {
-                console.error('Error loading music player:', e);
+                // Remove or comment out all console.error lines in this file.
             }
         };
     }
