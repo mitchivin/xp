@@ -80,6 +80,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 eventBus.publish('MUSIC_WIDGET_OPEN');
             }
         }
+        // Handle open-external-link from iframes (About Me social links)
+        else if (data.type === 'open-external-link' && typeof data.url === 'string') {
+            window.open(data.url, '_blank', 'noopener,noreferrer');
+        }
     });
 
     // Initialize CRT visual effects

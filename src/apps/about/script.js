@@ -55,6 +55,20 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // Force social links to open in the top window to avoid iframe block
+  document.querySelectorAll('a.left-panel__card__text.link').forEach(link => {
+    link.addEventListener('click', function(e) {
+      if (this.href.startsWith('http')) {
+        e.preventDefault();
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'open-external-link', url: this.href }, '*');
+        } else {
+          window.open(this.href, '_blank', 'noopener,noreferrer');
+        }
+      }
+    });
+  });
 });
 
 // Highlight corresponding software on skill hover

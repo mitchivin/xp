@@ -150,21 +150,21 @@ export default class StartMenu {
                     Command Prompt
                 </li>
                 <li class="all-programs-separator"></li>
-                <li class="all-programs-item" data-action="open-url" data-url="https://www.linkedin.com">
-                    <img src="./assets/gui/start-menu/linkedin.webp" alt="LinkedIn">
-                    LinkedIn
-                </li>
-                <li class="all-programs-item" data-action="open-url" data-url="https://www.instagram.com">
+                <li class="all-programs-item" data-action="open-url" data-url="https://www.instagram.com/mitchivin">
                     <img src="./assets/gui/start-menu/instagram.webp" alt="Instagram">
                     Instagram
                 </li>
-                <li class="all-programs-item" data-action="open-url" data-url="https://github.com">
-                    <img src="./assets/gui/start-menu/github.webp" alt="GitHub">
-                    GitHub
+                <li class="all-programs-item" data-action="open-url" data-url="https://www.linkedin.com/in/mitchivin">
+                    <img src="./assets/gui/start-menu/linkedin.webp" alt="LinkedIn">
+                    LinkedIn
                 </li>
-                <li class="all-programs-item" data-action="open-url" data-url="https://www.behance.net">
+                <li class="all-programs-item" data-action="open-url" data-url="https://www.behance.net/mitch_ivin">
                     <img src="./assets/gui/start-menu/behance.webp" alt="Behance">
                     Behance
+                </li>
+                <li class="all-programs-item" data-action="open-url" data-url="https://github.com/mitchivin">
+                    <img src="./assets/gui/start-menu/github.webp" alt="GitHub">
+                    GitHub
                 </li>
             </ul>
         `;
@@ -324,7 +324,7 @@ export default class StartMenu {
         return `
             <div class="menutopbar">
                 <img src="./assets/gui/start-menu/user.webp" alt="User" class="userpicture">
-                <span class="username">Mitchell Ivin</span>
+                <span class="username">Mitch Ivin</span>
             </div>
             <div class="start-menu-middle">
                 <div class="middle-section middle-left">
@@ -383,22 +383,28 @@ export default class StartMenu {
                 </div>
                 <div class="middle-section middle-right">
                     <ul class="menu-items">
-                        <li class="menu-item" id="menu-instagram" data-action="open-url" data-url="https://www.instagram.com">
+                        <li class="menu-item" id="menu-instagram" data-action="open-url" data-url="https://www.instagram.com/mitchivin">
                             <img src="./assets/gui/start-menu/instagram.webp" alt="Instagram">
                             <div class="item-content">
                                 <span class="item-title">Instagram</span>
                             </div>
                         </li>
-                        <li class="menu-item" id="menu-linkedin" data-action="open-url" data-url="https://www.linkedin.com">
+                        <li class="menu-item" id="menu-linkedin" data-action="open-url" data-url="https://www.linkedin.com/in/mitchivin">
                             <img src="./assets/gui/start-menu/linkedin.webp" alt="LinkedIn">
                             <div class="item-content">
                                 <span class="item-title">LinkedIn</span>
                             </div>
                         </li>
-                        <li class="menu-item" id="menu-github" data-action="open-url" data-url="https://github.com">
+                        <li class="menu-item" id="menu-behance" data-action="open-url" data-url="https://www.behance.net/mitch_ivin">
+                            <img src="./assets/gui/start-menu/behance.webp" alt="Behance">
+                            <div class="item-content">
+                                <span class="item-title" style="font-weight: bold;">Behance</span>
+                            </div>
+                        </li>
+                        <li class="menu-item" id="menu-github" data-action="open-url" data-url="https://github.com/mitchivin">
                             <img src="./assets/gui/start-menu/github.webp" alt="GitHub">
                             <div class="item-content">
-                                <span class="item-title">GitHub</span>
+                                <span class="item-title" style="font-weight: bold;">GitHub</span>
                             </div>
                         </li>
                         <li class="menu-divider right-section-divider"><hr class="divider"></li>

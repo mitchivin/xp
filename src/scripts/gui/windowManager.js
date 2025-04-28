@@ -288,8 +288,6 @@ class WindowManager {
         this.eventBus.subscribe(EVENTS.PROGRAM_OPEN, data => this.openProgram(data.programName));
         this.eventBus.subscribe(EVENTS.WINDOW_FOCUSED, data => this._handleWindowFocus(data.windowId));
         this.eventBus.subscribe(EVENTS.WINDOW_MINIMIZED, data => this._handleWindowMinimize(data.windowId));
-        this.eventBus.subscribe(EVENTS.WINDOW_MAXIMIZED, data => this._setWindowState(data.windowId, 'maximized'));
-        this.eventBus.subscribe(EVENTS.WINDOW_UNMAXIMIZED, data => this._setWindowState(data.windowId, 'unmaximized'));
         this.eventBus.subscribe(EVENTS.WINDOW_CLOSED, data => this._handleWindowCloseCleanup(data.windowId));
         this.eventBus.subscribe(EVENTS.WINDOW_RESTORED, data => this._handleWindowRestore(data.windowId));
         this.eventBus.subscribe(EVENTS.TASKBAR_ITEM_CLICKED, data => this._handleTaskbarClick(data.windowId));
@@ -858,46 +856,50 @@ class WindowManager {
             const vh = document.documentElement.clientHeight;
             const taskbar = document.querySelector('.taskbar');
             const taskbarHeight = taskbar ? taskbar.offsetHeight : TASKBAR_HEIGHT;
-            windowElement.style.top = '0px';
-            windowElement.style.left = '0px';
-            windowElement.style.width = vw + 'px';
-            windowElement.style.height = (vh - taskbarHeight) + 'px';
-            windowElement.style.transform = 'none';
             
-            state.isMaximized = true;
-            windowElement.classList.add('maximized'); // Add class to trigger CSS styles
-            if (maximizeBtn) maximizeBtn.classList.add('restore');
-            // Send maximized message to iframe if present
-            const iframe = windowElement.querySelector('iframe');
-            if (iframe && iframe.contentWindow) {
-              iframe.contentWindow.postMessage({ type: 'window:maximized' }, '*');
-            }
-            this.eventBus.publish(EVENTS.WINDOW_MAXIMIZED, { windowId: windowElement.id });
-
+            // Use requestAnimationFrame to batch style changes
+            window.requestAnimationFrame(() => {
+                windowElement.style.top = '0px';
+                windowElement.style.left = '0px';
+                windowElement.style.width = vw + 'px';
+                windowElement.style.height = (vh - taskbarHeight) + 'px';
+                windowElement.style.transform = 'none';
+                
+                state.isMaximized = true;
+                windowElement.classList.add('maximized'); // Add class to trigger CSS styles
+                if (maximizeBtn) maximizeBtn.classList.add('restore');
+                // Send maximized message to iframe if present
+                const iframe = windowElement.querySelector('iframe');
+                if (iframe && iframe.contentWindow) {
+                  iframe.contentWindow.postMessage({ type: 'window:maximized' }, '*');
+                }
+                this.eventBus.publish(EVENTS.WINDOW_MAXIMIZED, { windowId: windowElement.id });
+            });
         } else {
             // Restore
-            // Explicitly set saved styles back
-            windowElement.style.width = state.originalStyles.width;
-            windowElement.style.height = state.originalStyles.height;
-            windowElement.style.top = state.originalStyles.top;
-            windowElement.style.left = state.originalStyles.left;
-            windowElement.style.transform = state.originalStyles.transform;
+            window.requestAnimationFrame(() => {
+                windowElement.style.width = state.originalStyles.width;
+                windowElement.style.height = state.originalStyles.height;
+                windowElement.style.top = state.originalStyles.top;
+                windowElement.style.left = state.originalStyles.left;
+                windowElement.style.transform = state.originalStyles.transform;
 
-            // Clear potentially conflicting maximized styles explicitly
-             windowElement.style.margin = '';
-             windowElement.style.border = '';
-             windowElement.style.borderRadius = ''; 
-             windowElement.style.boxSizing = ''; 
-            
-            state.isMaximized = false;
-            windowElement.classList.remove('maximized'); // Remove class
-            if (maximizeBtn) maximizeBtn.classList.remove('restore');
-            // Send unmaximized message to iframe if present
-            const iframe = windowElement.querySelector('iframe');
-            if (iframe && iframe.contentWindow) {
-              iframe.contentWindow.postMessage({ type: 'window:unmaximized' }, '*');
-            }
-            this.eventBus.publish(EVENTS.WINDOW_UNMAXIMIZED, { windowId: windowElement.id });
+                // Clear potentially conflicting maximized styles explicitly
+                windowElement.style.margin = '';
+                windowElement.style.border = '';
+                windowElement.style.borderRadius = '';
+                windowElement.style.boxSizing = '';
+                
+                state.isMaximized = false;
+                windowElement.classList.remove('maximized'); // Remove class
+                if (maximizeBtn) maximizeBtn.classList.remove('restore');
+                // Send unmaximized message to iframe if present
+                const iframe = windowElement.querySelector('iframe');
+                if (iframe && iframe.contentWindow) {
+                  iframe.contentWindow.postMessage({ type: 'window:unmaximized' }, '*');
+                }
+                this.eventBus.publish(EVENTS.WINDOW_UNMAXIMIZED, { windowId: windowElement.id });
+            });
         }
     }
     

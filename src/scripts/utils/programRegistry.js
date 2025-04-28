@@ -130,7 +130,7 @@ const programData = {
     ),
     "resume": createProgram(
         "resume",
-        "Resume.pdf",
+        "Resume",
         "desktop/resume.webp",
         "resume",
         { dimensions: { width: 700, height: 800 }, statusBarText: "Skills and experience overview" }

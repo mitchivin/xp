@@ -8,29 +8,16 @@ const articleTitle = document.querySelector('.article-title');
 // Filter function: Shows/hides internet based on selected category
 const filterFunc = function (selectedValue) {
     const allItems = Array.from(filterItems);
-    // Hide all and reset order
     allItems.forEach(item => {
         item.classList.remove('active');
         item.style.order = '';
     });
-    let visible = [];
-    if (selectedValue === "all") {
-        visible = allItems;
-    } else if (selectedValue === "latest") {
-        visible = allItems.slice(-8);
-    } else {
-        visible = allItems.filter(item => item.dataset.category.toLowerCase() === selectedValue);
-    }
-    // Reverse the visible array for most-recent-first
-    visible = visible.slice().reverse();
+    let visible = allItems.filter(item => item.dataset.category.toLowerCase() === selectedValue);
     visible.forEach((item, idx) => {
         item.classList.add('active');
         item.style.order = idx;
     });
-    // Adjust padding for scrollbar after filtering
     adjustPaddingForScrollbar();
-    // If a flash still occurs, uncomment the next line and comment out the above:
-    // requestAnimationFrame(adjustPaddingForScrollbar);
 };
 
 // Add click event listener to all navigation/filter links
@@ -41,12 +28,7 @@ navigationLinks.forEach(link => {
         navigationLinks.forEach(l => l.classList.remove('active'));
         this.classList.add('active');
         filterFunc(filterValue);
-        articleTitle.textContent =
-          filterValue === "all"
-            ? "Latest"
-            : filterValue === "latest"
-            ? "Latest Projects"
-            : this.innerHTML;
+        articleTitle.textContent = this.innerHTML;
     });
 });
 
@@ -70,7 +52,8 @@ const projectDescriptions = {
   'Dynasty Flame': `Capturing the intensity and dominance of Patrick Mahomes, this piece highlights the spirit of the Kansas City Chiefs' championship era. Layered photo compositing and dynamic lighting techniques bring out both action and emotion, while a fiery color palette symbolizes the heat of competition and the relentless drive for greatness. Background typography and textured gradients were integrated to add depth without overpowering the central figures. Every detail was crafted to mirror the explosive impact Mahomes has made on modern football.`,
   'Code Switch': `A high-tempo edit tracking Joseph Sua'ali'i's transition from the NRL to the Wallabies. Synced to Jimmy Recard by Drapht, the project focuses on maintaining energy and rhythm while blending footage across two codes. Cuts and transitions were built to feel seamless without relying on heavy visual tricks.`,
   'Mamba Forever': `This graphic honors the legacy of Kobe Bryant through a surreal, dreamlike composition. Using advanced photo manipulation techniques, the piece blends real-world photography with fantasy elements like floating islands and ethereal clouds. The snake wrapped around his arm symbolizes Kobe's "Black Mamba" persona, while the towering sky creature hints at the mythic status he holds in sports history. Every element was designed to feel weightless yet powerful, reflecting the idea of transcendence beyond the game. The result is a visual story that captures both the ambition and the immortality of Bryant's legacy.`,
-  'OS Simulation': `This project is a fully interactive portfolio built as a Windows XP simulation. Every window, app, and animation is custom-coded to recreate the look and feel of the classic OS, but reimagined as a showcase for my design and development work.<br><br>I used a combination of design tools and AI coding assistants to bring the experience to life, from the boot screen to draggable windows, sound effects, and pixel-perfect UI details. The result is a nostalgic, immersive environment that turns a simple portfolio into a playful, memorable journey—one that highlights both my creativity and technical skills.`
+  'OS Simulation': `This project is a fully interactive portfolio built as a Windows XP simulation. Every window, app, and animation is custom-coded to recreate the look and feel of the classic OS, but reimagined as a showcase for my design and development work.<br><br>I used a combination of design tools and AI coding assistants to bring the experience to life, from the boot screen to draggable windows, sound effects, and pixel-perfect UI details. The result is a nostalgic, immersive environment that turns a simple portfolio into a playful, memorable journey—one that highlights both my creativity and technical skills.`,
+  "Blue's Lineup": `A matchday lineup graphic for the Blues ahead of their clash against the Reds. The design focuses on clarity and structure, using bold typography, vertical layout alignment, and a strong color contrast to separate key information. Every detail was built to balance visual energy with clean readability, reinforcing brand consistency across the matchday suite.`
 };
 
 const projectTools = {
@@ -83,7 +66,8 @@ const projectTools = {
   'Dynasty Flame': ['ps'],
   'Code Switch': ['pr', 'ae'],
   'Mamba Forever': ['ps'],
-  'OS Simulation': ['cursor', 'chat', 'ps', 'ai']
+  'OS Simulation': ['html', 'css', 'js'],
+  "Blue's Lineup": ['ps']
 };
 
 const toolIconData = {
@@ -95,7 +79,10 @@ const toolIconData = {
   pr: { src: '../../../assets/apps/projects/icons/pr.webp', alt: 'Premiere Pro', label: 'Premiere Pro' },
   lr: { src: '../../../assets/apps/projects/icons/lr.webp', alt: 'Lightroom', label: 'Lightroom' },
   chat: { src: '../../../assets/apps/projects/icons/chat.webp', alt: 'ChatGPT', label: 'ChatGPT' },
-  cursor: { src: '../../../assets/apps/projects/icons/cursor.webp', alt: 'Cursor', label: 'Cursor' }
+  cursor: { src: '../../../assets/apps/projects/icons/cursor.webp', alt: 'Cursor', label: 'Cursor' },
+  html: { src: '../../../assets/apps/projects/icons/html.webp', alt: 'HTML5', label: 'HTML5' },
+  css: { src: '../../../assets/apps/projects/icons/css.webp', alt: 'CSS3', label: 'CSS3' },
+  js: { src: '../../../assets/apps/projects/icons/js.webp', alt: 'JavaScript', label: 'JavaScript' }
 };
 
 const lightboxTools = document.querySelector('[data-lightbox-tools]');
@@ -266,10 +253,15 @@ projectLinks.forEach((link, idx) => {
                 lightboxDescription.innerHTML = desc || '';
             }
             setupGalleryForProject(titleElement.textContent.trim());
-            // Dynamic tools used
+            // Dynamic tools/tech stack label
             if (lightboxTools) {
                 lightboxTools.innerHTML = '';
                 const tools = projectTools[titleElement.textContent.trim()] || [];
+                // Determine label: 'Tech Stack:' for web development, else 'Tools Used:'
+                const category = categoryElement.textContent.trim().toLowerCase();
+                const label = category === 'web development' ? 'Tech Stack:' : 'Tools Used:';
+                const toolsLabelElem = document.querySelector('.tools-label');
+                if (toolsLabelElem) toolsLabelElem.textContent = label;
                 tools.forEach(toolKey => {
                     const tool = toolIconData[toolKey];
                     if (tool) {
@@ -370,23 +362,38 @@ function animateLightboxTransition(callback) {
   detailsContainer.classList.add('lightbox-fade-out', 'lightbox-animating');
   setTimeout(() => {
     callback(); // Update content
-    imgContainer.classList.remove('lightbox-fade-out');
-    detailsContainer.classList.remove('lightbox-fade-out');
-    setTimeout(() => {
-      imgContainer.classList.remove('lightbox-animating');
-      detailsContainer.classList.remove('lightbox-animating');
-    }, 100); // Reduced from 175ms
-  }, 100); // Reduced from 175ms
+
+    // Find the new image or video
+    const newImg = imgContainer.querySelector('.lightbox-img');
+    const newVid = imgContainer.querySelector('.lightbox-video');
+
+    function finishFadeIn() {
+      imgContainer.classList.remove('lightbox-fade-out');
+      detailsContainer.classList.remove('lightbox-fade-out');
+      setTimeout(() => {
+        imgContainer.classList.remove('lightbox-animating');
+        detailsContainer.classList.remove('lightbox-animating');
+      }, 100);
+    }
+
+    if (newVid && newVid.readyState < 1) {
+      newVid.addEventListener('loadedmetadata', finishFadeIn, { once: true });
+    } else if (newImg && !newImg.complete) {
+      newImg.addEventListener('load', finishFadeIn, { once: true });
+    } else {
+      finishFadeIn();
+    }
+  }, 100);
 }
 
 if (lightboxPrevBtn) {
     lightboxPrevBtn.addEventListener('click', function (e) {
         e.preventDefault();
         if (currentProjectList.length > 0 && currentProjectIndex !== null) {
-            let nextIndex = currentProjectIndex + 1;
-            if (nextIndex >= currentProjectList.length) nextIndex = 0;
-            preloadVideoForIndex(nextIndex); // Start preloading as soon as clicked
-            animateLightboxTransition(() => openLightboxByIndex(nextIndex));
+            let prevIndex = currentProjectIndex - 1;
+            if (prevIndex < 0) prevIndex = currentProjectList.length - 1;
+            preloadVideoForIndex(prevIndex);
+            animateLightboxTransition(() => openLightboxByIndex(prevIndex));
         }
     });
 }
@@ -394,17 +401,17 @@ if (lightboxNextBtn) {
     lightboxNextBtn.addEventListener('click', function (e) {
         e.preventDefault();
         if (currentProjectList.length > 0 && currentProjectIndex !== null) {
-            let prevIndex = currentProjectIndex - 1;
-            if (prevIndex < 0) prevIndex = currentProjectList.length - 1;
-            preloadVideoForIndex(prevIndex); // Start preloading as soon as clicked
-            animateLightboxTransition(() => openLightboxByIndex(prevIndex));
+            let nextIndex = currentProjectIndex + 1;
+            if (nextIndex >= currentProjectList.length) nextIndex = 0;
+            preloadVideoForIndex(nextIndex);
+            animateLightboxTransition(() => openLightboxByIndex(nextIndex));
         }
     });
 }
 
 // Initial filter
-filterFunc('latest');
-articleTitle.textContent = 'Latest Projects';
+filterFunc('social graphics');
+articleTitle.textContent = 'Social Graphics';
 requestAnimationFrame(() => {
   requestAnimationFrame(adjustPaddingForScrollbar);
 });

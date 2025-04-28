@@ -13,30 +13,41 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Image cycling logic
-  const imageCount = 4;
+  const imageCount = 3;
   let currentIndex = 1;
   const mainImage = document.querySelector('.main-image');
 
   // --- Event handler for status bar update ---
+  const imageTitles = {
+    1: 'shredding.jpg',
+    2: 'sightseeing.jpg',
+    3: 'bestfriends.jpg'
+  };
+
   const handleImageLoad = () => {
       if (window.parent && window.parent !== window) {
-          const imageName = `image${currentIndex}.webp`;
+          const title = imageTitles[currentIndex] || `image${currentIndex}`;
           const dimensions = `(${mainImage.naturalWidth}x${mainImage.naturalHeight})`;
-          const statusText = `${imageName} ${dimensions}`;
+          const statusText = `${title} ${dimensions}`;
           window.parent.postMessage({ type: 'updateStatusBar', text: statusText }, window.location.origin || '*');
       }
   };
   
   const handleImageError = () => {
       if (window.parent && window.parent !== window) {
-          const imageName = `image${currentIndex}.webp`;
-          window.parent.postMessage({ type: 'updateStatusBar', text: imageName + ' (Error loading)' }, window.location.origin || '*');
+          const title = imageTitles[currentIndex] || `image${currentIndex}`;
+          window.parent.postMessage({ type: 'updateStatusBar', text: title + ' (Error loading)' }, window.location.origin || '*');
       }
   };
 
   // Add listeners ONCE
   mainImage.addEventListener('load', handleImageLoad);
   mainImage.addEventListener('error', handleImageError);
+
+  // Force status bar update for the first image in case it's already loaded
+  if (mainImage.complete) {
+    handleImageLoad();
+  }
 
   function updateImage() {
     const imageName = `image${currentIndex}.webp`;
@@ -89,8 +100,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Enable XP-style tooltips for toolbar buttons
   setupTooltips('.toolbar-row > div[data-tooltip]');
-
-  // Add any additional Photo Viewer app logic here if needed
 });
-
-// ... existing code ...
