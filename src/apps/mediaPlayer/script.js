@@ -623,25 +623,12 @@ class WMPlayerElement extends HTMLElement {
          });
       }
       
-      //
-      // We handle `muted` ourselves, since there's no event that gets 
-      // triggered when a media element is programmatically muted. We 
-      // have to intercept that in order to update our UI.
-      //
-      // We handle `playbackRate` ourselves, so that we can let clients 
-      // set the base playback rate independently of fast-forwarding. 
-      // We need to shim the setter so that when fast-forwarding stops, 
-      // we know what rate to return the video to.
-      //
       for(const name of [
          // HTMLMediaElement:
          "audioTracks",
          "crossOrigin",
          "currentTime",
-         //"defaultPlaybackRate",
          "disableRemotePlayback",
-         //"muted",
-         //"playbackRate",
          "preservesPitch",
          "srcObject",
          "volume",
@@ -651,82 +638,6 @@ class WMPlayerElement extends HTMLElement {
          Object.defineProperty(this.prototype, name, {
             get: function() { return this.#media[name]; },
             set: function(v) { this.#media[name] = v; }
-         });
-      }
-      
-      //
-      // Attributes below.
-      //
-      
-      // Start by listing those attributes that we want to handle 
-      // entirely by ourselves. After this, we'll register the 
-      // attributes we want to automatically mirror to the wrapped 
-      // media element.
-      this.observedAttributes = [
-         "autoplay",
-         "src",
-         "data-controls-in-gutter-right",
-         "data-controls-in-tray-left",
-         "data-controls-in-tray-right",
-      ];
-      
-      //
-      // We handle `autoplay` ourselves.
-      //
-      // We handle `src` ourselves, since we need somewhat different 
-      // logic (owing to us having built-in playlist functionality).
-      //
-      // We don't forward `controls` or `controlslist` because we're 
-      // supplying our own UI; we explicitly want the wrapped media 
-      // element to use its default of having no controls.
-      //
-      // We don't forward `width` or `height` since they're not fully 
-      // meaningful in this case. Our player may show its UI outside 
-      // the bounds of the video, consuming additional size; in that 
-      // case, one would expect `width` and `height` to refer to the 
-      // total size of the player, and not just the video dimensions.
-      //
-      // We allow the `poster` to be set per playlist item, so we don't 
-      // forward that either.
-      //
-      for(const name of [
-         // HTMLMediaElement:
-         //"autoplay",
-         //"controls",
-         //"controlslist",
-         //"src",
-         // HTMLVideoElement:
-         //"height",
-         //"poster",
-         //"width",
-      ]) {
-         this.observedAttributes.push(name);
-         Object.defineProperty(this.prototype, name, {
-            get: function() { return this.#media[name]; },
-            set: function(v) {
-               this.#setting_attribute = true;
-               this.setAttribute(name);
-               this.#media[name] = v;
-               this.#setting_attribute = false;
-            }
-         });
-      }
-      
-      // There are some cases where an HTML attribute is reflected by 
-      // a JavaScript property with a different name. Handle them here.
-      for(const [name, attr] of [
-         // HTMLMediaElement:
-         ["defaultMuted", "muted"],
-      ]) {
-         this.observedAttributes.push(attr);
-         Object.defineProperty(this.prototype, name, {
-            get: function() { return this.#media[name]; },
-            set: function(v) {
-               this.#setting_attribute = true;
-               this.setAttribute(attr);
-               this.#media[name] = v;
-               this.#setting_attribute = false;
-            }
          });
       }
       
@@ -815,6 +726,7 @@ class WMPlayerElement extends HTMLElement {
       this.#volume_slider.addEventListener("change", this.#on_volume_slider_change.bind(this));
       
       this.#next_button = this.#shadow.querySelector(".next-ff");
+      this.#next_button.disabled = true; // Always disabled since only one video
       this.#next_button.addEventListener("mousedown", this.#on_next_mousedown.bind(this));
       this.#next_button.addEventListener("mouseup", this.#on_next_mouseup.bind(this));
       this.#next_button.addEventListener("keypress", this.#on_next_keypress.bind(this));
@@ -1677,29 +1589,9 @@ class WMPlayerElement extends HTMLElement {
    #update_next_state() {
       const TEXT_FOR_FAST_FWD_ONLY = "Press and hold to fast-forward";
       const TEXT_FOR_ALL_BEHAVIORS = "Next (press and hold to fast-forward)";
-      
-      let has_next = false;
       let node     = this.#next_button;
-      if (this.#playlist.size == 0) {
-         node.classList.remove("can-only-fast-forward");
-         node.disabled = true;
-         node.title    = TEXT_FOR_ALL_BEHAVIORS;
-      } else {
-         //
-         // It's always possible to fast-forward, so the button will always be enabled 
-         // if we have any media in our playlist. The only real question is whether we 
-         // can move to the next media item (i.e. whether there is one).
-         //
-         node.disabled = false;
-         if (this.#playlist.hasNextItem()) {
-            node.classList.remove("can-only-fast-forward");
-            node.title = TEXT_FOR_ALL_BEHAVIORS;
-            has_next   = true;
-         } else {
-            node.classList.add("can-only-fast-forward");
-            node.title = TEXT_FOR_FAST_FWD_ONLY;
-         }
-      }
+      node.disabled = true; // Always disabled
+      node.title    = TEXT_FOR_ALL_BEHAVIORS;
    }
    #update_prev_next_state(current_time) {
       this.#update_prev_state(current_time);
@@ -1843,6 +1735,17 @@ class WMPlayerElement extends HTMLElement {
        }
    }
    // --- End helper ---
+   
+   static get observedAttributes() {
+      return [
+         "autoplay",
+         "loop",
+         "src",
+         "data-controls-in-tray-left",
+         "data-controls-in-tray-right"
+         // Add any other attributes you want to observe
+      ];
+   }
 };
 customElements.define(
    "wm-player",

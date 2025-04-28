@@ -157,7 +157,7 @@
 .middle-right .menu-items::after {
     content: '';
     flex: 1;
-    min-height: 139px; /* Height: (36px * 4 removed) - (1px line + 4px margin = 5px effective divider height) */
+    min-height: 139px;
 }
 
 /* Menu items */

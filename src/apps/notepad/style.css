@@ -57,31 +57,6 @@ body {
     cursor: text; /* Default text I-beam cursor */
 }
 
-/* Status Bar styles removed - Handled by WindowManager */
-/*
-.status-bar {
-    display: flex;
-    background-color: #f0f0f0;
-    border-top: 1px solid #d7d7d7;
-    padding: 2px 0;
-    font-size: 11px;
-    justify-content: flex-end;
-    user-select: none;
-    height: 22px;
-}
-
-.status-item {
-    padding: 0 8px;
-    border-right: 1px solid #d7d7d7;
-    display: flex;
-    align-items: center;
-}
-
-.status-item:last-child {
-    border-right: none;
-}
-*/
-
 /* === MenuBar Styles (Copied from reusable/MenuBar.css) === */
 /* Menu bar styles for Windows XP-like UI
    .menu-bar: Menu bar container

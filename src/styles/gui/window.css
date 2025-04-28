@@ -2,7 +2,7 @@
 .app-window {
     border: 2px solid #284ffd;
     border-top-width: 1.5px;
-    border-radius: 8px;
+    border-radius: 8px 8px 0px 0px;
     box-shadow: 1px 1px 6px rgb(0 0 0 / 40%);
     display: flex;
     flex-direction: column;
@@ -464,7 +464,6 @@ iframe {
     justify-content: center; /* Center Ln/Col text */
 }
 
-/* Remove border from the very first item (now the dynamic Ln/Col) */
 .status-bar.notepad-statusbar > p:first-child {
     border-left: none;
 }

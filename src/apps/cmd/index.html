@@ -4,15 +4,16 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Command Prompt</title>
+        <link rel="stylesheet" href="https://unpkg.com/xp.css@0.2.3/dist/XP.css" crossorigin="anonymous">
         <link rel="stylesheet" href="style.css" />
     </head>
-    <body>
-        <pre id="history"></pre>
-        <span id="ps1">C:\Users\Portfolio></span>
-        <div id="input" contenteditable="true"></div>
-        <button id="caret">&nbsp;</button>
-
-
-        <script src="script.js"></script>
-    </body>
+    <body style="height: 100vh; overflow-y: auto; background-color: black; padding: 10px; box-sizing: border-box; margin: 0;">
+        <div id="output"> </div>
+        <div id="input-line" style="display: flex; align-items: baseline;">
+            <span id="prompt"> </span>
+            <span id="input" contenteditable="true" autofocus style="flex-grow: 1; outline: none; min-height: 1em; white-space: pre-wrap;"></span>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
 </html>

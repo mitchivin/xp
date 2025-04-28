@@ -26,8 +26,6 @@
 
 .loading-container {
     /* width: 400px; */
-
-    /* Removed fixed width */
     padding: 40px; /* Increased padding */
     display: flex;
     flex-direction: column;
@@ -94,9 +92,8 @@
 #login-screen {
     background-color: #000; /* Reverted from transparent to original black */
     pointer-events: none; /* Disabled initially */
-    padding: 0; /* Remove padding if any */
+    padding: 0;
     overflow: hidden; /* Hide potential iframe scrollbars */
-    /* Remove transition and opacity */
     opacity: 1;
 }
 
@@ -141,7 +138,7 @@
 }
 
 .boot-bottom-right img {
-    display: block; /* Remove potential extra space */
+    display: block;
     height: 35px; /* Fixed height */
     width: auto; /* Maintain aspect ratio */
 }

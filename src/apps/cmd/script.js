@@ -1,249 +1,89 @@
-// Helper function to select a single DOM element by CSS selector
-function getElement(selector) {
-    return document.querySelector(selector);
-}
+// --- Minimal CMD Prompt Logic ---
 
-// Helper function to create a DOM element with an optional class name
-function createElement(tag, className = '') {
-    const element = document.createElement(tag);
-    if (className) element.className = className;
-    return element;
-}
+// Get references to HTML elements
+const outputElement = document.getElementById('output');
+const promptElement = document.getElementById('prompt');
+const inputElement = document.getElementById('input');
+const bodyContainer = document.body;
 
-// Get references to main UI elements for the command prompt
-const history = getElement('#history');
-const input = getElement('#input');
-const ps1 = getElement('#ps1');
-const caret = getElement('#caret');
-const body = getElement('body');
+// Define the static path for the prompt
+const staticPath = 'C:\\Users\\Portfolio>';
 
-// Set the initial body class to DOS mode
-body.classList.add('dos');
-
-let command = '';
-let driveLetter = 'C';
-
-let path = [];
-
-
-// Process a command entered by the user and return the output string
-function processCommand(text) {
-    let actualCommand;
-    let parameters;
-    // Split the command and its parameters
-    if (text.indexOf(' ') !== -1) {
-        actualCommand = text.substring(0, text.indexOf(' '));
-        parameters = text.substring(text.indexOf(' ') + 1, text.length).split(' ');
+// Function to add a line of text (or a blank line) to the output div
+function addOutputLine(text) {
+    const lineDiv = document.createElement('div');
+    if (text === '') {
+        // For blank lines, add a non-breaking space to ensure height
+        // and add a specific class if needed for styling
+        lineDiv.innerHTML = '&nbsp;';
+        lineDiv.className = 'blank-line';
     } else {
-        actualCommand = text;
-        parameters = [];
+        // For text lines, set textContent for safety
+        lineDiv.textContent = text;
     }
-    // Handle command logic and return output
-    try {
-        if (actualCommand.indexOf(':') === 1 && actualCommand.length === 2) {
-            driveLetter = actualCommand.charAt(0).toUpperCase();
-            return '';
+    outputElement.appendChild(lineDiv);
+}
+
+// Function to scroll the container to the bottom
+function scrollToBottom() {
+    bodyContainer.scrollTop = bodyContainer.scrollHeight;
+}
+
+// Function to initialize the prompt
+function initializePrompt() {
+    // Clear any previous output children
+    outputElement.innerHTML = '';
+
+    // Add initial lines (each becomes a div)
+    addOutputLine('OS Simulation [Version 1.0]');
+    addOutputLine('Developed by Mitchell Ivin');
+    addOutputLine(''); // Add the blank line for initial spacing
+
+    // Set the prompt text
+    promptElement.textContent = staticPath;
+
+    // Focus the input area
+    inputElement.focus();
+
+    // Scroll to bottom
+    scrollToBottom();
+}
+
+// Event listener for Enter key on the input element
+inputElement.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Stop default newline behavior
+
+        const commandText = inputElement.textContent.trim();
+        const fullPromptLine = `${promptElement.textContent} ${commandText}`;
+
+        // Add the entered command line to the output (as a div)
+        addOutputLine(fullPromptLine);
+
+        // Add the standard response if the command was not empty (as a div)
+        if (commandText !== '') {
+            // Remove blank line from before the error message
+            addOutputLine(`'${commandText}' is not recognized as an internal or external command, operable program or batch file.`);
+            addOutputLine(''); // Add blank line AFTER the error message
         }
-        switch (actualCommand.toLowerCase()) {
-            case '':
-                return '';
 
-            case 'scandisk':
-                return 'Command not found\n\n';
-            case 'ver':
-                return 'JSDOS v0.1.442024\n\n';
-            case 'win':
-                return 'Windows not invented yet\n\n';
-            case 'set':
-            case 'eval':
-                return 'Command disabled for security reasons\n';
-            case 'clear':
-            case 'cls':
-                history.innerHTML = '';
-                return '';
-            case 'cd':
-                return processDirectoryChange(parameters[0]);
-            case 'cd\\':
-                return processDirectoryChange('\\');
-            case 'ls':
-            case 'dir':
-                return processDir(parameters[0]);
-            case 'echo':
-                return parameters.join(' ') + '\n';
-            case 'date':
-                return Date() + '\n';
-            case 'help':
-                return printHelp();
-            case 'exit':
-                // Attempt to close the window via parent message
-                if (window.parent && window.parent !== window) {
-                    window.parent.postMessage({ type: 'close-window' }, '*');
-                    return ''; // Return empty string as we are closing
-                } else {
-                    // Standalone fallback (may not work depending on browser security)
-                    window.close();
-                    return 'Attempting to close window...\n'; 
-                }
-            default:
-                // Return error for unrecognized command
-                return `'${text}' is not recognized as an internal or external command,<br>operable program or batch file.<br>`;
-        }
-    } catch (err) {
-        return 'Command caused an error [' + err + ']<br>';
-    }
-}
+        // Clear the input element
+        inputElement.textContent = '';
 
-// Change the current directory based on the user's input
-function processDirectoryChange(dirs) {
-    if (dirs === undefined) {
-        return '';
-    } else if (dirs.charAt(1) === ':') {
-        driveLetter = dirs.charAt(0);
-        path = dirs.substring(3, dirs.length).split('\\');
-        return '';
-    }
-    dirs = dirs.replace(/\//g, '\\');
-    const dirArray = dirs.split('\\');
-    for (const dir in dirArray) {
-        changeDirectory(dirArray[dir]);
-    }
-    return '';
-}
-
-// Update the path array to reflect directory changes
-function changeDirectory(dir) {
-    if (dir === '.' || dir === '') {
-        return;
-    } else if (dir === '..') {
-        path.pop();
-    } else if (dir === '\\') {
-        path = [];
-    } else {
-        path.push(dir);
-    }
-    return '';
-}
-
-// Generate a directory listing output string for the current or given directory
-function processDir(dir) {
-    if (dir === undefined) {
-        dir = driveLetter + ':\\' + path.join('\\');
-    }
-    let output = '';
-    output += ' Volume in drive ' + driveLetter + ' has no label.<br />';
-    output += ' Volume Serial Number is 98B1-B33F\n';
-    output += '\n';
-    output += ' Directory of ' + dir + '\n';
-    output += '\n';
-    output += ' 01/01/2009&#9;01:00 AM&#9;&lt;DIR&gt;&#9;&#9;.\n';
-    output += ' 01/01/2009&#9;01:00 AM&#9;&lt;DIR&gt;&#9;&#9;..\n';
-    output += '               0 File(s)              0 bytes\n';
-    output += '               2 Dir(s)   98,061,203,456 bytes free\n\n';
-    return output;
-}
-
-// Return a help string listing all supported commands
-function printHelp() {
-    let output = '';
-    output += 'Supported commands are:\n';
-    output += ' help\n';
-    output += ' ver\n';
-    output += ' defrag\n';
-    output += ' echo [text]\n';
-    output += ' cls\n';
-    output += ' dir\n';
-    output += ' cd [directory]\n\n';
-    return output;
-}
-
-// Print a line of output to the command history area
-function println(text) {
-    const line = createElement('div');
-    line.innerHTML = `${text}`;
-    history.appendChild(line);
-}
-
-// Initialize the command prompt with the Windows XP version banner
-function init() {
-    println('OS Simulation [Version 1.0]<br>Developed by Mitchell Ivin');
-}
-
-// Move the caret to the end of the input field and focus it
-function focusAndMoveCursorToTheEnd(e) {
-    input.focus();
-    const range = document.createRange();
-    const selection = window.getSelection();
-    const { childNodes } = input;
-    const lastChildNode = childNodes && childNodes.length - 1;
-    range.selectNodeContents(lastChildNode === -1 ? input : childNodes[lastChildNode]);
-    range.collapse(false);
-    selection.removeAllRanges();
-    selection.addRange(range);
-}
-
-// Listen for selection changes and update the caret display based on cursor position
-// If the selection is not at the end, hide the square caret. If at the end, show it.
-document.addEventListener('selectionchange', () => {
-    if (document.activeElement.id !== 'input') return;
-    const range = window.getSelection().getRangeAt(0);
-    const start = range.startOffset;
-    const end = range.endOffset;
-    const length = input.textContent.length;
-    if (end < length) {
-        input.classList.add('noCaret');
-    } else {
-        input.classList.remove('noCaret');
+        // Scroll to the bottom
+        scrollToBottom();
     }
 });
 
-// Listen for input events to sanitize pasted content and manage caret display
-input.addEventListener('input', () => {
-    if (input.childElementCount > 0) {
-        // If HTML is pasted, keep only the last line as plain text
-        const lines = input.innerText.replace(/\n$/, '').split('\n');
-        const lastLine = lines[lines.length - 1];
-        input.textContent = lastLine;
-        focusAndMoveCursorToTheEnd();
-    }
-    // If input is empty, ensure the square caret is visible
-    if (input.innerText.length === 0) {
-        input.classList.remove('noCaret');
-    }
-    scrollPromptIntoView();
-});
-
-// Listen for keydown events to keep the input focused when typing outside the field
-// This ensures the prompt always receives keyboard input
-// Move the caret to the end if needed
-document.addEventListener('keydown', (e) => {
-    if (e.target !== input) focusAndMoveCursorToTheEnd();
-});
-
-// Listen for Enter key to process the command and print the result
-input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        const commandText = input.textContent;
-        const outputText = processCommand(commandText);
-        const currentPrompt = ps1.textContent; // Get prompt from #ps1 span
-        // Append the static prompt + command to history
-        println(`${currentPrompt} ${commandText}`);
-        // Append the output (if any) to history
-        if (outputText) {
-            println(outputText);
-        }
-        input.textContent = '';
-        scrollPromptIntoView();
+// Event listener to keep input focused when clicking elsewhere in the body
+document.addEventListener('click', (event) => {
+    // If the click is within the body but not on the input field itself
+    if (bodyContainer.contains(event.target) && event.target !== inputElement) {
+        inputElement.focus();
+        // Note: Programmatically moving the cursor to the end of contenteditable
+        // after focusing requires more complex Selection API usage, omitted for simplicity.
     }
 });
 
-// Focus the input field and print the initial banner when the app loads
-input.focus();
-init();
-
-function scrollPromptIntoView() {
-    setTimeout(() => {
-        input.scrollIntoView({ block: "end" });
-        window.scrollTo(0, document.body.scrollHeight);
-    }, 0);
-}
+// Initialize the command prompt when the script loads
+initializePrompt();

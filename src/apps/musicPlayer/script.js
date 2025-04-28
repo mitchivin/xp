@@ -13,7 +13,7 @@ const demoSongInfo = [
   { band: 'The Gorillaz', song: '19-2000 (Soulchild Remix)' },
   { band: 'Chiddy Bang', song: 'Mind Your Manners' },
   { band: 'Kendrick Lamar', song: 'i' },
-  { band: 'Linkin Park, JAY-Z', song: 'Numb / Encore' }
+  { band: 'Chance the Rapper', song: 'Juice' }
 ];
 
 // If you have a manifest or can fetch file lists, replace this with a fetch or import

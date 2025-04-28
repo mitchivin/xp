@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.removeChild(link);
       },
       exit: handleExit
-      // Add more menu actions as needed
     }
   });
 

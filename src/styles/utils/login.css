@@ -98,8 +98,6 @@
     font-size: 19px;
     font-weight: 400;
     margin-top: 20px;
-
-    /* transform: translateX(-45px); Temporarily removed for testing rendering */
     letter-spacing: 0.25px;
     position: relative;
     right: 65px; /* Increased to move further left */
@@ -161,7 +159,7 @@
 
 /* Change subheading color on hover */
 .login-screen .back-gradient:hover .user-title {
-    color: white;
+    color: #fdbd32;
 }
 
 .login-screen .text-wrap {

@@ -148,7 +148,7 @@ export function initBootSequence(eventBus, EVENTS) {
                     }, 50);
                 }
             }, 1000);
-        }, 6500); // Changed from 5000 to 6500 (added 1.5s)
+        }, 6500);
     }
     
     /**
@@ -191,7 +191,7 @@ export function initBootSequence(eventBus, EVENTS) {
         // Set timeout to deactivate log off cooldown after 4.25 seconds
         setTimeout(() => {
             logOffCooldown = false;
-        }, 4250); // Changed from 5000ms to 4250ms
+        }, 4250);
         
         // Show network balloon after login, with 3s delay
         setTimeout(() => {
@@ -266,5 +266,20 @@ export function initBootSequence(eventBus, EVENTS) {
             sessionStorage.setItem('logged_in', 'false');
             document.dispatchEvent(new CustomEvent('triggerLoginCooldown'));
         }, 50);
+        // --- Failsafe: always ensure black overlay is hidden and login is visible ---
+        setTimeout(() => {
+            const blackTransition = document.getElementById('black-transition');
+            if (blackTransition) blackTransition.style.display = 'none';
+            loginScreen.style.display = 'flex';
+            loginScreen.style.opacity = '1';
+            loginScreen.style.pointerEvents = 'auto';
+            // Also ensure the login content is visible
+            const loginContent = loginScreen.querySelector('.login-screen');
+            if (loginContent) {
+                loginContent.style.opacity = '1';
+                loginContent.style.display = 'block';
+                loginContent.style.pointerEvents = 'auto';
+            }
+        }, 500);
     });
 } 

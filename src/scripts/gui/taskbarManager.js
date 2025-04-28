@@ -261,16 +261,17 @@ export function showNetworkBalloon() {
       <button class="balloon__close" aria-label="Close"></button>
       <div class="balloon__header">
         <img class="balloon__header__img" src="assets/gui/taskbar/welcome.webp" alt="welcome" />
-        <span class="balloon__header__text">Hey, I'm Mitch!</span>
+        <span class="balloon__header__text">Welcome to my Portfolio</span>
       </div>
-      <p class="balloon__text__first">Welcome to my design portfolio.<br>Deliberately different. Meant to be explored.</p>
+      <p class="balloon__text__first">Hey, I'm Mitch - I thought i'd mix things up a bit.<br>Deliberately different. Meant to be explored.</p>
     </div>
   `;
   setTimeout(() => {
     const iconRect = icon.getBoundingClientRect();
     const balloon = balloonRoot.querySelector('.balloon');
     const balloonRect = balloon.getBoundingClientRect();
-    balloonRoot.style.left = (iconRect.left + iconRect.width / 2 - balloonRect.width / 2 + window.scrollX - 114) + 'px';
+    // Adjusted left position by subtracting an additional 10px
+    balloonRoot.style.left = (iconRect.left + iconRect.width / 2 - balloonRect.width / 2 + window.scrollX - 124) + 'px'; 
     balloonRoot.style.top = (iconRect.top - balloonRect.height - 8 - 14 + window.scrollY) + 'px';
   }, 0);
   const balloon = balloonRoot.querySelector('.balloon');
@@ -301,10 +302,5 @@ const setupBalloonClick = () => {
 };
 window.addEventListener('DOMContentLoaded', () => {
   setupBalloonClick();
-  // Show balloon automatically on login (page load), after 3s delay
-  // setTimeout(() => {
-  //   if (!document.getElementById('balloon-root')) {
-  //     showNetworkBalloon();
-  //   }
-  // }, 3000);
+
 });

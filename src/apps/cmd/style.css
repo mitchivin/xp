@@ -1,277 +1,65 @@
-@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono:500,700');
-
-:root {
-    --defrag-bgColor: #5561ff;
-    --defrag-cyanColor: #44f0ff;
-    --defrag-redColor: #8f1b0e;
-    --defrag-greyColor: #aca8aa;
-    --defrag-blueColor: #0f06a6;
-    --normalFont: 'IBM Plex Mono', monospaced;
-    --cmd-font-family: 'Consolas', monospace;
-    --cmd-font-size: 15px;
-    --cmd-font-weight: 500;
-    --cmd-text-color: rgb(204 204 204);
+/* Apply base styles to the body */
+body {
+    font-family: 'Consolas', 'Courier New', monospace;
+    color: #ccc;
+    font-size: 16px; /* Updated font size */
+    font-weight: bold; /* Make text bold */
+    margin: 0; /* Ensure no body margin */
+    scrollbar-gutter: stable; /* Reserve space for scrollbar */
+    /* Background, height, overflow etc. are handled inline on body in index.html */
 }
 
-/* Base CMD styling - using a single style definition with CSS variables */
-body.dos {
-    background: rgb(12 12 12);
-    height: 100%;
-    box-sizing: border-box;
-    overflow: hidden hidden;
-    word-break: break-all;
+/* Ensure output, prompt, and input explicitly use the body's font settings */
+#output,
+#prompt,
+#input {
+    font-family: inherit; /* Inherit from body */
+    color: inherit;       /* Inherit from body */
+    font-size: inherit;     /* Inherit from body */
+}
+
+/* Ensure output div has no margin */
+#output {
     margin: 0;
-    padding: 6px 10px 10px;
-    user-select: none;
-    font-family: var(--cmd-font-family);
-    font-size: var(--cmd-font-size);
-    font-weight: var(--cmd-font-weight);
-    color: var(--cmd-text-color);
+    padding: 0;
 }
 
-/* Force consistent font styling on all CMD elements */
-body.dos *,
-#history,
-#history > div,
-#input,
-#ps1,
-#caret {
-    font-family: var(--cmd-font-family) !important;
-    font-size: var(--cmd-font-size) !important;
-    font-weight: var(--cmd-font-weight) !important;
-    color: var(--cmd-text-color) !important;
-    text-shadow: 0 0 1px var(--cmd-text-color) !important;
-    -webkit-font-smoothing: antialiased !important;
+/* Style for each line added to the output */
+#output > div {
+    min-height: 1em; /* Ensure blank lines take up space */
+    white-space: pre-wrap; /* Preserve spacing within the line */
+    margin: 0; /* Reset margin */
+    padding: 0; /* Reset padding */
+    /* Add margin-bottom ONLY if you want extra space between lines */
+    /* margin-bottom: 2px; */
 }
 
-/* Ensure no spacing at the top of command prompt */
-#history {
-    margin-top: 0;
-    padding-top: 0;
-    min-height: 0;
-    display: block;
+/* Style for blank lines specifically (using a class) */
+#output > div.blank-line {
+    /* Keep min-height from #output > div */
 }
 
-/* Add space after each history line */
-#history > div {
-    margin-bottom: 15px; /* Match font-size for line height */
+/* Keep input line layout */
+#input-line {
+    display: flex;
+    align-items: baseline;
+    padding-left:0px; /* Explicitly remove left padding */
+    margin-left: 0; /* Explicitly remove left margin */
+}
+
+#prompt {
+    margin-right: 9px; /* Increased margin for spacing */
 }
 
 #input {
-    display: inline;
+    flex-grow: 1;
     outline: none;
-    visibility: visible;
-    caret-color: transparent;
-}
-
-/*
-  If you press the Insert keygxn, the vertical line caret will automatically
-  be replaced by a one-character selection.
-*/
-#input::selection {
-    color: rgb(136 23 152);
-    background: rgb(242 242 242);
+    min-height: 1em;
+    white-space: pre-wrap;
+    caret-color: #ccc; /* Ensure caret is visible */
 }
 
 #input:empty::before {
     content: ' ';
-}
-
-@keyframes blink {
-    0%,
-    49.9% {
-        visibility: visible;
-    }
-
-    50%,
-    100% {
-        visibility: hidden;
-    }
-}
-
-#input.noCaret + #caret {
-    visibility: hidden;
-}
-
-#caret {
-    border: 0;
-    padding: 0;
-    outline: none;
-    background-color: var(--cmd-text-color);
     display: inline-block;
-    animation: blink 1s infinite;
-}
-
-body.defrag {
-    margin: 0;
-    font-family: var(--normalFont);
-    background: black;
-    font-size: 21px;
-    display: flex;
-    align-items: center;
-    height: 100%;
-}
-
-#defrag.screen {
-    width: 1024px;
-    height: 600px;
-    background: var(--defrag-bgColor);
-    border: 3px solid #000;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
-}
-
-/*
-
-Defrag
-
-*/
-#defrag-menu-top {
-    background: white;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 30px;
-}
-
-#defrag-help {
-    cursor: pointer;
-    padding: 0 10px;
-    user-select: none;
-}
-
-#defrag-help:active {
-    background: black;
-    color: white;
-}
-
-#defrag-menu-bottom {
-    background: white;
-    display: flex;
-    justify-content: space-between;
-}
-
-#defrag-menu-bottom > div {
-    padding: 0 15px;
-}
-
-#defrag-menu-bottom span {
-    color: var(--defrag-redColor);
-}
-
-/* Surface */
-
-#defrag-surface {
-    width: 12px;
-    height: 21px;
-    display: flex;
-    text-align: center;
-    vertical-align: bottom;
-}
-
-.block.used::before {
-    content: '•';
-    height: 20px;
-    display: inline-block;
-    color: var(--defrag-bgColor);
-    background: yellow;
-}
-
-.block.used.frag::before {
-    background: white;
-}
-
-.block.unused::before {
-    content: '░';
-}
-
-.block.reading::before {
-    content: 'r';
-}
-
-.block.writing::before {
-    content: 'W';
-}
-
-.block.writing::before,
-.block.reading::before {
-    background: blue;
-    color: white;
-    transform: translateY(2px);
-}
-
-.block.bad::before {
-    content: 'B';
-    height: 22px;
-    color: var(--defrag-redColor);
-    background: black;
-    transform: translateY(2px);
-}
-
-.block.unmovable::before {
-    content: 'X';
-}
-
-/* Info */
-
-#defrag-info {
-    display: flex;
-}
-
-#defrag-info fieldset {
-    border: 2px solid white;
-    text-align: center;
-    color: white;
-    width: 100%;
-    margin: 0 10px 10px;
-    min-height: 100px;
-}
-
-#defrag-info fieldset p {
-    margin: 0;
-}
-
-#defrag-info fieldset legend {
-    color: yellow;
-}
-
-.sb {
-    display: flex;
-    justify-content: space-between;
-}
-
-#defrag-progress {
-    width: 100%;
-    height: 22px;
-    background: #8791ff;
-}
-
-#defrag-progress #defrag-fill {
-    width: 0%;
-    height: 100%;
-    background: white;
-}
-
-.grid2x2 {
-    display: grid;
-    grid-template-columns: 50% 50%;
-    text-align: left;
-}
-
-.off {
-    opacity: 0;
-}
-
-[hidden] {
-    display: none !important;
-}
-
-.center {
-    text-align: center;
-}
-
-#ps1 {
-    font-weight: var(--cmd-font-weight); /* Use the variable instead of hardcoded 'bold' */
 }
