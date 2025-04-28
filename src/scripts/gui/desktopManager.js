@@ -329,7 +329,7 @@ export default class Desktop {
         iframe.style.pointerEvents = 'auto';
         iframe.style.overflow = 'hidden';
         iframe.setAttribute('scrolling', 'no');
-        iframe.setAttribute('allow', 'none');
+        iframe.setAttribute('allow', '');
 
         overlay.appendChild(iframe);
         document.body.appendChild(overlay);

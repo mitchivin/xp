@@ -1,93 +1,89 @@
 # Windows XP Portfolio Simulation
 
-A modern, interactive web-based simulation of the Windows XP desktop environment, designed as a creative portfolio. This project faithfully recreates the look, feel, and behavior of classic Windows XP—including boot/login, desktop, taskbar, and a suite of modular apps (About Me, My Projects, Notepad, Media Player, and more).
+A fully interactive, web-based simulation of the classic Windows XP desktop environment, reimagined as a creative digital portfolio. This project showcases design, development, and multimedia work in a nostalgic, highly interactive format.
 
 ---
 
-## 🚀 Features
-- **Authentic Windows XP UI:** Boot animation, login screen, desktop, taskbar, and windowed apps.
-- **Multiple Portfolio Apps:** Each app (About, Projects, Notepad, Media Player, Photos, Resume, Contact, Internet, etc.) is a self-contained XP-style program.
-- **Modular Architecture:** Easily add or extend apps using shared utilities for menu bars, toolbars, and window management.
-- **Responsive & Cross-Browser:** Works on modern browsers and adapts to various screen sizes.
-- **Pixel-Perfect Styling:** Custom XP.css and utility scripts for accurate visuals and interactions.
+## Features
 
-## 🗂️ Project Structure
-- `index.html` — Main entry point
-- `src/apps/` — Each app in its own subdirectory (with `index.html`, `script.js`, `style.css`)
-- `src/scripts/` — Core logic and shared utilities (menu bar, toolbar, window manager, etc.)
-- `src/styles/` — Shared/global styles
-- `assets/` — Images, icons, and sounds
-- `docs/` — Documentation (including this README)
+- **Authentic Windows XP UI:**  
+  Desktop, taskbar, start menu, window management, and system tray faithfully recreated with modern web technologies.
 
-## 🛠️ Getting Started
-1. **Clone the repository:**
-   ```sh
-   git clone <your-repo-url>
-   cd portfolioXP
-   ```
-2. **Open `index.html` in your browser** (no build step required).
-3. **Explore the desktop and apps!**
+- **App-Based Portfolio:**  
+  Each "app" (About Me, Projects, Contact, Resume, Notepad, Music Player, Photos, Internet) is a self-contained window, presenting a different aspect of your work and skills.
 
-### Requirements
-- Modern web browser (Chrome, Firefox, Edge, Safari)
-- No server or build tools required (pure front-end)
+- **Multimedia Integration:**  
+  - Image galleries, video previews, and interactive lightboxes.
+  - Embedded music player with custom UI and audio controls.
 
-## 🧩 Adding or Modifying Apps
-- Each app lives in its own folder under `src/apps/` (e.g., `src/apps/notepad/`).
-- Use shared utilities from `src/scripts/utils/` for consistent menu bars, toolbars, and actions.
-- Follow existing app structure for markup, styles, and logic.
-- For new apps, copy a minimal working app as a template.
+- **Dynamic Effects:**  
+  - CRT overlay, scanlines, and subtle flicker for retro authenticity.
+  - Responsive design for various screen sizes, including ultrawide support.
 
-## 🤝 Contributing
-- Keep UI/UX pixel-perfect and consistent with Windows XP.
-- Use shared utilities and follow code/documentation conventions.
-- Document new features or changes in this README.
+- **Performance Optimizations:**  
+  - Preloading and prefetching of assets for instant app/window opening.
+  - Modular, event-driven JavaScript for maintainability and scalability.
 
-## 🐞 Known Issues & Troubleshooting
-### 1. Duplicate Scrollbar Arrows
-- **Problem:** Duplicate up/down arrows may appear in scrollbars if a scroll container uses `display: flex` or has explicit `height`/`min-height`.
-- **Solution:**
-  - Avoid `display: flex`, `height`, or `min-height` on scroll containers unless necessary.
-  - Keep scroll containers as simple block elements.
-  - See the About Me app for a working example.
-
-### 2. Menu Bar Height Mismatch in New Apps
-- **Problem:** Menu bars in new apps may appear taller than in core apps, despite similar CSS.
-- **Solution:**
-  - Ensure the menu bar is a direct flex child of a `<body>` set to `display: flex; flex-direction: column; height: 100vh; width: 100vw;`.
-  - Use the following CSS at the top of your app's `style.css`:
-    ```css
-    html, body {
-      height: 100%; width: 100%; margin: 0; padding: 0; overflow: hidden;
-    }
-    body {
-      display: flex; flex-direction: column; height: 100vh; width: 100vw; margin: 0; padding: 0; overflow: hidden;
-    }
-    .YOUR-APP-MAIN-CONTAINER {
-      flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0;
-    }
-    ```
-  - Replace `.YOUR-APP-MAIN-CONTAINER` with your main wrapper class.
-
-### 3. Dropdown Menus Not Positioned Correctly
-- **Problem:** Dropdown menus may not align or function as expected in standalone mode.
-- **Solution:**
-  - Use `position: fixed` for dropdown menus in your app's JavaScript, mirroring logic from Notepad or other working apps.
-
-### 4. Asset Path Issues
-- **Problem:** Background images or icons may not display if asset paths are incorrect, especially on GitHub Pages.
-- **Solution:**
-  - Use correct relative paths from the CSS/HTML file to the `assets/` directory at the project root.
-  - Example:
-    ```css
-    background-image: url("../../../assets/apps/about-me/bg.webp");
-    ```
+- **Accessibility & Usability:**  
+  - Keyboard and mouse navigation.
+  - Tooltips and clear visual feedback for all interactive elements.
 
 ---
 
-## 📢 Support & Questions
-For questions, suggestions, or bug reports, please contact the project maintainer or open an issue in your repository platform.
+## Getting Started
+
+### 1. Clone or Download
+
+```bash
+git clone https://github.com/yourusername/xp-portfolio.git
+cd xp-portfolio
+```
+
+### 2. Open in Browser
+
+No build step required!  
+Simply open `index.html` in your preferred browser.
+
+> **Tip:** For the best experience, use Chrome or Edge and press `F11` for full screen.
 
 ---
 
-© 2025 Mitch Ivin. All rights reserved. This project is for portfolio and educational use only and is not affiliated with Microsoft.
+## Project Structure
+
+```
+XP_v1.07/
+│
+├── index.html                # Main entry point
+├── src/
+│   ├── apps/                 # Individual app windows (about, projects, musicPlayer, etc.)
+│   ├── scripts/              # Core logic, managers, utilities
+│   └── styles/               # Main styles, XP theme, CRT effects, resets
+├── assets/                   # Images, icons, audio, fonts
+└── ...
+```
+
+---
+
+## Customization
+
+- **Add/Edit Portfolio Items:**  
+  Update the relevant HTML/CSS/JS in `src/apps/projects/` or other app folders.
+- **Change Desktop Icons:**  
+  Replace or add images in `assets/gui/desktop/`.
+- **Modify Music Player:**  
+  Add songs/covers to `assets/apps/musicPlayer/`.
+
+---
+
+## Credits
+
+- **Design & Development:**  
+  Mitchell Ivin ([mitchellivin@gmail.com](mailto:mitchellivin@gmail.com))
+- **XP.css:**  
+  [XP.css](https://botoxparty.github.io/XP.css/) for base Windows XP styling inspiration.
+
+---
+
+## License
+
+This project is for educational and portfolio purposes. Please contact for collaboration or reuse. 
