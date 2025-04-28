@@ -19,12 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setupToolbar({
     '.send': () => {
-      // Use display name and email for the mailto link
-      const to = 'Mitch Ivin Design <mitch@gmail.com>';
+      // Use display name in double quotes for the mailto link
+      const to = '"Mitch Ivin Design" <mitchellivin@gmail.com>';
       const subject = document.querySelectorAll('.field-input')[2]?.value || '';
       const body = document.querySelector('.email-body')?.value || '';
 
-      const mailto = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      const mailto = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       window.location.href = mailto;
     },
     '.new': () => {

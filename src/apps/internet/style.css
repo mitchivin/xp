@@ -274,6 +274,23 @@ body {
   border: 1.5px solid transparent !important;
   background: none !important;
 }
+
+.back.disabled {
+  filter: grayscale(100%) opacity(0.6);
+  cursor: not-allowed !important;
+  pointer-events: none;
+  border: 1.5px solid transparent !important;
+  background: none !important;
+}
+
+.back.disabled:hover,
+.back.disabled:active {
+  filter: grayscale(100%) opacity(0.6);
+  cursor: not-allowed !important;
+  pointer-events: none;
+  border: 1.5px solid transparent !important;
+  background: none !important;
+}
 /* End Toolbar styles */
 
 /* Address bar styles for Windows XP-like UI - Copied FULLY from reusable/AddressBar.css */

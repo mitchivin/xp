@@ -40,7 +40,7 @@
     position: relative;
     height: var(--taskbar-height);
     width: auto;
-    cursor: pointer;
+    cursor: default !important;
     border: none !important;
     outline: none !important;
     background: transparent;
@@ -268,6 +268,10 @@
     height: 100%;
 }
 
+.tray-icons > *, .tray-icons img {
+    cursor: pointer !important;
+}
+
 .tray-network-icon,
 .tray-status-icon,
 .tray-mediaPlayer-icon {
@@ -349,6 +353,10 @@
   display: block;
   animation: fadein 1s forwards;
   z-index: 10;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
 }
 .balloon.hide {
   animation: fadeout 1s forwards;
@@ -447,3 +455,21 @@
   margin-top: 8px;
 }
 /* === End Balloon Tooltip Styles === */
+
+.balloon, .balloon * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
+.taskbar, .taskbar *,
+.taskbar-item, .taskbar-item *,
+.system-tray, .system-tray *,
+.tray-icons, .tray-icons *,
+.time, .time * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}

@@ -215,3 +215,11 @@ if (playerEl) {
 
 // --- Initialize song info and cover ---
 setSongImg();
+
+window.addEventListener('message', (event) => {
+  if (event.data?.type === 'pauseMusic') {
+    if (audioPlayer && !audioPlayer.paused) {
+      audioPlayer.pause();
+    }
+  }
+}); 

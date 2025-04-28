@@ -75,6 +75,7 @@
 .app-window .title-bar-controls button {
     -webkit-user-select: none;
     user-select: none;
+    cursor: default !important;
 }
 
 .app-window .title-bar-controls button:disabled {
@@ -537,4 +538,13 @@ iframe {
     color: #aaa;
     border-top: 1px solid #e0e0e0;
     /* Optionally, you can add more styles for a more obvious inactive look */
+}
+
+.status-bar, .status-bar *,
+.status-bar-field, .status-bar-field *,
+.notepad-statusbar, .notepad-statusbar * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
 }

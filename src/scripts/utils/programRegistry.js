@@ -99,7 +99,7 @@ const programData = {
         "Command Prompt", 
         "start-menu/cmd.webp", 
         "cmd", 
-        { initialHeight: 600 }
+        { dimensions: { width: 500, height: 350 } }
     ),
     "notepad": createProgram(
         "notepad", 
@@ -118,7 +118,7 @@ const programData = {
         { 
           dimensions: { width: 800, height: 600 }, 
           statusBarText: "Getting to know the designer",
-          position: { type: "custom", align: "center-left", offsetX: 120, offsetY: -50 }
+          position: { type: "custom", align: "center-left", offsetX: 120, offsetY: 0 }
         }
     ),
     "contact": createProgram(
@@ -158,7 +158,7 @@ const programData = {
         { 
           dimensions: { width: 1030, height: 780 }, 
           statusBarText: "Projects ready to explore",
-          position: { type: "custom", align: "center-left", offsetX: 640, offsetY: -50 }
+          position: { type: "custom", align: "center-left", offsetX: 475, offsetY: 0 }
         }
     ),
 

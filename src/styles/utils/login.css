@@ -125,7 +125,7 @@
     position: relative;
     overflow: hidden;
     z-index: 0;
-    /* cursor: pointer; */
+    cursor: pointer !important;
 }
 
 /* Gradient overlay using pseudo-element */

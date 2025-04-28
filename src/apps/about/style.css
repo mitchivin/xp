@@ -157,8 +157,9 @@ body {
 .left-panel__card__text.bold {
   font-weight: bold;
 }
-.left-panel__card__text.link {
-  text-decoration: none;
+.left-panel__card__text.link,
+.left-panel__card__row a {
+  cursor: pointer !important;
 }
 .left-panel__card__text:hover {
   cursor: pointer;
@@ -868,5 +869,11 @@ h3.subtitle_header + .software-grid {
   border-color: #aee7ff;
   color: #fff;
   transition: background 0.18s, border-color 0.18s;
+}
+
+.left-panel__card__row,
+.left-panel__card__row img,
+.left-panel__card__row span {
+  cursor: pointer !important;
 }
 

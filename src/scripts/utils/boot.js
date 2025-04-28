@@ -234,6 +234,14 @@ export function initBootSequence(eventBus, EVENTS) {
         logOffCooldown = true;
         window.loginCooldown = true;
 
+        // Pause all music player iframes on logoff
+        const musicIframes = document.querySelectorAll('iframe[src*="musicPlayer"]');
+        musicIframes.forEach(iframe => {
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({ type: 'pauseMusic' }, '*');
+            }
+        });
+
         // Play logoff sound
         try {
             const logoffSound = new Audio('./assets/sounds/logoff.wav');
