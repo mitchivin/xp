@@ -1,3 +1,5 @@
+let lastStatusUpdate = 0;
+
 // Media Player Custom Element Implementation
 // Implements a Windows Media Player XP-like UI as a custom <wm-player> element.
 // Includes playlist, slider, and player logic. See index.html for usage.
@@ -1754,7 +1756,6 @@ customElements.define(
 // --- End mediaPlayer.js --- 
 
 // Throttle status bar updates to parent
-let lastStatusUpdate = 0;
 function sendStatusBarUpdate(statusText) {
   const now = Date.now();
   if (now - lastStatusUpdate > 1000) { // Only send once per second
