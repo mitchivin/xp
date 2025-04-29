@@ -1731,7 +1731,7 @@ class WMPlayerElement extends HTMLElement {
                }
            }
            
-           window.parent.postMessage({ type: 'updateStatusBar', text: statusText }, window.location.origin || '*');
+           sendStatusBarUpdate(statusText);
        }
    }
    // --- End helper ---
@@ -1752,3 +1752,13 @@ customElements.define(
    WMPlayerElement
 );
 // --- End mediaPlayer.js --- 
+
+// Throttle status bar updates to parent
+let lastStatusUpdate = 0;
+function sendStatusBarUpdate(statusText) {
+  const now = Date.now();
+  if (now - lastStatusUpdate > 1000) { // Only send once per second
+    window.parent.postMessage({ type: 'updateStatusBar', text: statusText }, window.location.origin || '*');
+    lastStatusUpdate = now;
+  }
+} 

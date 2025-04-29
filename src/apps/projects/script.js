@@ -280,7 +280,7 @@ projectLinks.forEach((link, idx) => {
                 // Remove any existing video element
                 const oldVideo = container.querySelector('.lightbox-video');
                 if (oldVideo) container.removeChild(oldVideo);
-                // Use preloaded video if available
+                // Use preloaded hidden video if available
                 let preloaded = document.querySelector(`video[data-preload-src='${videoSrc}']`);
                 let videoToShow;
                 if (preloaded) {
@@ -289,8 +289,6 @@ projectLinks.forEach((link, idx) => {
                     videoToShow.controls = true;
                     videoToShow.className = 'lightbox-video';
                     videoToShow.muted = false;
-                    // Remove from body and append to container
-                    document.body.removeChild(videoToShow);
                     container.appendChild(videoToShow);
                 } else {
                     // Fallback: create a new video element
@@ -448,6 +446,7 @@ document.querySelectorAll('.project-img').forEach(figure => {
   const videoLinks = document.querySelectorAll('.project-item > a[data-video]');
   videoLinks.forEach(link => {
     const videoSrc = link.getAttribute('data-video');
+    // Only create a hidden preloader if not already present
     if (videoSrc && !document.querySelector(`video[data-preload-src='${videoSrc}']`)) {
       const preloadVid = document.createElement('video');
       preloadVid.src = videoSrc;
@@ -457,5 +456,18 @@ document.querySelectorAll('.project-img').forEach(figure => {
       preloadVid.style.display = 'none';
       document.body.appendChild(preloadVid);
     }
+    // Always set hover preview to preload='metadata'
+    const hoverPreview = link.querySelector('.project-hover-preview');
+    if (hoverPreview) {
+      hoverPreview.preload = 'metadata';
+      hoverPreview.muted = true;
+    }
   });
 })();
+
+// For hover previews, set preload='metadata' (except for the preloaded one)
+document.querySelectorAll('.project-img .project-hover-preview').forEach(video => {
+  if (!video.hasAttribute('data-preload-src')) {
+    video.preload = 'metadata';
+  }
+});
