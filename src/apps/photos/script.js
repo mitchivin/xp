@@ -13,29 +13,29 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Image cycling logic
-  const imageCount = 3;
+  const imageCount = 4;
   let currentIndex = 1;
   const mainImage = document.querySelector('.main-image');
 
   // --- Event handler for status bar update ---
   const imageTitles = {
     1: 'shredding.jpg',
-    2: 'sightseeing.jpg',
-    3: 'bestfriends.jpg'
+    2: 'sightseeing,jpg',
+    3: 'rugby.jpg',
+    4: 'bestFriends.jpg'
   };
 
   const handleImageLoad = () => {
       if (window.parent && window.parent !== window) {
-          const title = imageTitles[currentIndex] || `image${currentIndex}`;
+          const title = imageTitles[currentIndex] || `Image ${currentIndex}`;
           const dimensions = `(${mainImage.naturalWidth}x${mainImage.naturalHeight})`;
           const statusText = `${title} ${dimensions}`;
           window.parent.postMessage({ type: 'updateStatusBar', text: statusText }, window.location.origin || '*');
       }
   };
-  
   const handleImageError = () => {
       if (window.parent && window.parent !== window) {
-          const title = imageTitles[currentIndex] || `image${currentIndex}`;
+          const title = imageTitles[currentIndex] || `Image ${currentIndex}`;
           window.parent.postMessage({ type: 'updateStatusBar', text: title + ' (Error loading)' }, window.location.origin || '*');
       }
   };

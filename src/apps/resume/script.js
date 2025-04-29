@@ -24,10 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
     menuBarSelector: '.menu-bar',
     actions: {
       save: () => {
-        // Instantly download the resume.pdf asset
+        // Instantly download the resume PDF asset
         const link = document.createElement('a');
-        link.href = 'assets/resume.pdf';
-        link.download = 'resume.pdf';
+        link.href = '../../../assets/apps/resume/mitchivinResume.pdf';
+        link.download = 'mitchivinResume.pdf';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -93,10 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
       setResumeZoom(resumeZoom);
     },
     '.save': () => {
-      // Instantly download the resume.pdf asset
+      // Instantly download the resume PDF asset
       const link = document.createElement('a');
-      link.href = 'assets/resume.pdf';
-      link.download = 'resume.pdf';
+      link.href = '../../../assets/apps/resume/mitchivinResume.pdf';
+      link.download = 'mitchivinResume.pdf';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

@@ -40,7 +40,7 @@ function createIframePool(apps) {
         iframe.setAttribute('frameborder', '0');
         iframe.setAttribute('width', '100%');
         iframe.setAttribute('height', '100%');
-        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals');
+        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads');
         iframe.style.width = '100%';
         iframe.style.height = '100%';
         iframe.style.border = 'none';
@@ -154,7 +154,7 @@ class WindowTemplates {
                 frameborder: '0',
                 width: '100%',
                 height: '100%',
-                sandbox: 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals',
+                sandbox: 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads',
                 style: 'visibility:hidden; position:absolute; left:-9999px;'
             };
             for (const [attr, value] of Object.entries(attrs))
@@ -193,7 +193,7 @@ class WindowTemplates {
             frameborder: '0',
             width: '100%',
             height: '100%',
-            sandbox: 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals'
+            sandbox: 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads'
         };
         for (const [attr, value] of Object.entries(attrs))
             iframe.setAttribute(attr, value);

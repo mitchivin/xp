@@ -212,4 +212,25 @@ function initRandomScanline() {
         // This allows initial page render to complete first
         setTimeout(startAnimation, 500);
     }
-} 
+}
+
+// --- Scanline control via media player events ---
+window.addEventListener('message', function(event) {
+    if (!event.data || typeof event.data.type !== 'string') return;
+    const scanline = document.querySelector('.crt-scanline');
+    if (!scanline) return;
+    if (event.data.type === 'media-play') {
+        scanline.style.display = 'none';
+    } else if (event.data.type === 'media-pause' || event.data.type === 'media-stop') {
+        scanline.style.display = 'block';
+        // Reset scanline position and transition
+        scanline.style.transition = 'none';
+        scanline.style.transform = 'translateY(-10px)';
+        // Force reflow
+        void scanline.offsetWidth;
+        // Start the animation immediately
+        const duration = SCANLINE_MIN_DURATION_MS + Math.random() * SCANLINE_MAX_DURATION_MS;
+        scanline.style.transition = `transform ${duration}ms linear`;
+        scanline.style.transform = 'translateY(100vh)';
+    }
+});

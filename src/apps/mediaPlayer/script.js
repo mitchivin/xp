@@ -1329,6 +1329,10 @@ class WMPlayerElement extends HTMLElement {
    #on_media_play(e) {
       this.#is_stopped = false; 
       this.#update_play_state(); 
+      // Notify parent to stop scanline
+      if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'media-play' }, '*');
+      }
    }
    #on_media_ended(e) {
       //
@@ -1384,18 +1388,30 @@ class WMPlayerElement extends HTMLElement {
          this.#internals.states.delete("playing");
          this.#internals.states.delete("paused");
          this.#internals.states.add("stopped");
+         // Notify parent to resume scanline
+         if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'media-stop' }, '*');
+         }
       } else if (this.#media.paused) {
          this.#play_pause_button.textContent = "Play";
          this.#play_pause_button.title = "Play";
          this.#internals.states.delete("playing");
          this.#internals.states.add("paused");
          this.#internals.states.delete("stopped");
+         // Notify parent to resume scanline
+         if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'media-pause' }, '*');
+         }
       } else {
          this.#play_pause_button.textContent = "Pause";
          this.#play_pause_button.title = "Pause";
          this.#internals.states.add("playing");
          this.#internals.states.delete("paused");
          this.#internals.states.delete("stopped");
+         // Notify parent to stop scanline
+         if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'media-play' }, '*');
+         }
       }
       this.#update_parent_status(); // Update status bar based on final state
    }
@@ -1762,4 +1778,4 @@ function sendStatusBarUpdate(statusText) {
     window.parent.postMessage({ type: 'updateStatusBar', text: statusText }, window.location.origin || '*');
     lastStatusUpdate = now;
   }
-} 
+}
