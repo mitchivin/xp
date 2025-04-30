@@ -24,11 +24,20 @@ const filterFunc = function (selectedValue) {
 navigationLinks.forEach(link => {
     link.addEventListener('click', function (e) {
         e.preventDefault();
-        const filterValue = this.innerHTML.toLowerCase();
+        const filterValue = this.dataset.filter;
         navigationLinks.forEach(l => l.classList.remove('active'));
         this.classList.add('active');
         filterFunc(filterValue);
-        articleTitle.textContent = this.innerHTML;
+        // Set article title to the visible span's text
+        const desktopSpan = this.querySelector('.desktop-long');
+        const mobileSpan = this.querySelector('.mobile-short');
+        if (window.innerWidth <= 600 && mobileSpan) {
+            articleTitle.textContent = mobileSpan.textContent;
+        } else if (desktopSpan) {
+            articleTitle.textContent = desktopSpan.textContent;
+        } else {
+            articleTitle.textContent = this.textContent;
+        }
     });
 });
 
@@ -419,7 +428,7 @@ function adjustPaddingForScrollbar() {
   // Check if vertical scrollbar is present on the window
   const needsScrollbar = document.documentElement.scrollHeight > document.documentElement.clientHeight;
   if (!needsScrollbar) {
-    container.style.paddingRight = '16px'; // Adjust to your scrollbar width if needed
+    container.style.paddingRight = ''; // Adjust to your scrollbar width if needed
   } else {
     container.style.paddingRight = '';
   }

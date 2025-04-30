@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <link rel="icon" href="./assets/gui/components/favicon.png" type="image/png">
     <title>Mitch Ivin | Graphic Design</title>
@@ -66,6 +66,15 @@
     <link rel="stylesheet" href="https://unpkg.com/xp.css@0.2.3/dist/XP.css" crossorigin="anonymous">
     <link rel="stylesheet" href="./src/styles/main.css">
     <link rel="stylesheet" href="./src/styles/utils/boot.css">
+    <style>
+      @media (max-width: 600px) {
+        .taskbar,
+        .start-button,
+        .system-tray {
+          display: none !important;
+        }
+      }
+    </style>
 </head>
 <body>
     <!-- Boot Screen -->

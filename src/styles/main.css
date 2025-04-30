@@ -58,6 +58,12 @@ body {
 .desktop {
 }
 
+/* Prevent double-tap to zoom on desktop icons (mobile) */
+.desktop-icon {
+  touch-action: manipulation;
+}
+
+
 #boot-screen,
 #login-screen {
     cursor: default !important;

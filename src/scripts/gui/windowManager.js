@@ -365,12 +365,27 @@ class WindowManager {
     }
     
     _createWindowElement(program) {
+        const isMobile = window.innerWidth <= 600;
+
         const windowElement = document.createElement('div');
         windowElement.id = program.id;
         windowElement.className = 'app-window';
         windowElement.setAttribute('data-program', program.id.replace('-window', ''));
 
         windowElement.innerHTML = this._getWindowBaseHTML(program);
+
+        // --- Mobile Maximized Logic ---
+        if (isMobile) {
+            windowElement.classList.add('maximized');
+            windowElement.style.position = 'fixed';
+            windowElement.style.left = '0';
+            windowElement.style.top = '0';
+            windowElement.style.width = '100vw';
+            windowElement.style.height = '100vh';
+            windowElement.style.maxWidth = '100vw';
+            windowElement.style.maxHeight = '100vh';
+        }
+
 
         let content;
         if (program.template === 'iframe-standard' && preloadedIframes[program.id.replace('-window', '')]) {
@@ -441,6 +456,7 @@ class WindowManager {
     }
     
     _getWindowBaseHTML(program) {
+        const isMobile = typeof window !== 'undefined' && window.innerWidth <= 600;
         return `
             <div class="window-inactive-mask"></div>
             <div class="title-bar">
@@ -451,8 +467,8 @@ class WindowManager {
                     <div class="title-bar-text">${program.title}</div>
                 </div>
                 <div class="title-bar-controls">
-                    ${program.canMinimize !== false ? '<button aria-label="Minimize" data-action="minimize"></button>' : ''}
-                    ${program.canMaximize !== false ? '<button aria-label="Maximize" data-action="maximize"></button>' : ''}
+                    ${isMobile ? '' : (program.canMinimize !== false ? '<button aria-label="Minimize" data-action="minimize"></button>' : '')}
+                    ${isMobile ? '' : (program.canMaximize !== false ? '<button aria-label="Maximize" data-action="maximize"></button>' : '')}
                     <button aria-label="Close" data-action="close"></button>
                 </div>
             </div>

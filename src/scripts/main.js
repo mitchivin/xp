@@ -22,6 +22,38 @@ const SCANLINE_MIN_DURATION_MS = 4000; // Minimum scanline animation duration (m
 const SCANLINE_MAX_DURATION_MS = 3000; // Maximum additional random duration (ms)
 
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Prevent double-tap to zoom except on images ---
+    let lastTouchEnd = 0;
+    function isDesktopIconOrChild(el) {
+        while (el && el !== document.body) {
+            if (el.classList && el.classList.contains('desktop-icon')) return true;
+            el = el.parentElement;
+        }
+        return false;
+    }
+    function shouldPreventZoom(e) {
+        // Always allow zoom on images
+        if (e.target.tagName === 'IMG') return false;
+        // Prevent zoom if tapping on a desktop icon or any non-image UI
+        if (isDesktopIconOrChild(e.target)) return true;
+        // Optionally add more selectors for other UI
+        return true;
+    }
+    document.body.addEventListener('touchend', function(e) {
+        const now = Date.now();
+        if (now - lastTouchEnd < 300 && shouldPreventZoom(e)) {
+            e.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, { passive: false });
+    // Also prevent on touchstart for reliability
+    document.body.addEventListener('touchstart', function(e) {
+        const now = Date.now();
+        if (now - lastTouchEnd < 300 && shouldPreventZoom(e)) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
     // Initialize core UI components with shared event bus for communication
     new Taskbar(eventBus);
     new Desktop(eventBus);
@@ -89,9 +121,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize CRT visual effects
     initRandomScanline();
 
-    // Open About Me and My Projects (Internet) on page load
-    eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: 'about' });
-    eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: 'internet' });
+    // Open About Me and My Projects (Internet) on page load (desktop only)
+    if (window.innerWidth > 600) {
+        eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: 'about' });
+        eventBus.publish(EVENTS.PROGRAM_OPEN, { programName: 'internet' });
+    }
 
     // Enable XP-style tooltips globally for all elements with data-tooltip
     setupTooltips('[data-tooltip]');

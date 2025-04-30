@@ -115,14 +115,25 @@ export default class Desktop {
             const iconText = iconSpan ? iconSpan.textContent.trim() : '';
             const iconId = iconText.toLowerCase().replace(/\s+/g, '-');
 
-            icon.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const now = Date.now();
-                const lastTime = this.lastClickTimes[iconId] || 0;
-                if (now - lastTime < 300) return;
-                this.toggleIconSelection(icon, e.ctrlKey);
-                this.lastClickTimes[iconId] = now;
-            });
+            const isMobile = window.matchMedia('(pointer: coarse)').matches && window.innerWidth <= 600;
+            if (isMobile) {
+                icon.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    let programName = icon.getAttribute('data-program-name');
+                    if (programName === 'command-prompt') programName = 'cmd';
+                    this.eventBus.publish(EVENTS.PROGRAM_OPEN, { programName });
+                });
+            } else {
+                icon.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const now = Date.now();
+                    const lastTime = this.lastClickTimes[iconId] || 0;
+                    if (now - lastTime < 300) return;
+                    this.toggleIconSelection(icon, e.ctrlKey);
+                    this.lastClickTimes[iconId] = now;
+                });
+            }
 
             icon.addEventListener('dblclick', (e) => {
                 e.stopPropagation();

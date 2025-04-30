@@ -444,6 +444,14 @@ iframe {
     overflow: hidden !important;
 }
 
+@media (max-width: 600px) {
+  .app-window.maximized,
+  .window.maximized {
+    height: calc(100vh - var(--taskbar-height, 0px) + 30px) !important;
+    max-height: calc(100vh + 30px) !important;
+  }
+}
+
 /* --- Notepad Status Bar Specific Styles --- */
 .status-bar.notepad-statusbar {
     justify-content: flex-end; /* Align items to the right */
